@@ -1,4 +1,7 @@
 # Route 88 Bike Cafe’s POS System
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f1f7c3434f1a46d5925eb4482ad6b302)](https://app.codacy.com/app/CodexLink/DMBS_Route88_POSSystem?utm_source=github.com&utm_medium=referral&utm_content=CodexLink/DMBS_Route88_POSSystem&utm_campaign=Badge_Grade_Dashboard)
+
 This is a repository that contains all assets for Route 88 Bike Cafe POS System in a subject called "Database Management System". This was made to show proof of contributions for each members involved from this project.
 
 ## Table of Contents
