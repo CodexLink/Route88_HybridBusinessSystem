@@ -4,7 +4,7 @@ from kivy.lang import Builder
 
 KV = '''
 
-<Row@RecycleView>:
+<Row@BoxLayout>:
     ind: 1
     Button:
         text: str(root.ind)

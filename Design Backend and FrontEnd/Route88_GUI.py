@@ -16,13 +16,10 @@ from kivy.utils import get_color_from_hex
 from kivymd.color_definitions import colors
 from kivy.clock import Clock
 from random import choice as RandomizePick
-import mysql.connector
-
 from kivy.uix.boxlayout import BoxLayout
 from kivy.base import runTouchApp
 from kivy.properties import ListProperty
-import sqlite3 as lite
-
+import MySQLdb
 
 '''
     MD_Route88_System_GUI(App), Default Class: App
@@ -90,86 +87,61 @@ class MD_Route88_System_GUI(App):
     '''
     def MDGUI_ClearTextField(self, WindowActive):
         try:
-            WindowCandidate = [WindowName for WindowName in self.root.ids.ScreenDesign_Handler.screen_names]
-            print(WindowCandidate)
-            for ActiveWindowCandidate in WindowCandidate:
-                if WindowActive == WindowCandidate[0]: # Screen -> Route88_FirstTimeSetup
-                    print
-                    self.root.ids.FirstTimer_DataFirstName.text = ""
-                    self.root.ids.FirstTimer_DataLastName.text = ""
-                    self.root.ids.FirstTimer_DataJobPosition.text = ""
-                    self.root.ids.FirstTimer_DataPassword.text = ""
-                elif WindowActive == WindowCandidate[1]: # Screen -> Route88_POS_SystemView
-                    pass
-                elif WindowActive == WindowCandidate[2]: # Screen -> Route88_Inventory_SystemView
-                    pass
-                elif WindowActive == WindowCandidate[3]: # Screen -> Route88_StaffAccount_Add
-                    pass
-                elif WindowActive == ActiveWindowCandidate[4]: # Screen -> Route88_StaffAccount_Delete
-                    pass
-                elif WindowActive == ActiveWindowCandidate[5]: # Screen -> Route88_StaffAccount_Edit
-                    pass
-                elif WindowActive == ActiveWindowCandidate[6]: # Screen -> Route88_StaffAccount_Selection
-                    pass
-                else:
-                    raise Exception
+            if WindowActive == 'Route88_FirstTimeSetup': # Screen -> Route88_FirstTimeSetup
+                self.root.ids.FirstTimer_DataFirstName.text = ""
+                self.root.ids.FirstTimer_DataLastName.text = ""
+                self.root.ids.FirstTimer_DataJobPosition.text = ""
+                self.root.ids.FirstTimer_DataPasswordInit.text = ""
+                self.root.ids.FirstTimer_DataPasswordConfirm.text = ""
+            elif WindowActive == 'Route88_POS_SystemView': # Screen -> Route88_POS_SystemView
+                pass
+            elif WindowActive == 'Route88_DashboardView': # Screen -> Route88_StaffAccount_Delete
+                pass
+            elif WindowActive == 'Route88_Inventory_SystemView': # Screen -> Route88_Inventory_SystemView
+                pass
+            elif WindowActive == 'Route88_StaffAccount_View': # Screen -> Route88_StaffAccount_Add
+                pass
+            elif WindowActive == 'Route88_StaffAccount_Add': # Screen -> Route88_StaffAccount_Edit
+                self.root.ids.NewStaff_FirstName.text = ''
+                self.root.ids.NewStaff_LastName.text = ''
+                self.root.ids.NewStaff_JobPosition.text = ''
+                self.root.ids.NewStaff_PasswordInit.text = ''
+                self.root.ids.NewStaff_PasswordConfirm.text = ''
+            elif WindowActive == 'Route88_StaffAccount_Delete': # Screen -> Route88_StaffAccount_Selection
+                pass
+            elif WindowActive == 'Route88_StaffAccount_Edit': # Screen -> Route88_StaffAccount_Selection
+                self.root.ids.ExistingEdit_FirstName.text = ''
+                self.root.ids.ExistingEdit_LastName.text = ''
+                self.root.ids.ExistingEdit_JobPosition.text = ''
+                self.root.ids.ExistingEdit_PasswordInit.text = ''
+                self.root.ids.ExistingEdit_PasswordConfirm.text = ''
+            elif WindowActive == 'Route88_StaffAccount_Selection': # Screen -> Route88_StaffAccount_Selection
+                self.root.ids.ExistingChange_Password.text = ''
+                pass
+            else:
+                raise Exception
         except Exception as ErrorMessage:
             KivyDebugErrPrint.error("Invalid ScreenName: Candidate Value of 'WindowActive' didn't get any match from ScreenDesign_Handler.screen_names. Please restart or if the problem persist, contact developer @CodexLink.")
             #raise Exception("Invalid ScreenName: Candidate Value of 'WindowActive' didn't get any match from ScreenDesign_Handler.screen_names. Please restart or if the problem persist, contact developer @CodexLink.")
 
     '''
     '''
-    # This Function Member is for Screen 'Route88_FirstTimeSetup' only.
-    def MDGUI_FirstTimeSubmit(self):
-        pass
-    '''
-    '''
-    def MDGUI_DataSubmission(self, WindowActive):
+
+    def MDGUI_DataSubmission(self, WindowCandidate):
+        if bool(MDGUI_DataValidate(WindowCandidate)) == True:
+            pass
+
+    def MDGUI_DataValidate(self, WindowCandidate):
         pass
 
     def get_data(self):
-        con = lite.connect('test.db')
-        cur = con.cursor()
-        try:
-            with con:
-                cur.execute("CREATE TABLE Cars(Id INT, Name TEXT, Price INT)")
-                cur.execute("INSERT INTO Cars VALUES(1,'Audi',52642)")
-                cur.execute("INSERT INTO Cars VALUES(2,'Mercedes',57127)")
-                cur.execute("INSERT INTO Cars VALUES(3,'Skoda',9000)")
-                cur.execute("INSERT INTO Cars VALUES(4,'Volvo',29000)")
-                cur.execute("INSERT INTO Cars VALUES(5,'Bentley',350000)")
-                cur.execute("INSERT INTO Cars VALUES(6,'Citroen',21000)")
-                cur.execute("INSERT INTO Cars VALUES(7,'Hummer',41400)")
-                cur.execute("INSERT INTO Cars VALUES(8,'Volkswagen',21600)")
-                cur.execute("INSERT INTO Cars VALUES(9,'Audi',52642)")
-                cur.execute("INSERT INTO Cars VALUES(10,'Mercedes',57127)")
-                cur.execute("INSERT INTO Cars VALUES(11,'Skoda',9000)")
-                cur.execute("INSERT INTO Cars VALUES(12,'Volvo',29000)")
-                cur.execute("INSERT INTO Cars VALUES(13,'Bentley',350000)")
-                cur.execute("INSERT INTO Cars VALUES(14,'Citroen',21000)")
-                cur.execute("INSERT INTO Cars VALUES(15,'Hummer',41400)")
-                cur.execute("INSERT INTO Cars VALUES(16,'Volkswagen',21600)")
-                cur.execute("INSERT INTO Cars VALUES(17,'Audi',52642)")
-                cur.execute("INSERT INTO Cars VALUES(18,'Mercedes',57127)")
-                cur.execute("INSERT INTO Cars VALUES(19,'Skoda',9000)")
-                cur.execute("INSERT INTO Cars VALUES(20,'Volvo',29000)")
-                cur.execute("INSERT INTO Cars VALUES(21,'Bentley',350000)")
-                cur.execute("INSERT INTO Cars VALUES(22,'Citroen',21000)")
-                cur.execute("INSERT INTO Cars VALUES(23,'Hummer',41400)")
-                cur.execute("INSERT INTO Cars VALUES(24,'Volkswagen',21600)")
-                cur.execute("INSERT INTO Cars VALUES(25,'Audi',52642)")
-                cur.execute("INSERT INTO Cars VALUES(26,'Mercedes',57127)")
-                cur.execute("INSERT INTO Cars VALUES(27,'Skoda',9000)")
-                cur.execute("INSERT INTO Cars VALUES(28,'Volvo',29000)")
-                cur.execute("INSERT INTO Cars VALUES(29,'Bentley',350000)")
-                cur.execute("INSERT INTO Cars VALUES(30,'Citroen',21000)")
-                cur.execute("INSERT INTO Cars VALUES(31,'Hummer',41400)")
-                cur.execute("INSERT INTO Cars VALUES(32,'Volkswagen',21600)")
-        except:
-            pass
+        con = MySQLdb.connect(host='localhost', user='root', passwd='', db='test')
+        cur = con.cursor(MySQLdb.cursors.DictCursor)
         cur.execute("SELECT * FROM Cars")
-        self.rows = cur.fetchall()
-        print(self.rows)
+        #self.rows = cur.fetchall()
+        rows = cur.fetchall()
+        for row in rows:
+            print(row['id'])
 
 
 class MySQLDatabaseHandler:

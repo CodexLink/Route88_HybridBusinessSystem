@@ -89,15 +89,20 @@ NavigationLayout:
         NavigationDrawerSubheader:
             text: "Staff Accounts"
         NavigationDrawerIconButton:
+            icon: 'apps'
+            text: "View Enlisted Staff"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_View'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | View Staff"
+        NavigationDrawerIconButton:
             icon: 'face'
-            text: "Add Staff"
+            text: "Add Staff Account"
             on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_Add'
-            on_release: app.root.ids.ToolbarMain.title = "Route88 | Add Staff Account"
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Add Staff"
         NavigationDrawerIconButton:
             icon: 'delete-sweep'
-            text: "Remove Staff"
+            text: "Remove Staff Account"
             on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_Delete'
-            on_release: app.root.ids.ToolbarMain.title = "Route88 | Remove Staff Account"
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Remove Staff"
         NavigationDrawerIconButton:
             id: Edit_SectionAccess
             icon: 'key-change'
@@ -141,13 +146,13 @@ NavigationLayout:
                     Image:
                         source: 'assets/LayerTriangleVector.png'
                         size_hint: None, None
-                        size: 1920, 1080
+                        size: dp(1920), dp(1080)
                 AnchorLayout:
                     anchor_x: 'center'
                     anchor_y: 'center'
                     MDCard:
                         size_hint: None, None
-                        size: dp(560), dp(450)
+                        size: dp(600), dp(520)
                         BoxLayout:
                             orientation: 'vertical'
                             padding: dp(20)
@@ -184,14 +189,22 @@ NavigationLayout:
                                     id: FirstTimer_DataJobPosition
                                     hint_text: "Input Your Job Position"
                                     required: True
-                                    helper_text: "Job Position is Required! Here are your options {Manager, Cashier}"
+                                    helper_text: "Job Position is Required! Here are your options, [Manager OR Cashier]"
                                     helper_text_mode: "on_focus"
                                     write_tab: False
                                 MDTextField:
-                                    id: FirstTimer_DataPassword
+                                    id: FirstTimer_DataPasswordInit
                                     hint_text: "Input Your Password"
                                     required: True
-                                    helper_text: "Password is needed."
+                                    helper_text: "Password is required."
+                                    helper_text_mode: "on_focus"
+                                    password: True
+                                    write_tab: False
+                                MDTextField:
+                                    id: FirstTimer_DataPasswordConfirm
+                                    hint_text: "Repeat Your Confirmed Password"
+                                    required: True
+                                    helper_text: "You have to repeat your password to ensure you input the correct password!"
                                     helper_text_mode: "on_focus"
                                     password: True
                                     write_tab: False
@@ -206,7 +219,7 @@ NavigationLayout:
                                     text: "Submit Data"
                                     size_hint: None, None
                                     size: 3 * dp(48), dp(48)
-                                    on_release: app.MD_FirstTime_DataSubmission()
+                                    on_release: app.MDGUI_DataSubmission(app.root.ids.ScreenDesign_Handler.current)
 # System Screen Section - Start Point
             Screen:
                 name: 'Route88_POS_SystemView'
@@ -217,8 +230,9 @@ NavigationLayout:
                     BoxLayout:
                         RecycleView:
                             data: [{'text':"{0}".format(x)} for i in app.rows for x in i]
-                            viewclass: 'TableList'
-                            RecycleBoxLayout:
+                            viewclass: 'MDFlatButton'
+                            RecycleGridLayout:
+                                cols: 3
                                 default_size: None, dp(50)
                                 orientation: "vertical"
                                 default_size_hint: 1, None
@@ -335,7 +349,7 @@ NavigationLayout:
                                     BoxLayout:
                                         orientation: 'horizontal'
                                         spacing: dp(10)
-                                        padding: 0
+                                        padding: dp(0)
                                         MDTextField:
                                             id: Resource_UnitVal
                                             hint_text: "Unit Value Input"
@@ -368,20 +382,20 @@ NavigationLayout:
                     anchor_x: 'center'
                     anchor_y: 'center'
                     Image:
-                        source: 'assets/LayerTriangleVector3.jpg'
+                        source: 'assets/LayerTriangleVector.jpg'
                         size_hint: None, None
-                        size: 1920, 1080
+                        size: dp(1920), dp(1080)
                 AnchorLayout:
                     anchor_x: 'center'
                     anchor_y: 'center'
                     MDCard:
                         size_hint: None, None
-                        size: dp(560), dp(470)
+                        size: dp(600), dp(520)
                         BoxLayout:
                             orientation: 'vertical'
                             padding: dp(20)
                             StackLayout:
-                                spacing:20
+                                spacing: dp(20)
                                 MDLabel:
                                     text: 'Add a Staff'
                                     theme_text_color: 'Primary'
@@ -389,60 +403,61 @@ NavigationLayout:
                                     size_hint_y: None
                                     height: dp(15)
                                 MDLabel:
-                                    text: 'More staffs? Add more using this form!'
+                                    text: 'More staffs to be in charge? Add more using this form!'
                                     theme_text_color: 'Secondary'
                                     font_style: "Body1"
                                     size_hint_y: None
                                     height: dp(3)
                                 MDTextField:
-                                    hint_text: "Input First Name"
+                                    id: NewStaff_FirstName
+                                    hint_text: "Input New Staff's First Name"
                                     required: True
-                                    helper_text: "Required"
+                                    helper_text: "Required for Identification."
                                     helper_text_mode: "on_focus"
                                     write_tab: False
                                 MDTextField:
-                                    hint_text: "Input Last Name"
+                                    id: NewStaff_LastName
+                                    hint_text: "Input New Staff's Last Name"
                                     required: True
-                                    helper_text: "Required"
+                                    helper_text: "Required for Identification."
                                     helper_text_mode: "on_focus"
                                     write_tab: False
                                 MDTextField:
-                                    hint_text: "Input Your Job Position"
+                                    id: NewStaff_JobPosition
+                                    hint_text: "Input New Staff's Job Position"
                                     required: True
-                                    helper_text: "Required"
+                                    helper_text: "Required to Identify their Role for their usage of system."
                                     helper_text_mode: "on_focus"
                                     write_tab: False
                                 MDTextField:
-                                    hint_text: "Input Your Password"
+                                    id: NewStaff_PasswordInit
+                                    hint_text: "Input New Staff's Password"
                                     required: True
-                                    helper_text: "Password is needed to avoid changing authors without permission."
+                                    helper_text: "Password is required."
                                     helper_text_mode: "on_focus"
                                     password: True
                                     write_tab: False
                                 MDTextField:
-                                    hint_text: "Confirm Your Password"
+                                    id: NewStaff_PasswordConfirm
+                                    hint_text: "Confirm New Staff's Password"
                                     required: True
-                                    helper_text: "Password is needed to avoid changing authors without permission."
+                                    helper_text: "You have to repeat your password to ensure you input the correct password!"
                                     helper_text_mode: "on_focus"
                                     password: True
                                     write_tab: False
-                                MDLabel:
-                                    text: 'Want to use the program with modifying features? Click Admin Previledge for more info.'
-                                    theme_text_color: 'Secondary'
-                                    font_style: "Caption"
-                                    size_hint_y: None
-                                    height: dp(8)
                                 MDFlatButton:
                                     theme_text_color: 'Custom'
                                     text: "Clear Fields"
                                     size_hint: None, None
                                     size: 3 * dp(48), dp(48)
+                                    on_release: app.MDGUI_ClearTextField(app.root.ids.ScreenDesign_Handler.current)
                                 MDRaisedButton:
-                                    text: "Submit Data"
+                                    text: "Add Staff"
                                     size_hint: None, None
                                     size: 3 * dp(48), dp(48)
             Screen:
                 name: 'Route88_StaffAccount_Delete'
+
             Screen:
                 name: 'Route88_StaffAccount_Edit'
                 AnchorLayout:
@@ -451,21 +466,21 @@ NavigationLayout:
                     Image:
                         source: 'assets/LayerTriangleVector.png'
                         size_hint: None, None
-                        size: 1920, 1080
+                        size: dp(1920), dp(1080)
                     AnchorLayout:
                         anchor_x: 'center'
                         anchor_y: 'center'
                         MDCard:
                             size_hint: None, None
-                            size: dp(860), dp(470)
+                            size: dp(860), dp(520)
                             BoxLayout:
                                 orientation: 'vertical'
                                 padding: dp(20), dp(20)
                                 StackLayout:
-                                    spacing:20
+                                    spacing:dp(20)
                                     BoxLayout:
                                         orientation: 'vertical'
-                                        spacing: 20
+                                        spacing: dp(20)
                                         MDLabel:
                                             text: 'Edit an Existing Registed Staff'
                                             theme_text_color: 'Primary'
@@ -497,42 +512,70 @@ NavigationLayout:
                                                         AvatarSampleWidget:
                                                             source: './assets/avatar.png'
                                                     TwoLineAvatarListItem:
+                                                        id: UserSelectExist_1
                                                         type: "two-line"
                                                         text: "No User Data"
                                                         secondary_text: "No Job Description"
                                                         AvatarSampleWidget:
                                                             source: './assets/avatar.png'
                                                     TwoLineAvatarListItem:
+                                                        id: UserSelectExist_2
                                                         type: "two-line"
                                                         text: "No User Data"
                                                         secondary_text: "No Job Description"
                                                         AvatarSampleWidget:
                                                             source: './assets/avatar.png'
                                                     TwoLineAvatarListItem:
+                                                        id: UserSelectExist_3
                                                         type: "two-line"
                                                         text: "No User Data"
                                                         secondary_text: "No Job Description"
                                                         AvatarSampleWidget:
                                                             source: './assets/avatar.png'
                                                     TwoLineAvatarListItem:
+                                                        id: UserSelectExist_4
                                                         type: "two-line"
                                                         text: "No User Data"
                                                         secondary_text: "No Job Description"
                                                         AvatarSampleWidget:
                                                             source: './assets/avatar.png'
                                                     TwoLineAvatarListItem:
+                                                        id: UserSelectExist_5
                                                         type: "two-line"
                                                         text: "No User Data"
                                                         secondary_text: "No Job Description"
                                                         AvatarSampleWidget:
                                                             source: './assets/avatar.png'
                                                     TwoLineAvatarListItem:
+                                                        id:UserSelectExist_6
                                                         type: "two-line"
                                                         text: "No User Data"
                                                         secondary_text: "No Job Description"
                                                         AvatarSampleWidget:
                                                             source: './assets/avatar.png'
                                                     TwoLineAvatarListItem:
+                                                        id: UserSelectExist_7
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_8
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_9
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_10
                                                         type: "two-line"
                                                         text: "No User Data"
                                                         secondary_text: "No Job Description"
@@ -546,31 +589,31 @@ NavigationLayout:
                                                     StackLayout:
                                                         spacing: dp(10)
                                                         MDTextField:
-                                                            id: Existing_FirstName
-                                                            hint_text: "First Name"
+                                                            id: ExistingEdit_FirstName
+                                                            hint_text: "Staff First Name"
                                                             write_tab: False
                                                             disabled: True
                                                         MDTextField:
-                                                            id: Existing_LastName
-                                                            hint_text: "Last Name"
+                                                            id: ExistingEdit_LastName
+                                                            hint_text: "Staff Last Name"
                                                             write_tab: False
                                                             disabled: True
                                                         MDTextField:
-                                                            id: Existing_JobPosition
-                                                            hint_text: "Job Position"
+                                                            id: ExistingEdit_JobPosition
+                                                            hint_text: "Staff Job Position"
                                                             write_tab: False
                                                             disabled: True
                                                         MDTextField:
-                                                            id: Existing_Password
-                                                            hint_text: "Password"
+                                                            id: ExistingEdit_PasswordInit
+                                                            hint_text: "Staff Password"
                                                             required: True
                                                             password: True
                                                             helper_text: "Enter your password to login."
                                                             helper_text_mode: "persistent"
                                                             write_tab: False
                                                         MDTextField:
-                                                            id: Existing_Password
-                                                            hint_text: "Confirm Password"
+                                                            id: ExistingEdit_PasswordConfirm
+                                                            hint_text: "Staff Confirm Password"
                                                             required: True
                                                             password: True
                                                             helper_text: "Enter your password to login."
@@ -580,18 +623,16 @@ NavigationLayout:
                                                             padding: dp(0),dp(20)
                                                             spacing: dp(60)
                                                             MDFlatButton:
-                                                                id: Existing_ClearCredentials
                                                                 theme_text_color: 'Custom'
                                                                 text: "Clear Fields"
                                                                 size_hint: None, None
                                                                 size: 3 * dp(48), dp(48)
                                                                 on_release: app.MDGUI_ClearTextField(app.root.ids.ScreenDesign_Handler.current)
                                                             MDRaisedButton:
-                                                                id: Existing_SubmitCredentials
                                                                 text: "Submit Credentials"
                                                                 size_hint: None, None
                                                                 size: 3 * dp(48), dp(48)
-                                                                #on_release: app.MDGUI_DataSubmission   (app.root.ids.ScreenDesign_Handler.current)
+                                                                on_release: app.MDGUI_DataSubmission   (app.root.ids.ScreenDesign_Handler.current)
             Screen:
                 name: 'Route88_StaffAccount_Selection'
                 AnchorLayout:
@@ -600,21 +641,21 @@ NavigationLayout:
                     Image:
                         source: 'assets/LayerTriangleVector.png'
                         size_hint: None, None
-                        size: 1920, 1080
+                        size: dp(1920), dp(1080)
                 AnchorLayout:
                     anchor_x: 'center'
                     anchor_y: 'center'
                     MDCard:
                         size_hint: None, None
-                        size: dp(860), dp(470)
+                        size: dp(860), dp(440)
                         BoxLayout:
                             orientation: 'vertical'
                             padding: dp(20), dp(20)
                             StackLayout:
-                                spacing:20
+                                spacing:dp(20)
                                 BoxLayout:
                                     orientation: 'vertical'
-                                    spacing: 20
+                                    spacing: dp(20)
                                     MDLabel:
                                         text: 'Select an Existing Registed Staff'
                                         theme_text_color: 'Primary'
@@ -634,54 +675,70 @@ NavigationLayout:
                                             MDList:
                                                 id: MDList_UserInsertion_Selection
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_1
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_2
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_3
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_4
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_5
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_6
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_7
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_8
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
                                                     AvatarSampleWidget:
                                                         source: './assets/avatar.png'
                                                 TwoLineAvatarListItem:
+                                                    id: SelectUserChange_9
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_10
                                                     type: "two-line"
                                                     text: "No User Data"
                                                     secondary_text: "No Job Description"
@@ -695,23 +752,23 @@ NavigationLayout:
                                                 StackLayout:
                                                     spacing: dp(10)
                                                     MDTextField:
-                                                        id: Existing_FirstName
-                                                        hint_text: "First Name"
+                                                        id: ExistingChange_FirstName
+                                                        hint_text: "Existing User First Name"
                                                         write_tab: False
                                                         disabled: True
                                                     MDTextField:
-                                                        id: Existing_LastName
-                                                        hint_text: "Last Name"
+                                                        id: ExistingChange_LastName
+                                                        hint_text: "Existing User Last Name"
                                                         write_tab: False
                                                         disabled: True
                                                     MDTextField:
-                                                        id: Existing_JobPosition
-                                                        hint_text: "Job Position"
+                                                        id: ExistingChange_JobPosition
+                                                        hint_text: "Existing User Job Position"
                                                         write_tab: False
                                                         disabled: True
                                                     MDTextField:
-                                                        id: Existing_Password
-                                                        hint_text: "Password"
+                                                        id: ExistingChange_Password
+                                                        hint_text: "Existing User Password"
                                                         required: True
                                                         password: True
                                                         helper_text: "Enter your password to login."
@@ -721,16 +778,14 @@ NavigationLayout:
                                                         padding: dp(0),dp(20)
                                                         spacing: dp(60)
                                                         MDFlatButton:
-                                                            id: Existing_ClearCredentials
                                                             theme_text_color: 'Custom'
                                                             text: "Clear Fields"
                                                             size_hint: None, None
                                                             size: 3 * dp(48), dp(48)
                                                             on_release: app.MDGUI_ClearTextField(app.root.ids.ScreenDesign_Handler.current)
                                                         MDRaisedButton:
-                                                            id: Existing_SubmitCredentials
                                                             text: "Submit Credentials"
                                                             size_hint: None, None
                                                             size: 3 * dp(48), dp(48)
-                                                            #on_release: app.MDGUI_DataSubmission   (app.root.ids.ScreenDesign_Handler.current)
+                                                            on_release: app.MDGUI_DataSubmission   (app.root.ids.ScreenDesign_Handler.current)
 # Staff Account Screen Section - End Point
