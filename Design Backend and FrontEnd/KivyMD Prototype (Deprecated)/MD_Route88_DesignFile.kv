@@ -1,0 +1,794 @@
+#:import Toolbar kivymd.toolbar.Toolbar
+#:import ThemeManager kivymd.theming.ThemeManager
+#:import MDNavigationDrawer_HeaderStringOnly kivymd.navigationdrawer.MDNavigationDrawer_HeaderStringOnly
+#:import NavigationLayout kivymd.navigationdrawer.NavigationLayout
+#:import NavigationDrawerDivider kivymd.navigationdrawer.NavigationDrawerDivider
+#:import NavigationDrawerToolbar kivymd.navigationdrawer.NavigationDrawerToolbar
+#:import NavigationDrawerSubheader kivymd.navigationdrawer.NavigationDrawerSubheader
+#:import MDCheckbox kivymd.selectioncontrols.MDCheckbox
+#:import MDSwitch kivymd.selectioncontrols.MDSwitch
+#:import MDList kivymd.list.MDList
+#:import OneLineListItem kivymd.list.OneLineListItem
+#:import TwoLineListItem kivymd.list.TwoLineListItem
+#:import ThreeLineListItem kivymd.list.ThreeLineListItem
+#:import OneLineAvatarListItem kivymd.list.OneLineAvatarListItem
+#:import OneLineIconListItem kivymd.list.OneLineIconListItem
+#:import OneLineAvatarIconListItem kivymd.list.OneLineAvatarIconListItem
+#:import MDTextField kivymd.textfields.MDTextField
+#:import MDSpinner kivymd.spinner.MDSpinner
+#:import MDCard kivymd.card.MDCard
+#:import MDSeparator kivymd.card.MDSeparator
+#:import MDDropdownMenu kivymd.menu.MDDropdownMenu
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import colors kivymd.color_definitions.colors
+#:import SmartTile kivymd.grid.SmartTile
+#:import MDSlider kivymd.slider.MDSlider
+#:import MDTabbedPanel kivymd.tabs.MDTabbedPanel
+#:import MDTab kivymd.tabs.MDTab
+#:import MDProgressBar kivymd.progressbar.MDProgressBar
+#:import MDAccordion kivymd.accordion.MDAccordion
+#:import MDAccordionItem kivymd.accordion.MDAccordionItem
+#:import MDAccordionSubItem kivymd.accordion.MDAccordionSubItem
+#:import MDThemePicker kivymd.theme_picker.MDThemePicker
+#:import MDBottomNavigation kivymd.tabs.MDBottomNavigation
+#:import MDBottomNavigationItem kivymd.tabs.MDBottomNavigationItem
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import MDTable kivymd.table.Table
+#:import AnchorLayout kivy.uix.anchorlayout
+#:import StackLayout kivy.uix.stacklayout
+#:import GridLayout kivy.uix.gridlayout
+#:import Window kivy.core.window.Window
+#:import RecycleView kivy.uix.recycleview
+#:import RecycleBoxLayout kivy.uix.recycleboxlayout
+
+<TableList@BoxLayout>:
+    text:''
+    MDFlatButton:
+        id: txt_a
+        text: root.text
+    MDFlatButton:
+        id: txt_b
+        text: root.name
+    MDFlatButton:
+        id: txt_b
+        text: root.km
+    MDRaisedButton:
+        text: "Edit"
+    MDRaisedButton:
+        text: "Delete"
+
+NavigationLayout:
+    id: LiteralNavagationLayer
+    MDNavigationDrawer_HeaderStringOnly:
+        id: NavDrawerContent
+        header_name: 'Welcome!'
+        subheader_name: 'Job Position: Unknown Yet'
+        NavigationDrawerDivider:
+        NavigationDrawerSubheader:
+            text: "Main Menu"
+        NavigationDrawerIconButton:
+            id: Route_Dashboard
+            icon: 'view-dashboard'
+            text: "Dashboard"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_DashboardView'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Dashboard"
+            disabled: True
+        NavigationDrawerIconButton:
+            id: Route_POSSystem
+            icon: 'scanner'
+            text: "POS System"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_POS_SystemView'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | POS SystemView"
+        NavigationDrawerIconButton:
+            id: Route_InventorySystem
+            icon: 'view-list'
+            text: "Inventory System"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_Inventory_SystemView'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Inventory SystemView"
+        NavigationDrawerDivider:
+        NavigationDrawerSubheader:
+            text: "Staff Accounts"
+        NavigationDrawerIconButton:
+            icon: 'apps'
+            text: "View Enlisted Staff"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_View'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | View Staff"
+        NavigationDrawerIconButton:
+            icon: 'face'
+            text: "Add Staff Account"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_Add'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Add Staff"
+        NavigationDrawerIconButton:
+            icon: 'delete-sweep'
+            text: "Remove Staff Account"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_Delete'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Remove Staff"
+        NavigationDrawerIconButton:
+            id: Edit_SectionAccess
+            icon: 'key-change'
+            text: "Edit Staff"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_Edit'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Edit Staff Account Information"
+            #on_release: app.UserIdentity_Edit('Receive')
+        NavigationDrawerIconButton:
+            icon: 'nature-people'
+            text: "Change Staff In-Charge"
+            on_release: app.root.ids.ScreenDesign_Handler.current = 'Route88_StaffAccount_Selection'
+            on_release: app.root.ids.ToolbarMain.title = "Route88 | Change Staff In-Charge"
+        NavigationDrawerDivider:
+        NavigationDrawerSubheader:
+            text: "App Commands"
+        NavigationDrawerIconButton:
+            id: ToolMenu_6
+            icon: 'exit-to-app'
+            text: "Exit Application"
+            on_release: app.get_running_app().stop()
+    BoxLayout:
+        orientation: 'vertical'
+        Toolbar:
+            id: ToolbarMain
+            title: app.title
+            md_bg_color: get_color_from_hex(colors[app.theme_cls.primary_palette][app.theme_cls.primary_hue])
+            background_palette: app.theme_cls.primary_palette
+            background_hue: app.theme_cls.primary_hue
+            left_action_items: [['menu', lambda x: app.root.toggle_nav_drawer()]]
+            #Add an If and else on this icon
+            right_action_items: [['invert-colors', lambda x: app.MDGUI_PaletteChange()], ['brightness-2', lambda x: app.MDGUI_SchemeChange()]]
+            darkBooleanParameter: False
+        ScreenManager:
+            id: ScreenDesign_Handler
+            transition: FadeTransition(clearcolor=[255, 255, 255, 0])
+            Screen:
+                name: 'Route88_FirstTimeSetup'
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    Image:
+                        source: 'assets/LayerTriangleVector.png'
+                        size_hint: None, None
+                        size: dp(1920), dp(1080)
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(600), dp(520)
+                        BoxLayout:
+                            orientation: 'vertical'
+                            padding: dp(20)
+                            StackLayout:
+                                spacing:dp(20)
+                                MDLabel:
+                                    text: 'Hello and Welcome!'
+                                    theme_text_color: 'Primary'
+                                    font_style: "Headline"
+                                    size_hint_y: None
+                                    height: dp(15)
+                                MDLabel:
+                                    text: 'First Time? Please input all the required information!'
+                                    theme_text_color: 'Secondary'
+                                    font_style: "Body1"
+                                    size_hint_y: None
+                                    height: dp(3)
+                                MDTextField:
+                                    id: FirstTimer_DataFirstName
+                                    hint_text: "Input Your First Name"
+                                    required: True
+                                    helper_text: "Your first name will be displayed on navigation drawer."
+                                    helper_text_mode: "on_focus"
+                                    write_tab: False
+                                    #text:  'What is this ghoosting in my keyboard!?!?!?'
+                                MDTextField:
+                                    id: FirstTimer_DataLastName
+                                    hint_text: "Input Your Last Name"
+                                    required: True
+                                    helper_text: "Your last name will be displayed on navigation drawer."
+                                    helper_text_mode: "on_focus"
+                                    write_tab: False
+                                MDTextField:
+                                    id: FirstTimer_DataJobPosition
+                                    hint_text: "Input Your Job Position"
+                                    required: True
+                                    helper_text: "Job Position is Required! Here are your options, [Manager OR Cashier]"
+                                    helper_text_mode: "on_focus"
+                                    write_tab: False
+                                MDTextField:
+                                    id: FirstTimer_DataPasswordInit
+                                    hint_text: "Input Your Password"
+                                    required: True
+                                    helper_text: "Password is required."
+                                    helper_text_mode: "on_focus"
+                                    password: True
+                                    write_tab: False
+                                MDTextField:
+                                    id: FirstTimer_DataPasswordConfirm
+                                    hint_text: "Repeat Your Confirmed Password"
+                                    required: True
+                                    helper_text: "You have to repeat your password to ensure you input the correct password!"
+                                    helper_text_mode: "on_focus"
+                                    password: True
+                                    write_tab: False
+                                MDFlatButton:
+                                    theme_text_color: 'Custom'
+                                    text: "Clear Input"
+                                    size_hint: None, None
+                                    theme_text_color: 'Custom'
+                                    size: 3 * dp(48), dp(48)
+                                    on_release: app.MDGUI_ClearTextField(app.root.ids.ScreenDesign_Handler.current)
+                                MDRaisedButton:
+                                    text: "Submit Data"
+                                    size_hint: None, None
+                                    size: 3 * dp(48), dp(48)
+                                    on_release: app.MDGUI_DataSubmission(app.root.ids.ScreenDesign_Handler.current)
+# System Screen Section - Start Point
+            Screen:
+                name: 'Route88_POS_SystemView'
+            Screen:
+                name: 'Route88_Inventory_SystemView'
+                GridLayout:
+                    cols: 2
+                    BoxLayout:
+                        RecycleView:
+                            data: ['text:{0}, name:{1}, km:{2}'.format(row['id'],row['brand'],row['km']) for row in app.rows]
+                            viewclass: 'MDFlatButton'
+                            RecycleGridLayout:
+                                cols: 3
+                                default_size: None, dp(50)
+                                orientation: "vertical"
+                                default_size_hint: 1, None
+                                size_hint_y: None
+                                height: self.minimum_height
+                        
+                        MDFlatButton:
+                            text: 'Test'
+
+                    ScrollView:
+                        do_scroll_x: False                            
+                        GridLayout:
+                            cols:1
+                            size_hint_y: None
+                            spacing: dp(10)
+                            padding: dp(10)
+                            height: self.minimum_height
+                            StackLayout:
+                                size_hint_y: None
+                                size: dp(800), dp(580)
+                                padding: dp(15)
+                                BoxLayout:
+                                    orientation:'vertical'
+                                    spacing: dp(10)
+                                    MDLabel:
+                                        font_style: 'Headline'
+                                        theme_text_color: 'Primary'
+                                        text: "Data Editor"
+                                        width: dp(20)
+                                        text_size: self.size
+                                        halign: 'left'
+                                        valign: 'top'
+                                    BoxLayout:
+                                        orientation: 'horizontal'
+                                        spacing: dp(10)
+                                        padding: 0
+                                        MDTextField:
+                                            id: Resource_ItemNumVal
+                                            hint_text: "Item Number Input"
+                                            helper_text: 'Item Number of the Particular.'
+                                            helper_text_mode: 'on_focus'
+                                            write_tab: False
+                                        MDRaisedButton:
+                                            id: QuickAction_Increment_1
+                                            theme_text_color: 'Custom'
+                                            text: "Increment"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(1,'Increment')
+                                        MDRaisedButton:
+                                            id: QuickAction_Decrement_1
+                                            theme_text_color: 'Custom'
+                                            text: "Decrement"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(1,'Decrement')
+                                    MDTextField:
+                                        id: Resource_ParticularProperty
+                                        hint_text: "Particulars Input"
+                                        helper_text: 'Name of the Unit / Product.'
+                                        helper_text_mode: 'on_focus'
+                                        write_tab: False
+                                    BoxLayout:
+                                        orientation: 'horizontal'
+                                        spacing: dp(10)
+                                        padding: 0
+                                        MDTextField:
+                                            id: Resource_OnHandVal
+                                            hint_text: "On Hand Value Input"
+                                            helper_text: "Units used by people."
+                                            helper_text_mode: 'on_focus'
+                                            write_tab: False
+                                        MDRaisedButton:
+                                            id: QuickAction_Increment_2
+                                            theme_text_color: 'Custom'
+                                            text: "Increment"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(2,'Increment')
+                                        MDRaisedButton:
+                                            id: QuickAction_Decrement_2
+                                            theme_text_color: 'Custom'
+                                            text: "Decrement"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(2,'Decrement')
+                                    BoxLayout:
+                                        orientation: 'horizontal'
+                                        spacing: dp(10)
+                                        padding: 0
+                                        MDTextField:
+                                            id: Resource_ProposedVal
+                                            hint_text: "Proposed Value Input"
+                                            helper_text: "It is the decided value."
+                                            helper_text_mode: 'on_focus'
+                                            write_tab: False
+                                        MDRaisedButton:
+                                            id: QuickAction_Increment_3
+                                            theme_text_color: 'Custom'
+                                            text: "Increment"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(3,'Increment')
+                                        MDRaisedButton:
+                                            id: QuickAction_Increment_3
+                                            theme_text_color: 'Custom'
+                                            text: "Decrement"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(3,'Decrement')
+                                    MDTextField:
+                                        id: Resource_UnitTypeProperty
+                                        hint_text: "Unit Type Input"
+                                        helper_text: "Type of the Unit"
+                                        helper_text_mode: 'on_focus'
+                                        write_tab: False
+                                    BoxLayout:
+                                        orientation: 'horizontal'
+                                        spacing: dp(10)
+                                        padding: dp(0)
+                                        MDTextField:
+                                            id: Resource_UnitVal
+                                            hint_text: "Unit Value Input"
+                                            helper_text: "The actual cost of the unit."
+                                            helper_text_mode: "on_focus"
+                                            write_tab: False
+                                        MDRaisedButton:
+                                            id: QuickAction_Increment_4
+                                            theme_text_color: 'Custom'
+                                            text: "Increment"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(4,'Increment')
+                                        MDRaisedButton:
+                                            id: QuickAction_Decrement_4
+                                            theme_text_color: 'Custom'
+                                            text: "Decrement"
+                                            size_hint: None, None
+                                            size: 3 * dp(48), dp(48)
+                                            on_release: app.MDWorksheetWorker_DataEditor_ValueRaiseLowCaller(4,'Decrement')
+                    MDFlatButton:
+                        text: "Get data"
+                        on_press: app.get_data()
+# System Screen Section - End Point
+
+# Staff Account Screen Section - Start Point
+            Screen:
+                name: 'Route88_StaffAccount_Add'
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    Image:
+                        source: 'assets/LayerTriangleVector.jpg'
+                        size_hint: None, None
+                        size: dp(1920), dp(1080)
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(600), dp(520)
+                        BoxLayout:
+                            orientation: 'vertical'
+                            padding: dp(20)
+                            StackLayout:
+                                spacing: dp(20)
+                                MDLabel:
+                                    text: 'Add a Staff'
+                                    theme_text_color: 'Primary'
+                                    font_style: "Headline"
+                                    size_hint_y: None
+                                    height: dp(15)
+                                MDLabel:
+                                    text: 'More staffs to be in charge? Add more using this form!'
+                                    theme_text_color: 'Secondary'
+                                    font_style: "Body1"
+                                    size_hint_y: None
+                                    height: dp(3)
+                                MDTextField:
+                                    id: NewStaff_FirstName
+                                    hint_text: "Input New Staff's First Name"
+                                    required: True
+                                    helper_text: "Required for Identification."
+                                    helper_text_mode: "on_focus"
+                                    write_tab: False
+                                MDTextField:
+                                    id: NewStaff_LastName
+                                    hint_text: "Input New Staff's Last Name"
+                                    required: True
+                                    helper_text: "Required for Identification."
+                                    helper_text_mode: "on_focus"
+                                    write_tab: False
+                                MDTextField:
+                                    id: NewStaff_JobPosition
+                                    hint_text: "Input New Staff's Job Position"
+                                    required: True
+                                    helper_text: "Required to Identify their Role for their usage of system."
+                                    helper_text_mode: "on_focus"
+                                    write_tab: False
+                                MDTextField:
+                                    id: NewStaff_PasswordInit
+                                    hint_text: "Input New Staff's Password"
+                                    required: True
+                                    helper_text: "Password is required."
+                                    helper_text_mode: "on_focus"
+                                    password: True
+                                    write_tab: False
+                                MDTextField:
+                                    id: NewStaff_PasswordConfirm
+                                    hint_text: "Confirm New Staff's Password"
+                                    required: True
+                                    helper_text: "You have to repeat your password to ensure you input the correct password!"
+                                    helper_text_mode: "on_focus"
+                                    password: True
+                                    write_tab: False
+                                MDFlatButton:
+                                    theme_text_color: 'Custom'
+                                    text: "Clear Fields"
+                                    size_hint: None, None
+                                    size: 3 * dp(48), dp(48)
+                                    on_release: app.MDGUI_ClearTextField(app.root.ids.ScreenDesign_Handler.current)
+                                MDRaisedButton:
+                                    text: "Add Staff"
+                                    size_hint: None, None
+                                    size: 3 * dp(48), dp(48)
+            Screen:
+                name: 'Route88_StaffAccount_Delete'
+
+            Screen:
+                name: 'Route88_StaffAccount_Edit'
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    Image:
+                        source: 'assets/LayerTriangleVector.png'
+                        size_hint: None, None
+                        size: dp(1920), dp(1080)
+                    AnchorLayout:
+                        anchor_x: 'center'
+                        anchor_y: 'center'
+                        MDCard:
+                            size_hint: None, None
+                            size: dp(860), dp(520)
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: dp(20), dp(20)
+                                StackLayout:
+                                    spacing:dp(20)
+                                    BoxLayout:
+                                        orientation: 'vertical'
+                                        spacing: dp(20)
+                                        MDLabel:
+                                            text: 'Edit an Existing Registed Staff'
+                                            theme_text_color: 'Primary'
+                                            font_style: "Headline"
+                                            size_hint_y: None
+                                            height: dp(15)
+                                        MDLabel:
+                                            text: 'Typo? Wrong Info? You can change it here!'
+                                            theme_text_color: 'Secondary'
+                                            font_style: "Body1"
+                                            size_hint_y: None
+                                            height: dp(3)
+                                        GridLayout:
+                                            cols:2
+                                            ScrollView:
+                                                do_scroll_x: False
+                                                MDList:
+                                                    id: MDList_UserInsertion_Selection
+                                                    TwoLineAvatarListItem:
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_1
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_2
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_3
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_4
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_5
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id:UserSelectExist_6
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_7
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_8
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_9
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                                    TwoLineAvatarListItem:
+                                                        id: UserSelectExist_10
+                                                        type: "two-line"
+                                                        text: "No User Data"
+                                                        secondary_text: "No Job Description"
+                                                        AvatarSampleWidget:
+                                                            source: './assets/avatar.png'
+                                            ScrollView:
+                                                do_scroll_x: False
+                                                BoxLayout:
+                                                    orientation: 'vertical'
+                                                    padding: dp(20), dp(0)
+                                                    StackLayout:
+                                                        spacing: dp(10)
+                                                        MDTextField:
+                                                            id: ExistingEdit_FirstName
+                                                            hint_text: "Staff First Name"
+                                                            write_tab: False
+                                                            disabled: True
+                                                        MDTextField:
+                                                            id: ExistingEdit_LastName
+                                                            hint_text: "Staff Last Name"
+                                                            write_tab: False
+                                                            disabled: True
+                                                        MDTextField:
+                                                            id: ExistingEdit_JobPosition
+                                                            hint_text: "Staff Job Position"
+                                                            write_tab: False
+                                                            disabled: True
+                                                        MDTextField:
+                                                            id: ExistingEdit_PasswordInit
+                                                            hint_text: "Staff Password"
+                                                            required: True
+                                                            password: True
+                                                            helper_text: "Enter your password to login."
+                                                            helper_text_mode: "persistent"
+                                                            write_tab: False
+                                                        MDTextField:
+                                                            id: ExistingEdit_PasswordConfirm
+                                                            hint_text: "Staff Confirm Password"
+                                                            required: True
+                                                            password: True
+                                                            helper_text: "Enter your password to login."
+                                                            helper_text_mode: "persistent"
+                                                            write_tab: False
+                                                        StackLayout:
+                                                            padding: dp(0),dp(20)
+                                                            spacing: dp(60)
+                                                            MDFlatButton:
+                                                                theme_text_color: 'Custom'
+                                                                text: "Clear Fields"
+                                                                size_hint: None, None
+                                                                size: 3 * dp(48), dp(48)
+                                                                on_release: app.MDGUI_ClearTextField(app.root.ids.ScreenDesign_Handler.current)
+                                                            MDRaisedButton:
+                                                                text: "Submit Credentials"
+                                                                size_hint: None, None
+                                                                size: 3 * dp(48), dp(48)
+                                                                on_release: app.MDGUI_DataSubmission   (app.root.ids.ScreenDesign_Handler.current)
+            Screen:
+                name: 'Route88_StaffAccount_Selection'
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    Image:
+                        source: 'assets/LayerTriangleVector.png'
+                        size_hint: None, None
+                        size: dp(1920), dp(1080)
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(860), dp(440)
+                        BoxLayout:
+                            orientation: 'vertical'
+                            padding: dp(20), dp(20)
+                            StackLayout:
+                                spacing:dp(20)
+                                BoxLayout:
+                                    orientation: 'vertical'
+                                    spacing: dp(20)
+                                    MDLabel:
+                                        text: 'Select an Existing Registed Staff'
+                                        theme_text_color: 'Primary'
+                                        font_style: "Headline"
+                                        size_hint_y: None
+                                        height: dp(15)
+                                    MDLabel:
+                                        text: 'Please choose your account and enter your credentials!'
+                                        theme_text_color: 'Secondary'
+                                        font_style: "Body1"
+                                        size_hint_y: None
+                                        height: dp(3)
+                                    GridLayout:
+                                        cols:2
+                                        ScrollView:
+                                            do_scroll_x: False
+                                            MDList:
+                                                id: MDList_UserInsertion_Selection
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_1
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_2
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_3
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_4
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_5
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_6
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_7
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_8
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_9
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                                TwoLineAvatarListItem:
+                                                    id: SelectUserChange_10
+                                                    type: "two-line"
+                                                    text: "No User Data"
+                                                    secondary_text: "No Job Description"
+                                                    AvatarSampleWidget:
+                                                        source: './assets/avatar.png'
+                                        ScrollView:
+                                            do_scroll_x: False
+                                            BoxLayout:
+                                                orientation: 'vertical'
+                                                padding: dp(20), dp(0)
+                                                StackLayout:
+                                                    spacing: dp(10)
+                                                    MDTextField:
+                                                        id: ExistingChange_FirstName
+                                                        hint_text: "Existing User First Name"
+                                                        write_tab: False
+                                                        disabled: True
+                                                    MDTextField:
+                                                        id: ExistingChange_LastName
+                                                        hint_text: "Existing User Last Name"
+                                                        write_tab: False
+                                                        disabled: True
+                                                    MDTextField:
+                                                        id: ExistingChange_JobPosition
+                                                        hint_text: "Existing User Job Position"
+                                                        write_tab: False
+                                                        disabled: True
+                                                    MDTextField:
+                                                        id: ExistingChange_Password
+                                                        hint_text: "Existing User Password"
+                                                        required: True
+                                                        password: True
+                                                        helper_text: "Enter your password to login."
+                                                        helper_text_mode: "persistent"
+                                                        write_tab: False
+                                                    StackLayout:
+                                                        padding: dp(0),dp(20)
+                                                        spacing: dp(60)
+                                                        MDFlatButton:
+                                                            theme_text_color: 'Custom'
+                                                            text: "Clear Fields"
+                                                            size_hint: None, None
+                                                            size: 3 * dp(48), dp(48)
+                                                            on_release: app.MDGUI_ClearTextField(app.root.ids.ScreenDesign_Handler.current)
+                                                        MDRaisedButton:
+                                                            text: "Submit Credentials"
+                                                            size_hint: None, None
+                                                            size: 3 * dp(48), dp(48)
+                                                            on_release: app.MDGUI_DataSubmission   (app.root.ids.ScreenDesign_Handler.current)
+# Staff Account Screen Section - End Point
