@@ -29,7 +29,7 @@ import MySQLdb
 
 class MD_Route88_System_GUI(App):
     
-    rows = ListProperty([("Id","Brand","Km Run")])
+    rows = {"Id": '0',"Brand": '0',"Km Run": '0'}
     theme_cls = ThemeManager()
     title = "Route88 System"
     Icon_Status = 'brightness-1'
@@ -135,14 +135,18 @@ class MD_Route88_System_GUI(App):
         pass
 
     def get_data(self):
-        con = MySQLdb.connect(host='localhost', user='root', passwd='', db='test')
-        cur = con.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute("SELECT * FROM Cars")
-        #self.rows = cur.fetchall()
-        rows = cur.fetchall()
-        for row in rows:
-            print(row['id'])
-
+        try:
+            con = MySQLdb.connect(host='localhost', user='root', passwd='', db='test')
+            cur = con.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("SELECT * FROM Cars")
+            #self.rows = cur.fetchall()
+            self.rows = cur.fetchall()
+            for row in self.rows:
+                print('text:{0}, name:{1}, km:{2}'.format(row['id'],row['brand'],row['km']))
+            print(self.rows)
+        except Exception as ErrorMessage:
+            self.MDGUI_SnackbarHandler(str(ErrorMessage))
+            KivyDebugErrPrint.error('Database Error: {}'.format(ErrorMessage))
 
 class MySQLDatabaseHandler:
     def Database_Init():

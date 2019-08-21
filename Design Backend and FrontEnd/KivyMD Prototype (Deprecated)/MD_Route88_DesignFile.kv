@@ -48,10 +48,10 @@
         text: root.text
     MDFlatButton:
         id: txt_b
-        text: root.text
+        text: root.name
     MDFlatButton:
         id: txt_b
-        text: root.text
+        text: root.km
     MDRaisedButton:
         text: "Edit"
     MDRaisedButton:
@@ -229,7 +229,7 @@ NavigationLayout:
                     cols: 2
                     BoxLayout:
                         RecycleView:
-                            data: [{'text':"{0}".format(x)} for i in app.rows for x in i]
+                            data: ['text:{0}, name:{1}, km:{2}'.format(row['id'],row['brand'],row['km']) for row in app.rows]
                             viewclass: 'MDFlatButton'
                             RecycleGridLayout:
                                 cols: 3
@@ -238,6 +238,9 @@ NavigationLayout:
                                 default_size_hint: 1, None
                                 size_hint_y: None
                                 height: self.minimum_height
+                        
+                        MDFlatButton:
+                            text: 'Test'
 
                     ScrollView:
                         do_scroll_x: False                            
