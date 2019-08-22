@@ -127,3 +127,4 @@ dmypy.json
 build/
 *temp*.py
 *.db
+*.DS_Store
