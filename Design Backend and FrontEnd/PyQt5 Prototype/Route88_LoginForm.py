@@ -241,7 +241,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
             "Route88_LoginWindow", "Route88 Bike Cafe"))
         self.label_2.setText(_translate(
             "Route88_LoginWindow", " POS and Inventory System"))
-        self.StatusLabel.setText("Status: No Actions Yet.")
+        self.StatusLabel.setText("Unknown: No Submission Detected.")
 
     def RunInstance_OnLoad(self):
         try:
@@ -260,20 +260,24 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
 
     def R88GUI_DataSubmission(self):
         try:
-            selectedList = self.UserAcc_Enlisted.selectionModel().selectedRows()
-            #for index in sorted(self.UserAcc_Enlisted.selectionModel().selectedRows()):
-            #    print('Row %d is selected' % index.data(0))
-            #    payment = self.UserAcc_Enlisted.data(self.UserAcc_Enlisted.index(index.row(), 0))
-            #    print(payment)
-            row = self.UserAcc_Enlisted.currentRow() # Index of Row
-            firstColumnInRow = self.UserAcc_Enlisted.item(row, 0) # returns QTableWidgetItem
             cur = self.con.cursor()
-            cur.execute("SELECT Fname, Lname FROM Employees WHERE Fname='{0}' AND password='{1}'".formatself.UserAcc_Enlisted.data(self.UserAcc_Enlisted.index(selectedList.row(), 0)), self.UserAcc_Enlisted.selectionModel().selectedRows())
-            raise Exception("This function is not yet finished.")
+            cur.execute("SELECT concat(lname, ', ', fname) As FullName FROM Employees")
+            rows = cur.fetchall()
+            indexes = self.UserAcc_Enlisted.selectionModel().selectedRows()
+            for index in sorted(indexes):
+                userhandler = cur.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = '{0}' AND password = '{1}'".format(str(index.data()),self.UserAcc_Password.text()))
+                
+                if userhandler == 1:
+                    self.StatusLabel.setText("Success: Login Credentials Matched!")
+                    QSound.play("SysSounds/LoginSuccessNotify.wav")
+                else:
+                    self.StatusLabel.setText("Error: Login Credentials is Not Matched! Check your Password!")
+                    QSound.play("SysSounds/LoginFailedNotify.wav")
+
         except Exception as ErrorMessage:
             print(ErrorMessage)
             self.StatusLabel.setText(str(ErrorMessage))
-            QSound.play("DefaultBeep.wav")
+            QSound.play("SysSounds/LoginFailedNotify.wav")
 
 if __name__ == "__main__":
     import sys
