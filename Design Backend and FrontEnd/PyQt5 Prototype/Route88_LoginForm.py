@@ -246,9 +246,8 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
     def RunInstance_OnLoad(self):
         try:
             currentRow = 0
-            global con
-            con = MySQLdb.connect(host='localhost', user='root', passwd='', db='Route88_Staff')
-            cur = con.cursor(MySQLdb.cursors.DictCursor)
+            self.con = MySQLdb.connect(host='localhost', user='root', passwd='', db='Route88_Staff')
+            cur = self.con.cursor(MySQLdb.cursors.DictCursor)
             cur.execute("SELECT * FROM Employees")
             rows = cur.fetchall()
             for row in rows:
@@ -260,13 +259,16 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
                 print(Error)
 
     def R88GUI_DataSubmission(self):
-        print(self.UserAcc_Enlisted.selectionModel().selectedRows())
         try:
-            for index in sorted(self.UserAcc_Enlisted.selectionModel().selectedRows()):
-                print('Row %d is selected' % index.data(0))
-
-            cur = con.cursor()
-            cur.execute("SELECT Fname, Lname FROM Employees WHERE Fname={0} AND password={1}".format(str(self.UserAcc_Enlisted.currentRow), self.UserAcc_Enlisted.selectionModel().selectedRows()))
+            selectedList = self.UserAcc_Enlisted.selectionModel().selectedRows()
+            #for index in sorted(self.UserAcc_Enlisted.selectionModel().selectedRows()):
+            #    print('Row %d is selected' % index.data(0))
+            #    payment = self.UserAcc_Enlisted.data(self.UserAcc_Enlisted.index(index.row(), 0))
+            #    print(payment)
+            row = self.UserAcc_Enlisted.currentRow() # Index of Row
+            firstColumnInRow = self.UserAcc_Enlisted.item(row, 0) # returns QTableWidgetItem
+            cur = self.con.cursor()
+            cur.execute("SELECT Fname, Lname FROM Employees WHERE Fname='{0}' AND password='{1}'".formatself.UserAcc_Enlisted.data(self.UserAcc_Enlisted.index(selectedList.row(), 0)), self.UserAcc_Enlisted.selectionModel().selectedRows())
             raise Exception("This function is not yet finished.")
         except Exception as ErrorMessage:
             print(ErrorMessage)
