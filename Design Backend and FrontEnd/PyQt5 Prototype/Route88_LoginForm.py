@@ -261,12 +261,9 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
     def R88GUI_DataSubmission(self):
         try:
             cur = self.con.cursor()
-            cur.execute("SELECT concat(lname, ', ', fname) As FullName FROM Employees")
-            rows = cur.fetchall()
             indexes = self.UserAcc_Enlisted.selectionModel().selectedRows()
             for index in sorted(indexes):
-                userhandler = cur.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = '{0}' AND password = '{1}'".format(str(index.data()),self.UserAcc_Password.text()))
-                
+                userhandler = cur.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = %s AND password = %s", (index.data(),self.UserAcc_Password.text(),))
                 if userhandler == 1:
                     self.StatusLabel.setText("Success: Login Credentials Matched!")
                     QSound.play("SysSounds/LoginSuccessNotify.wav")
