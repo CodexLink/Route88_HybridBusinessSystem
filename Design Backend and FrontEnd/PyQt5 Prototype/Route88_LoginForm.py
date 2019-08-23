@@ -14,7 +14,13 @@ import MySQLdb
 class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
     def setupUi(self, Route88_LoginWindow):
         Route88_LoginWindow.setObjectName("Route88_LoginWindow")
-        self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowFlags(
+            QtCore.Qt.Dialog |
+            QtCore.Qt.CustomizeWindowHint |
+            QtCore.Qt.WindowTitleHint |
+            QtCore.Qt.WindowCloseButtonHint |
+            QtCore.Qt.WindowStaysOnTopHint
+            )
         Route88_LoginWindow.setFixedSize(430, 420)
         font = QtGui.QFont()
         font.setFamily("Roboto")
@@ -73,7 +79,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.UserAcc_Enlisted.setSizeAdjustPolicy(
             QtWidgets.QAbstractScrollArea.AdjustToContentsOnFirstShow)
         self.UserAcc_Enlisted.setEditTriggers(
-            QtWidgets.QAbstractItemView.AnyKeyPressed)
+            QtWidgets.QAbstractItemView.NoEditTriggers)
         self.UserAcc_Enlisted.setDragDropOverwriteMode(False)
         self.UserAcc_Enlisted.setAlternatingRowColors(True)
         self.UserAcc_Enlisted.setSelectionMode(
@@ -226,22 +232,13 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         item = self.UserAcc_Enlisted.horizontalHeaderItem(1)
         item.setText(_translate("Route88_LoginWindow", "Staff Job Position"))
         __sortingEnabled = self.UserAcc_Enlisted.isSortingEnabled()
-        self.UserAcc_Enlisted.setSortingEnabled(False)
-        item = self.UserAcc_Enlisted.item(0, 0)
-        item.setText(_translate("Route88_LoginWindow", "root"))
-        item = self.UserAcc_Enlisted.item(0, 1)
-        item.setText(_translate("Route88_LoginWindow", "Database User"))
-        item = self.UserAcc_Enlisted.item(1, 0)
-        item.setText(_translate("Route88_LoginWindow",
-                                "Charles Ian Mascarenas"))
-        item = self.UserAcc_Enlisted.item(1, 1)
-        item.setText(_translate("Route88_LoginWindow", "Database Designer"))
+        self.UserAcc_Enlisted.setSortingEnabled(True)
         self.UserAcc_Enlisted.setSortingEnabled(__sortingEnabled)
         self.label.setText(_translate(
             "Route88_LoginWindow", "Route88 Bike Cafe"))
         self.label_2.setText(_translate(
             "Route88_LoginWindow", " POS and Inventory System"))
-        self.StatusLabel.setText("Unknown: No Submission Detected.")
+        self.StatusLabel.setText("Connecting To MySQL Database...")
 
     def RunInstance_OnLoad(self):
         try:
@@ -263,8 +260,8 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
             cur = self.con.cursor()
             indexes = self.UserAcc_Enlisted.selectionModel().selectedRows()
             for index in sorted(indexes):
-                userhandler = cur.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = %s AND password = %s", (index.data(),self.UserAcc_Password.text(),))
-                if userhandler == 1:
+                userhandler = cur.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = %s AND password = %s", (index.data(),self.UserAcc_Password.text()))
+                if userhandler:
                     self.StatusLabel.setText("Success: Login Credentials Matched!")
                     QSound.play("SysSounds/LoginSuccessNotify.wav")
                 else:
