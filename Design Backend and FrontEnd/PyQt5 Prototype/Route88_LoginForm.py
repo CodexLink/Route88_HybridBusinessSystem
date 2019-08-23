@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'Route88_LoginForm.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
+"""
+    Route88 Login Form, Semi-Finalized
+    Initialized by @CodexLink, Janrey Licas
+"""
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
@@ -23,7 +19,6 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.GroupContainer_PassCred = QtWidgets.QGroupBox(Route88_LoginWindow)
         self.GroupContainer_PassCred.setGeometry(
             QtCore.QRect(30, 320, 361, 51))
-
         self.GroupContainer_PassCred.setFlat(False)
         self.GroupContainer_PassCred.setObjectName("GroupContainer_PassCred")
         self.UserAcc_Password = QtWidgets.QLineEdit(
@@ -195,12 +190,10 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.GroupContainer_PassCred.raise_()
         self.frame.raise_()
         self.StatusLabel.raise_()
-
         self.retranslateUi(Route88_LoginWindow)
         QtCore.QMetaObject.connectSlotsByName(Route88_LoginWindow)
         Route88_LoginWindow.setTabOrder(
             self.UserAcc_Password, self.UserAcc_SubmitData)
-        #self.RunInstance_OnLoad() # After GUI Processing, Run Functions that is needed to run for loading data, specifically for Table Data Initialization with Database.
 
     def retranslateUi(self, Route88_LoginWindow):
         _translate = QtCore.QCoreApplication.translate
