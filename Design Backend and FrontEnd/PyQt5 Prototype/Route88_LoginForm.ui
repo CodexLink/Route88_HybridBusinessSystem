@@ -120,6 +120,9 @@
     <property name="text">
      <string>Submit Data</string>
     </property>
+    <property name="default">
+     <bool>true</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="GroupContainer_StaffAccount">
