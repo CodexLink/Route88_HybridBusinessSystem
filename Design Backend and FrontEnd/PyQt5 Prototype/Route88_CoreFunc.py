@@ -43,9 +43,7 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
         except Exception as ErrorHandler:
             print(ErrorHandler)
 
-    '''
-        Route88_LoginForm UI Window Functions - StartPoint
-    '''
+    #Route88_LoginForm UI Window Functions - StartPoint
     def LoginForm_ParseUserEnlisted(self):
         try:
             currentRow = 0
@@ -69,7 +67,6 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
         try:
             self.MySQL_CursorSet(None)
             RowIndexSelected = self.Route88_LoginWindow.UserAcc_Enlisted.selectionModel().selectedRows()
-            
             for RowIndexQuery in sorted(RowIndexSelected):
                 QueryReturn = self.MySQLDataWireCursor.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = %s AND password = %s", (
                     RowIndexQuery.data(), self.Route88_LoginWindow.UserAcc_Password.text()))
@@ -87,13 +84,9 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
             print(LoginSubmissionErrorMsg)
             self.Route88_LoginWindow.StatusLabel.setText(str(LoginSubmissionErrorMsg))
             QSound.play("SysSounds/LoginFailedNotify.wav")
-    '''
-        Route88_LoginForm UI Window Functions - EndPoint
-    '''
+    # Route88_LoginForm UI Window Functions - EndPoint
 
-    '''
-        MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
-    '''
+    #MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
     def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredentials='root', SQL_PCredential='', SQLDatabase_Target='Route88_Staff'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredentials, passwd=SQL_PCredential, db=SQLDatabase_Target)
@@ -106,9 +99,6 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
             print(CursorErrMsg)
-
-        #MySQLDataWireCursor = self.MySQLDataWire.cursor(MySQL.cursors.DictCursor)
-        pass
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
