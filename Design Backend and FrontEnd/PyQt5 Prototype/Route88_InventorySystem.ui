@@ -122,39 +122,18 @@
             </widget>
            </item>
            <item>
-            <widget class="QPlainTextEdit" name="Query_ValueToFind">
+            <widget class="QLineEdit" name="Query_ValueToSearch">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Roboto Mono</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Sunken</enum>
-             </property>
-             <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
-             </property>
-             <property name="horizontalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
-             </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustIgnored</enum>
-             </property>
              <property name="placeholderText">
-              <string>Enter A Value To Search...</string>
+              <string>Value Search...</string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -463,6 +442,24 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="StaffAct_RefreshData">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Refresh Database</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -481,48 +478,48 @@
     <property name="title">
      <string>Window</string>
     </property>
-    <addaction name="actionSwitch_System"/>
-    <addaction name="actionExport_Data"/>
+    <addaction name="Window_SwitchSystemView"/>
+    <addaction name="Window_Quit"/>
    </widget>
    <widget class="QMenu" name="menuStaffs">
     <property name="title">
      <string>Staffs</string>
     </property>
-    <addaction name="actionSwitch_To"/>
-    <addaction name="actionManage_Staffs"/>
+    <addaction name="Staff_SwitchTo"/>
+    <addaction name="Staff_Manage"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>About</string>
     </property>
-    <addaction name="actionAbout_This_System"/>
+    <addaction name="About_InfoSystem"/>
    </widget>
    <addaction name="menuWindow"/>
    <addaction name="menuStaffs"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionAbout_This_System">
+  <action name="About_InfoSystem">
    <property name="text">
     <string>About This System...</string>
    </property>
   </action>
-  <action name="actionSwitch_To">
+  <action name="Staff_SwitchTo">
    <property name="text">
     <string>Logout / Switch To...</string>
    </property>
   </action>
-  <action name="actionManage_Staffs">
+  <action name="Staff_Manage">
    <property name="text">
     <string>Manage Staffs...</string>
    </property>
   </action>
-  <action name="actionSwitch_System">
+  <action name="Window_SwitchSystemView">
    <property name="text">
     <string>Switch System...</string>
    </property>
   </action>
-  <action name="actionExport_Data">
+  <action name="Window_Quit">
    <property name="text">
     <string>Quit</string>
    </property>
