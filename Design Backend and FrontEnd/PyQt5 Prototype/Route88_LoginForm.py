@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'Route88_LoginForm.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
+"""
+    Route88 Login Form, Semi-Finalized
+    Initialized by @CodexLink, Janrey Licas
+"""
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
@@ -20,10 +16,10 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         Route88_LoginWindow.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         Route88_LoginWindow.setTabletTracking(False)
         Route88_LoginWindow.setWindowTitle("Route88 System | Login")
+        self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         self.GroupContainer_PassCred = QtWidgets.QGroupBox(Route88_LoginWindow)
         self.GroupContainer_PassCred.setGeometry(
             QtCore.QRect(30, 320, 361, 51))
-
         self.GroupContainer_PassCred.setFlat(False)
         self.GroupContainer_PassCred.setObjectName("GroupContainer_PassCred")
         self.UserAcc_Password = QtWidgets.QLineEdit(
@@ -164,7 +160,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.frame)
-        self.label_2.setGeometry(QtCore.QRect(113, 60, 201, 18))
+        self.label_2.setGeometry(QtCore.QRect(121, 60, 201, 18))
         font = QtGui.QFont()
         font.setFamily("Roboto Mono")
         font.setPointSize(10)
@@ -174,7 +170,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.label_3.setGeometry(QtCore.QRect(20, 20, 71, 71))
         self.label_3.setText("")
         self.label_3.setPixmap(QtGui.QPixmap(
-            "../../Design Component Experimentations/PyQt5 Design Attempt/r_88.ico"))
+            "IcoDisplay/r_88.ico"))
         self.label_3.setScaledContents(True)
         self.label_3.setObjectName("label_3")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.frame)
@@ -195,12 +191,10 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.GroupContainer_PassCred.raise_()
         self.frame.raise_()
         self.StatusLabel.raise_()
-
         self.retranslateUi(Route88_LoginWindow)
         QtCore.QMetaObject.connectSlotsByName(Route88_LoginWindow)
         Route88_LoginWindow.setTabOrder(
             self.UserAcc_Password, self.UserAcc_SubmitData)
-        #self.RunInstance_OnLoad() # After GUI Processing, Run Functions that is needed to run for loading data, specifically for Table Data Initialization with Database.
 
     def retranslateUi(self, Route88_LoginWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -226,7 +220,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
             "Route88_LoginWindow", "Route88 Bike Cafe"))
         self.label_2.setText(_translate(
             "Route88_LoginWindow", "POS and Inventory System"))
-        self.StatusLabel.setText("Connecting To MySQL Database...")
+        self.StatusLabel.setText("Unknown...")
 
 
 if __name__ == "__main__":
