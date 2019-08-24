@@ -21,17 +21,15 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
-
         self.Route88_LoginWindow = Ui_Route88_LoginWindow()
         self.Route88_LoginWindow.setupUi(self)
-
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
 
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
-        
+        # Button Binds for Window 'Route88_LoginForm'
         self.Route88_LoginWindow.UserAcc_Password.returnPressed.connect(self.Route88_LoginWindow.UserAcc_SubmitData.click)
         self.Route88_LoginWindow.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
-
+        #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
         self.MySQL_ConnectDatabase()
         self.MySQL_CursorSet(MySQL.cursors.DictCursor)
         self.RunFunction_AfterRender("Route88_LoginForm")
@@ -70,7 +68,7 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
             for RowIndexQuery in sorted(RowIndexSelected):
                 QueryReturn = self.MySQLDataWireCursor.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = %s AND password = %s", (
                     RowIndexQuery.data(), self.Route88_LoginWindow.UserAcc_Password.text()))
-
+                # After query we need to check if QueryReturn contains non-zero values. If it contains non-zero we proceed. Else not...
                 if QueryReturn:
                     self.Route88_LoginWindow.StatusLabel.setText(
                         "Login Success: Credential Input Matched!")
@@ -86,7 +84,8 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
             QSound.play("SysSounds/LoginFailedNotify.wav")
     # Route88_LoginForm UI Window Functions - EndPoint
 
-    #MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
+    # MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
+    # Initialize MySQL Server Twice, One for Login and Last.... ???
     def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredentials='root', SQL_PCredential='', SQLDatabase_Target='Route88_Staff'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredentials, passwd=SQL_PCredential, db=SQLDatabase_Target)
@@ -94,12 +93,14 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
             self.Route88_LoginWindow.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print(MySQL_ErrorMessage)
 
+    # Sets CursorType for Iteration which outputs the following CursorType
     def MySQL_CursorSet(self, CursorType=None):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
             print(CursorErrMsg)
 
+# Literal Procedural Programming Part
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Route88_CoreLoad = Route88_CoreClass()
