@@ -61,7 +61,11 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
             for UserData in UserDataTable:
                 self.Route88_LoginWindow.UserAcc_Enlisted.setRowCount(currentRow + 1)
                 self.Route88_LoginWindow.UserAcc_Enlisted.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}, {1}'.format(UserData['lname'], UserData['fname'])))
+                self.UserColumn_1 = self.Route88_LoginWindow.UserAcc_Enlisted.item(currentRow, 0)
+                self.UserColumn_1.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.Route88_LoginWindow.UserAcc_Enlisted.setItem(currentRow, 1, QtWidgets.QTableWidgetItem(UserData['JobPosition']))
+                self.UserColumn_2 = self.Route88_LoginWindow.UserAcc_Enlisted.item(currentRow, 1)
+                self.UserColumn_2.setTextAlignment(QtCore.Qt.AlignCenter)
                 currentRow += 1
 
             self.Route88_LoginWindow.StatusLabel.setText("Database Loaded: Ready!")
