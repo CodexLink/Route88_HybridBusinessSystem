@@ -16,6 +16,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         Route88_LoginWindow.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         Route88_LoginWindow.setTabletTracking(False)
         Route88_LoginWindow.setWindowTitle("Route88 System | Login")
+        self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         self.GroupContainer_PassCred = QtWidgets.QGroupBox(Route88_LoginWindow)
         self.GroupContainer_PassCred.setGeometry(
             QtCore.QRect(30, 320, 361, 51))
@@ -159,7 +160,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.frame)
-        self.label_2.setGeometry(QtCore.QRect(113, 60, 201, 18))
+        self.label_2.setGeometry(QtCore.QRect(121, 60, 201, 18))
         font = QtGui.QFont()
         font.setFamily("Roboto Mono")
         font.setPointSize(10)
@@ -169,7 +170,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.label_3.setGeometry(QtCore.QRect(20, 20, 71, 71))
         self.label_3.setText("")
         self.label_3.setPixmap(QtGui.QPixmap(
-            "../../Design Component Experimentations/PyQt5 Design Attempt/r_88.ico"))
+            "IcoDisplay/r_88.ico"))
         self.label_3.setScaledContents(True)
         self.label_3.setObjectName("label_3")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.frame)
@@ -219,7 +220,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
             "Route88_LoginWindow", "Route88 Bike Cafe"))
         self.label_2.setText(_translate(
             "Route88_LoginWindow", "POS and Inventory System"))
-        self.StatusLabel.setText("Connecting To MySQL Database...")
+        self.StatusLabel.setText("Unknown...")
 
 
 if __name__ == "__main__":
