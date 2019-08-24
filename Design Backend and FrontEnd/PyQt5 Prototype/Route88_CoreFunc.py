@@ -16,11 +16,19 @@ from PyQt5.QtMultimedia import QSound
 import MySQLdb as MySQL
 import sys
 from Route88_LoginForm import Ui_Route88_LoginWindow
+#from Route88_POS_Initial_1 import 
 
 class Route88_CoreClass(QtWidgets.QMainWindow):
-
+    # Class Initializer, __init__
     def __init__(self):
         super().__init__()
+        '''
+            LoginWindow is Not Initialized / Seperate as a Function for Initialization.
+                Note: The reason why we did this is because I don't things to be more complicated as it should be.
+                So that when my other members start to read my code, it is exactly stated here that we want first to initialize LoginWindow
+                other than anything that they thought, 'what the hell is this argument that you pass?'
+                ~ All other window will be seperately initialized...
+        '''
         self.Route88_LoginWindow = Ui_Route88_LoginWindow()
         self.Route88_LoginWindow.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
@@ -33,6 +41,7 @@ class Route88_CoreClass(QtWidgets.QMainWindow):
         self.MySQL_ConnectDatabase()
         self.MySQL_CursorSet(MySQL.cursors.DictCursor)
         self.RunFunction_AfterRender("Route88_LoginForm")
+    # Technical Functions
     # Load Function After UI Rendering.
     def RunFunction_AfterRender(self, WindowUI_Name):
         try:
