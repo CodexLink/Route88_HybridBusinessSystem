@@ -89,9 +89,62 @@
                <pointsize>10</pointsize>
               </font>
              </property>
+             <property name="currentText">
+              <string>All Columns</string>
+             </property>
              <item>
               <property name="text">
-               <string>&lt;All Column&gt;</string>
+               <string>All Columns</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Item Code</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Supplier Code</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Item Name</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Type</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Quantity</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Cost</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Expiry Date</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Menu Inclusion</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Data Created</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Last Modified</string>
               </property>
              </item>
             </widget>
@@ -254,6 +307,7 @@
       <property name="font">
        <font>
         <family>Roboto Mono</family>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="title">
@@ -265,6 +319,7 @@
          <property name="font">
           <font>
            <family>Roboto Mono</family>
+           <pointsize>9</pointsize>
           </font>
          </property>
          <property name="sizeAdjustPolicy">
@@ -342,11 +397,6 @@
          <column>
           <property name="text">
            <string>Cost</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Supplier Name</string>
           </property>
          </column>
          <column>
@@ -472,19 +522,6 @@
          </property>
          <property name="text">
           <string>Refresh Database</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="StaffAct_ResetView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Reset Grid View</string>
          </property>
         </widget>
        </item>
