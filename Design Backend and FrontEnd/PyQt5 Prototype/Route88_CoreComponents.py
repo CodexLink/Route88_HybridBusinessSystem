@@ -64,13 +64,14 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
         self.UserAcc_Password.returnPressed.connect(self.UserAcc_SubmitData.click)
         self.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
         #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
-        self.MySQL_ConnectDatabase()
-        self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+
         self.LoginForm_RunFuncAfterRender()
     # Technical Functions
     # Load Function After UI Rendering.
     def LoginForm_RunFuncAfterRender(self):
         try:
+            self.MySQL_ConnectDatabase()
+            self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             self.LoginForm_ParseUserEnlisted()
         except Exception as ErrorHandler:
             print(ErrorHandler)
@@ -136,23 +137,43 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint)
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-        # Button Binds for Window 'Route88_LoginForm'
-        #self.UserAcc_Password.returnPressed.connect(self.UserAcc_SubmitData.click)
-        #self.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
-        #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
-        #self.StaffAct_RefreshData.clicked.connect(self.test)
-
-        self.MySQL_ConnectDatabase()
-        self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-        self.InventorySys_RunFuncAfterRender()
-    #Function Definitions for Route88_InventoryDesign
+        #Function Definitions for Route88_InventoryDesign
         # Button Binds for Window 'Route88_InventoryDesign'
         #self.Route88_LoginWindow.UserAcc_Password.returnPressed.connect(self.Route88_LoginWindow.UserAcc_SubmitData.click)
         #self.Route88_LoginWindow.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
-    def InventorySys_RunFuncAfterRender(self):
-        self.MySQL_ConnectDatabase()
-        self.MySQL_CursorSet(MySQL.cursors.DictCursor)
 
+        #self.StaffAct_RefreshData.clicked.connect(self.test)
+
+        self.InventorySys_RunFuncAfterRender()
+
+    def InventorySys_RunFuncAfterRender(self):
+        try: 
+            self.MySQL_ConnectDatabase()
+            self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+            self.InventorySys_LoadData()
+        except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
+            self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ InventorySys_RunFuncAfterRender] -> {0}'.format(FunctionErrorMsg))
+
+    def InventorySys_LoadData(self):
+        try:
+            #Setups
+            self.MySQLDataWireCursor.execute("DESCRIBE Employees")
+            ColumnDataFetch = self.MySQLDataWireCursor.fetchall()
+            self.MySQLDataWireCursor.execute("SELECT")
+            InventoryDataFetch = self.MySQLDataWireCursor.fetchall()
+            # Fill Query_ColumnOpt First.
+            for ColumnData in ColumnDataFetch:
+                self.Query_ColumnOpt.addItem(str(ColumnData['Field']))
+            # Fill Inventory Menu
+            for 
+            
+
+        except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
+            self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ InventorySys_LoadData] -> {0}'.format(FunctionErrorMsg))
+
+    # Event Handlers
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_F4 and (event.modifiers() & QtCore.Qt.AltModifier):
             print("EventKeyPressed: ALT F4")
@@ -163,7 +184,9 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
 # Literal Procedural Programming Part
 if __name__ == "__main__":
     sysCmdArgumentHandler('CLS') # Clear Output Buffer so we can debug with dignity.
+    print('[Application App Startup] Route88_Core Application Version 0, Debug Output')
     app = QtWidgets.QApplication(sys.argv)
     Route88_Instance = Route88_LoginCore()
     Route88_Instance.show()
     sys.exit(app.exec_())
+    #print('[Application Shutdown] Terminating PyQt5 Engine...')
