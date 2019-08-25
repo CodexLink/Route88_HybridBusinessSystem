@@ -114,6 +114,80 @@
       <string>Cancel</string>
      </property>
     </widget>
+    <widget class="QGroupBox" name="groupBox_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Vatable</string>
+     </property>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>₱0.00</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_7">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>110</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>VAT</string>
+     </property>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>₱0.00</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
@@ -224,12 +298,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Rate</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Amount</string>
+       <string>Total Price</string>
       </property>
      </column>
      <item row="0" column="0">
@@ -266,17 +335,6 @@
       </property>
      </item>
      <item row="0" column="3">
-      <property name="text">
-       <string>asdds</string>
-      </property>
-      <property name="textAlignment">
-       <set>AlignCenter</set>
-      </property>
-      <property name="flags">
-       <set>ItemIsSelectable|ItemIsEnabled</set>
-      </property>
-     </item>
-     <item row="0" column="4">
       <property name="text">
        <string>32</string>
       </property>
@@ -395,12 +453,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Rate</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Amount</string>
+       <string>Total Price</string>
       </property>
      </column>
      <item row="0" column="0">
@@ -437,17 +490,6 @@
       </property>
      </item>
      <item row="0" column="3">
-      <property name="text">
-       <string>asdds</string>
-      </property>
-      <property name="textAlignment">
-       <set>AlignCenter</set>
-      </property>
-      <property name="flags">
-       <set>ItemIsSelectable|ItemIsEnabled</set>
-      </property>
-     </item>
-     <item row="0" column="4">
       <property name="text">
        <string>32</string>
       </property>
@@ -564,21 +606,6 @@
      <string>Invoice Number</string>
     </property>
    </widget>
-   <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>40</y>
-      <width>561</width>
-      <height>691</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetFixedSize</enum>
-     </property>
-    </layout>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -586,7 +613,7 @@
      <x>0</x>
      <y>0</y>
      <width>1075</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAbout">
