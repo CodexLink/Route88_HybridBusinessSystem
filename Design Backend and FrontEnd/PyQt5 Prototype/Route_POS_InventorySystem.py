@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Route88_InventorySystemView(object):
+class Ui_Route88_InventorySystemView(QtWidgets.QMainWindow):
     def setupUi(self, Route88_InventorySystemView):
         Route88_InventorySystemView.setObjectName("Route88_InventorySystemView")
         Route88_InventorySystemView.setWindowModality(QtCore.Qt.ApplicationModal)

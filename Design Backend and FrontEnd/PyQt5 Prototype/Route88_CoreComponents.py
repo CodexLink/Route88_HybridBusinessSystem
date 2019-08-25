@@ -56,10 +56,10 @@ class Route88_TechnicalCore(object):
 
     # MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
     # Initialize MySQL Server Twice, One for Login and Last.... ???
-    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredentials='root', SQL_PCredential='', SQLDatabase_Target='Route88_Staff'):
+    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='Route88_Staff'):
         try:
-            self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredentials, passwd=SQL_PCredential, db=SQLDatabase_Target)
-            print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredentials, '???'))
+            self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
+            print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredential, '???'))
         except MySQL.OperationalError as MySQL_ErrorMessage:
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print(MySQL_ErrorMessage)
@@ -70,6 +70,7 @@ class Route88_TechnicalCore(object):
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
             print(CursorErrMsg)
+
 
 class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
     # Class Initializer, __init__
@@ -177,24 +178,24 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         self.StaffAct_Edit.clicked.connect(self.InventorySys_EditEntry_Selected)
         self.StaffAct_Delete.clicked.connect(self.InventorySys_DeleteEntry_Selected)
         self.StaffAct_RefreshData.clicked.connect(self.InventorySys_RefreshData)
-        self.StaffAct_ResetView.clicked.connect(self.InventorySys_ResetGridView)
     
         self.InventorySys_RunFuncAfterRender() #Run This Function After UI Initialization
 
-        #Function Definitions for Route88_InventoryDesign
-        
-
-
-
+    #Function Definitions for Route88_InventoryDesign
     def InventorySys_LoadUIElement_Explicit(self):
-    
+        currentRow = 0
         self.InventoryStatus = QtWidgets.QStatusBar()
-        self.InventoryStatus.showMessage("asdhoiasdhoiasdhjoiasdjoi")
         self.setStatusBar(self.InventoryStatus)
+        self.InventoryView_Supplies.setRowCount(currentRow + 1)
+        for SetCellFixedElem in range(10):
+            self.InventoryView_Supplies.horizontalHeader().setSectionResizeMode(SetCellFixedElem, QtWidgets.QHeaderView.ResizeToContents)
+
+        self.InventoryView_Supplies.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        self.InventoryView_Supplies.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
 
     def InventorySys_RunFuncAfterRender(self):
-        try: 
-            self.MySQL_ConnectDatabase()
+        try:
+            self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             self.InventorySys_LoadData()
         except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
@@ -204,41 +205,85 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
     def InventorySys_LoadData(self):
         try:
             #Setups
-            self.MySQLDataWireCursor.execute("DESCRIBE Employees")
-            ColumnDataFetch = self.MySQLDataWireCursor.fetchall()
-            self.MySQLDataWireCursor.execute("SELECT")
+            currentRow = 0
+            self.MySQLDataWireCursor.execute("SELECT * FROM InventoryList")
             InventoryDataFetch = self.MySQLDataWireCursor.fetchall()
             # Fill Query_ColumnOpt First.
-            for ColumnData in ColumnDataFetch:
-                self.Query_ColumnOpt.addItem(str(ColumnData['Field']))
-            # Fill Inventory Menu
+            #Fill Inventory Menu
             for InventoryData in InventoryDataFetch:
-                pass
-            
+                self.InventoryView_Supplies.setRowCount(currentRow + 1)
+                self.InventoryView_Supplies.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemCode'])))
+                self.InventoryView_Supplies.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_SupplierCode'])))
+                self.InventoryView_Supplies.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemName'])))
+                self.InventoryView_Supplies.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemType'])))
+                self.InventoryView_Supplies.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemName'])))
+                self.InventoryView_Supplies.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ConsumerCost'])))
+                self.InventoryView_Supplies.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ExpiryDate'])))
+                self.InventoryView_Supplies.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_MenuInclusion'])))
+                self.InventoryView_Supplies.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_CreationTime'])))
+                self.InventoryView_Supplies.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_LastUpdate'])))
+                
+                for SetCellFixedWidth in range(10):
+                    self.ColumnPosFixer = self.InventoryView_Supplies.item(currentRow, SetCellFixedWidth)
+                    self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
+                currentRow += 1
+            self.InventoryStatus.showMessage('Database Query Process: TableView Data Refreshed from MySQL Database Sucess! Ready!')
+            print('[Database Query Process @ InventorySys_LoadData] -> TableView Data Refreshed from MySQL Database Sucess! Ready!')
 
-        except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
+        except (Exception, MySQL.OperationalError, MySQL.Error) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ InventorySys_LoadData] -> {0}'.format(FunctionErrorMsg))
 
     # Interactive Button to Function
     # Searcb Query Functions
     def InventorySys_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
-        pass
+
+        #self.EventTimer = QtCore.QTimer(self)
+        #self.EventTimer.setSingleShot(True)
+        #self.EventTimer.setInterval(2000) #.5 seconds
+        self.InventoryStatus.showMessage('Looking for {0}...'.format(str(self.Query_ValueToSearch.text())))
+
+        self.EventTimer.timeout.connect(self.readListValues)
     
-    def InventorySys_PatternEnable(self, BoolPropertyToListDown):
-        pass
+    def readListValues(self):
+        #QtTest.QTest.qWait(1500)
+        print('Searched')
+    
+    def InventorySys_PatternEnable(self):
+        if self.SearchPattern_ExactOpt.isChecked():
+            self.SearchPattern_ComboBox.setEnabled(False)
+            self.InventoryStatus.showMessage('Search Pattern: Switched to Exact Mode...')
+        elif self.SearchPattern_ContainOpt.isChecked():
+            self.SearchPattern_ComboBox.setEnabled(True)
+            self.InventoryStatus.showMessage('Search Pattern: Switched to BetweenString Mode...')
+        else:
+            self.InventoryStatus.showMessage('Application Error: No Other Radio Buttons has a state of Bool(True).')
+            raise ValueError('[Exception Thrown @ InventorySys_PatternEnable] -> No Other Radio Buttons has a state of Bool(True).')
+
     # Staff Action Functions
     def InventorySys_AddEntry(self):
         pass
+
     def InventorySys_EditEntry_Selected(self):
         pass
+
     def InventorySys_DeleteEntry_Selected(self):
         pass
-    def InventorySys_RefreshData(self):
 
-        pass
-    def InventorySys_ResetGridView(self):
-        pass
+    def InventorySys_RefreshData(self):
+        try:
+
+            self.InventoryView_Supplies.clearContents()
+            for RowLeftOver in range(10):
+                self.InventoryView_Supplies.removeRow(RowLeftOver)
+            self.InventoryStatus.showMessage('[Data Query Process @ InventorySys_RefreshData] -> Attempting To Refresh Data from MySQL Database...')
+            self.InventoryStatus.showMessage('Database Query Process: Attempting To Refresh Data from MySQL Database...')
+            QtTest.QTest.qWait(1500)
+            self.InventorySys_LoadData()
+        except (Exception, MySQL.Error, MySQL.OperationalError) as RefreshError:
+            self.InventoryStatus.showMessage('Application Error: {0}'.format(str(RefreshError)))
+            raise Exception('[Exception Thrown @ InventorySys_RefreshData] -> {0}'.format(str(RefreshError)))
+
     # Event Handlers
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_F4 and (event.modifiers() & QtCore.Qt.AltModifier):
