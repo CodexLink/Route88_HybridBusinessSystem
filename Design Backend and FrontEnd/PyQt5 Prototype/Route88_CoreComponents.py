@@ -15,6 +15,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
 from PyQt5.QtMultimedia import QSound
 import MySQLdb as MySQL
 import sys
+from os import system as sysCmdArgumentHandler
 from Route88_LoginForm import Ui_Route88_LoginWindow
 from Route88_InventorySystem import Ui_Route88_InventorySystemView 
 #from Route88_POSSystem import ???
@@ -29,6 +30,7 @@ class Route88_TechnicalCore(object):
     def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredentials='root', SQL_PCredential='', SQLDatabase_Target='Route88_Staff'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredentials, passwd=SQL_PCredential, db=SQLDatabase_Target)
+            print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredentials, '???'))
         except MySQL.OperationalError as MySQL_ErrorMessage:
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print(MySQL_ErrorMessage)
@@ -64,13 +66,12 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
         #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
         self.MySQL_ConnectDatabase()
         self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-        self.LoginForm_RunFuncAfterRender("Route88_LoginForm")
+        self.LoginForm_RunFuncAfterRender()
     # Technical Functions
     # Load Function After UI Rendering.
-    def LoginForm_RunFuncAfterRender(self, WindowUI_Name):
+    def LoginForm_RunFuncAfterRender(self):
         try:
-            if WindowUI_Name == 'Route88_LoginForm':
-                self.LoginForm_ParseUserEnlisted()
+            self.LoginForm_ParseUserEnlisted()
         except Exception as ErrorHandler:
             print(ErrorHandler)
 
@@ -116,8 +117,8 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
                     QtTest.QTest.qWait(1500)
                     self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
                     self.close()
-                    self.InventorySys_Init()
-
+                    self.Route88_InventoryInstance = Route88_InventoryCore()
+                    self.Route88_InventoryInstance.show()
                 else:
                     self.StatusLabel.setText("Login Error: Credential Input Not Matched! Check your Password!")
                     QSound.play("SysSounds/LoginFailedNotify.wav")
@@ -129,44 +130,39 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
     # Route88_LoginForm UI Window Functions - EndPoint
 
 
-
-
-
-'''
-class Route88_InventoryCore(QtWidgets.QMainWindow, Route88_TechnicalCore):
-    def __init__(self):
-        super().__init__()
-        self.Route88_LoginWindow = Ui_Route88_LoginWindow()
-        self.Route88_LoginWindow.setupUi(self)
+class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCore):
+    def __init__(self, Parent=None):
+        super(Route88_InventoryCore, self).__init__(Parent=Parent)
+        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint)
+        self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
         # Button Binds for Window 'Route88_LoginForm'
-        self.Route88_LoginWindow.UserAcc_Password.returnPressed.connect(self.Route88_LoginWindow.UserAcc_SubmitData.click)
-        self.Route88_LoginWindow.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
+        #self.UserAcc_Password.returnPressed.connect(self.UserAcc_SubmitData.click)
+        #self.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
         #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
-        #self.MySQL_ConnectDatabase()
-        #self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-        #self.LoginForm_RunFuncAfterRender("Route88_LoginForm")
-    #Function Definitions for Route88_InventoryDesign
-    def InventorySys_Init(self):
-        super().__init__()
-        self.Route88_InventorySystemView = Ui_Route88_InventorySystemView()
-        self.Route88_InventorySystemView.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-        self.Route88_InventorySystemView.show()
+        #self.StaffAct_RefreshData.clicked.connect(self.test)
 
+        self.MySQL_ConnectDatabase()
+        self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+        self.InventorySys_RunFuncAfterRender()
+    #Function Definitions for Route88_InventoryDesign
         # Button Binds for Window 'Route88_InventoryDesign'
         #self.Route88_LoginWindow.UserAcc_Password.returnPressed.connect(self.Route88_LoginWindow.UserAcc_SubmitData.click)
         #self.Route88_LoginWindow.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
-        #Run The Following Functions for Initializing User Data @ Window 'Route88_InventoryDesign'
+    def InventorySys_RunFuncAfterRender(self):
         self.MySQL_ConnectDatabase()
         self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-        self.LoginForm_RunFuncAfterRender("")
-'''
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_F4 and (event.modifiers() & QtCore.Qt.AltModifier):
+            print("EventKeyPressed: ALT F4")
+            event.ignore()
+        if event.key() == QtCore.Qt.Key_Space:
+            print("EventKeyPressed: Space")
 
 # Literal Procedural Programming Part
 if __name__ == "__main__":
+    sysCmdArgumentHandler('CLS') # Clear Output Buffer so we can debug with dignity.
     app = QtWidgets.QApplication(sys.argv)
     Route88_Instance = Route88_LoginCore()
     Route88_Instance.show()
