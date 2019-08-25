@@ -8,8 +8,6 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-
 class Ui_Route88_InventorySystemView(QtWidgets.QMainWindow):
     def setupUi(self, Route88_InventorySystemView):
         Route88_InventorySystemView.setObjectName("Route88_InventorySystemView")
@@ -284,7 +282,7 @@ class Ui_Route88_InventorySystemView(QtWidgets.QMainWindow):
         Route88_InventorySystemView.setWindowTitle(_translate("Route88_InventorySystemView", "Route88 System | Inventory SystemView"))
         self.groupBox_3.setTitle(_translate("Route88_InventorySystemView", "Search Query"))
         self.label.setText(_translate("Route88_InventorySystemView", "By"))
-        self.Query_ColumnOpt.setItemText(0, _translate("Route88_InventorySystemView", "<All Column>"))
+        self.Query_ColumnOpt.setItemText(0, _translate("Route88_InventorySystemView", "All Fields"))
         self.label_2.setText(_translate("Route88_InventorySystemView", "Look For"))
         self.Query_ValueToSearch.setPlaceholderText(_translate("Route88_InventorySystemView", "Value Search..."))
         self.groupBox_4.setTitle(_translate("Route88_InventorySystemView", "Search For Patterns Options"))
