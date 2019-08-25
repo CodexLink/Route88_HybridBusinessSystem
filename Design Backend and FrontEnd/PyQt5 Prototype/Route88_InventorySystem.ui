@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1068</width>
+    <width>1133</width>
     <height>608</height>
    </rect>
   </property>
@@ -36,6 +36,52 @@
       <property name="spacing">
        <number>6</number>
       </property>
+      <item>
+       <widget class="QGroupBox" name="groupBox_5">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Roboto Mono</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="title">
+         <string>Table Selection</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QComboBox" name="TableSystem_Selection">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <item>
+            <property name="text">
+             <string>Inventory Table</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Supplier Table</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Transaction Table</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
       <item>
        <widget class="QGroupBox" name="groupBox_3">
         <property name="font">
@@ -172,6 +218,46 @@
              <property name="text">
               <string>Look For</string>
              </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="Query_Operator">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>=</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>&lt;&gt;</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>&gt;</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>&lt;</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>&gt;=</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>&lt;=</string>
+              </property>
+             </item>
             </widget>
            </item>
            <item>
@@ -535,7 +621,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1068</width>
+     <width>1133</width>
      <height>21</height>
     </rect>
    </property>
