@@ -9,6 +9,35 @@
                 Charles Ian Mascarenas "ci-mascarenas" - https://github.com/ci-mascarenas
                 Jan Patrick Moreno "jaypeemrn" - https://github.com/jaypeemrn
                 Brenda Hernandez "imbrendzzz" - https://github.com/imbrendzzz
+
+    Multi-Level Inheritance Method of Application Architecture:
+        -> 
+    Core Component Structure:
+        Class Route88_TechnicalCore()
+            Methods:
+                -> __init__()
+        Class Route88_LoginCore()
+            Methods:
+                -> __init__()
+                -> <ClassShortName>_LoadUIElement_Explicit
+                -> <ClassShortName>_RunFuncAfterRender
+        Class Route88_InventoryCore()
+            Methods:
+                -> __init__()
+                -> <ClassShortName>_LoadUIElement_Explicit
+                -> <ClassShortName>_RunFuncAfterRender
+        Class Route88_POSCore()
+            Methods:
+                -> __init__()
+                -> <ClassShortName>_LoadUIElement_Explicit
+                -> <ClassShortName>_RunFuncAfterRender
+    
+    Legends:
+        __init__() -> Class Initializers, Possibly Constructors
+        <ClassShortName>_LoadUIElement_Explicit -> Load Extra Elements from 'That' UI
+            > This was implemented to ensure that changes from the UI file will not affect any additional elements that we just manually added which cannot be initiated with Qt Designer, this would result to extra elements remains whatver UI file changes after generating using 'pyuic5' module.
+        <ClassShortName>_RunFuncAfterRender -> Condition, Must Be After setupUi()
+            > This was implemented right after setupUi(). Because, we have to initialize every value from the database which would then be shown after UI has been render. So that when the engine initiates .show(). All values is already there. So in sort, setup Values and Elements.
 '''
 
 from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
@@ -136,15 +165,32 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         super(Route88_InventoryCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint)
         self.setupUi(self)
+        self.InventorySys_LoadUIElement_Explicit()
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-        #Function Definitions for Route88_InventoryDesign
         # Button Binds for Window 'Route88_InventoryDesign'
-        #self.Route88_LoginWindow.UserAcc_Password.returnPressed.connect(self.Route88_LoginWindow.UserAcc_SubmitData.click)
-        #self.Route88_LoginWindow.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
+        # > Search Query Binds
+        self.Query_ValueToSearch.textChanged.connect(self.InventorySys_SearchVal)
+        self.SearchPattern_ExactOpt.clicked.connect(self.InventorySys_PatternEnable)
+        self.SearchPattern_ContainOpt.clicked.connect(self.InventorySys_PatternEnable)
+        # > Staff Action Binds 
+        self.StaffAct_Add.clicked.connect(self.InventorySys_AddEntry)
+        self.StaffAct_Edit.clicked.connect(self.InventorySys_EditEntry_Selected)
+        self.StaffAct_Delete.clicked.connect(self.InventorySys_DeleteEntry_Selected)
+        self.StaffAct_RefreshData.clicked.connect(self.InventorySys_RefreshData)
+        self.StaffAct_ResetView.clicked.connect(self.InventorySys_ResetGridView)
+    
+        self.InventorySys_RunFuncAfterRender() #Run This Function After UI Initialization
 
-        #self.StaffAct_RefreshData.clicked.connect(self.test)
+        #Function Definitions for Route88_InventoryDesign
+        
 
-        self.InventorySys_RunFuncAfterRender()
+
+
+    def InventorySys_LoadUIElement_Explicit(self):
+    
+        self.InventoryStatus = QtWidgets.QStatusBar()
+        self.InventoryStatus.showMessage("asdhoiasdhoiasdhjoiasdjoi")
+        self.setStatusBar(self.InventoryStatus)
 
     def InventorySys_RunFuncAfterRender(self):
         try: 
@@ -166,13 +212,33 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
             for ColumnData in ColumnDataFetch:
                 self.Query_ColumnOpt.addItem(str(ColumnData['Field']))
             # Fill Inventory Menu
-            for 
+            for InventoryData in InventoryDataFetch:
+                pass
             
 
         except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ InventorySys_LoadData] -> {0}'.format(FunctionErrorMsg))
 
+    # Interactive Button to Function
+    # Searcb Query Functions
+    def InventorySys_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
+        pass
+    
+    def InventorySys_PatternEnable(self, BoolPropertyToListDown):
+        pass
+    # Staff Action Functions
+    def InventorySys_AddEntry(self):
+        pass
+    def InventorySys_EditEntry_Selected(self):
+        pass
+    def InventorySys_DeleteEntry_Selected(self):
+        pass
+    def InventorySys_RefreshData(self):
+
+        pass
+    def InventorySys_ResetGridView(self):
+        pass
     # Event Handlers
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_F4 and (event.modifiers() & QtCore.Qt.AltModifier):

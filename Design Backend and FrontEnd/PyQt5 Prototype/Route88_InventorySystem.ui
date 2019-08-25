@@ -316,7 +316,12 @@
          </row>
          <column>
           <property name="text">
-           <string>ItemID</string>
+           <string>ItemCode</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>SupplierCode</string>
           </property>
          </column>
          <column>
@@ -326,32 +331,42 @@
          </column>
          <column>
           <property name="text">
-           <string>Quantity</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
            <string>Type</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Rate</string>
+           <string>Quantity</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>SupplierID</string>
+           <string>Cost</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>SupplierName</string>
+           <string>Supplier Name</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>MenuIncluded?</string>
+           <string>Expiry Date</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Menu Inclusion</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Data Created</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Last Modified</string>
           </property>
          </column>
         </widget>
@@ -445,7 +460,7 @@
        <item>
         <widget class="QPushButton" name="StaffAct_RefreshData">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -457,6 +472,19 @@
          </property>
          <property name="text">
           <string>Refresh Database</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="StaffAct_ResetView">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Reset Grid View</string>
          </property>
         </widget>
        </item>
@@ -498,7 +526,6 @@
    <addaction name="menuStaffs"/>
    <addaction name="menuAbout"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="About_InfoSystem">
    <property name="text">
     <string>About This System...</string>
