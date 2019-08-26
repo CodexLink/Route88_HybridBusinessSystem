@@ -64,17 +64,27 @@
            </property>
            <item>
             <property name="text">
-             <string>Inventory Table</string>
+             <string>Inventory Management</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Supplier Table</string>
+             <string>Employee Management</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Transaction Table</string>
+             <string>Supplier Management</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Transaction Management</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Position Management</string>
             </property>
            </item>
           </widget>
@@ -134,6 +144,9 @@
                <family>Roboto Mono</family>
                <pointsize>10</pointsize>
               </font>
+             </property>
+             <property name="statusTip">
+              <string>Selects a Particular Column To Start Searching For the Value Inputted.</string>
              </property>
              <property name="currentText">
               <string>None</string>
@@ -236,6 +249,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="statusTip">
+              <string>Sets a Conditional Operator for Exact Searching Method.</string>
+             </property>
              <item>
               <property name="text">
                <string>=</string>
@@ -307,7 +323,7 @@
          </font>
         </property>
         <property name="title">
-         <string>Search For Patterns Options</string>
+         <string>Search Patterns</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
@@ -383,6 +399,9 @@
              <pointsize>10</pointsize>
             </font>
            </property>
+           <property name="statusTip">
+            <string>Sets a Pattern Condition for Contains Pattern Method.</string>
+           </property>
            <item>
             <property name="text">
              <string>Between</string>
@@ -414,7 +433,7 @@
        </font>
       </property>
       <property name="title">
-       <string>Inventory View</string>
+       <string>Management Table View</string>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -552,6 +571,9 @@
            <pointsize>10</pointsize>
           </font>
          </property>
+         <property name="statusTip">
+          <string>Add an Item Entry as A New Data.</string>
+         </property>
          <property name="text">
           <string>Add Entry</string>
          </property>
@@ -575,6 +597,9 @@
           <font>
            <pointsize>10</pointsize>
           </font>
+         </property>
+         <property name="statusTip">
+          <string>Edit or Modify a Particular Selected Row Data.</string>
          </property>
          <property name="text">
           <string>Edit / Modify Selected Entry</string>
@@ -600,6 +625,9 @@
            <pointsize>10</pointsize>
           </font>
          </property>
+         <property name="statusTip">
+          <string>Delete a Particular Selected Row Data.</string>
+         </property>
          <property name="text">
           <string>Delete Selected Entry</string>
          </property>
@@ -617,6 +645,9 @@
           <font>
            <pointsize>10</pointsize>
           </font>
+         </property>
+         <property name="statusTip">
+          <string>Refreshes Data From Window Session.</string>
          </property>
          <property name="text">
           <string>Refresh Database</string>
@@ -662,28 +693,58 @@
    <addaction name="menuAbout"/>
   </widget>
   <action name="About_InfoSystem">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>About This System...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
    </property>
   </action>
   <action name="Staff_SwitchTo">
    <property name="text">
     <string>Logout / Switch To...</string>
    </property>
+   <property name="statusTip">
+    <string>Go Back To Login Menu</string>
+   </property>
   </action>
   <action name="Staff_Manage">
    <property name="text">
     <string>Manage Staffs...</string>
+   </property>
+   <property name="statusTip">
+    <string>Manage Staff from the Window.</string>
    </property>
   </action>
   <action name="Window_SwitchSystemView">
    <property name="text">
     <string>Switch System...</string>
    </property>
+   <property name="statusTip">
+    <string>Switches Window to a Candidate Window to Switch.</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::ApplicationSpecificRole</enum>
+   </property>
   </action>
   <action name="Window_Quit">
    <property name="text">
     <string>Quit</string>
+   </property>
+   <property name="statusTip">
+    <string>Closes the whole system.</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+   <property name="shortcutVisibleInContextMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

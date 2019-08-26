@@ -50,6 +50,7 @@ from Route88_InventorySystem import Ui_Route88_InventorySystemView
 #from Route88_POSSystem import ???
 
 # This class contains all technical function that would be used by these multiple class of multiple window.
+
 class Route88_TechnicalCore(object):
     def __init__(self, Parent=None):
         super().__init__()
@@ -147,7 +148,7 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
                     self.StatusLabel.setText("Successfully Logged in as ...".format("Unknown User..."))
                     QtTest.QTest.qWait(1500)
                     self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
-                    self.close()
+                    self.hide()
                     self.Route88_InventoryInstance = Route88_InventoryCore()
                     self.Route88_InventoryInstance.show()
                 else:
@@ -193,6 +194,8 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         self.StaffAct_Delete.clicked.connect(self.InventorySys_DeleteEntry_Selected)
         self.StaffAct_RefreshData.clicked.connect(self.InventorySys_RefreshData)
 
+        self.Window_Quit.triggered.connect(self.close)
+
         self.TableParameter = 'InventoryList' # Sets Current Table Tempporarily
         self.InventorySys_RunFuncAfterRender() #Run This Function After UI Initialization
 
@@ -209,7 +212,6 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
 
         self.InventoryTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         self.InventoryTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
-        
 
     def InventorySys_RunFuncAfterRender(self):
         try:
@@ -258,10 +260,8 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
             print('[Exception Thrown @ InventorySys_LoadData] -> {0}'.format(FunctionErrorMsg))
 
     # Interactive Button to Function
+    # Menu Bar Functions
     # Table Selection Functions
-    def InventorySys_SetTableFocus(self):
-        pass
-
     def InventorySys_SearchFieldSet(self):
         if self.Query_ColumnOpt.currentText() == 'None':
             self.Query_Operator.setEnabled(False)
@@ -413,7 +413,7 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
                 self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.TableParameter, self.selectedData))
                 self.InventoryTable_View.removeRow(self.selectedRow)
                 self.MySQLDataWire.commit()
-                self.InventoryStatus.showMessage('Deletion Query Process Success! -> Row {} Deleted.'.format(self.selectedRow))
+                self.InventoryStatus.showMessage('Deletion Query Process Success! -> Row {} Deleted.'.format(self.selectedRow + 1))
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
             self.InventoryStatus.showMessage('Deletion Query Process Error -> {}'.format(DelectionErrMsg))
@@ -424,8 +424,6 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
             self.InventoryTable_View.clearContents()
             for RowLeftOver in range(10):
                 self.InventoryTable_View.removeRow(RowLeftOver)
-            
-            self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
 
             self.InventoryStatus.showMessage('[Data Query Process @ InventorySys_RefreshData] -> Attempting To Refresh Data from MySQL Database...')
             self.InventoryStatus.showMessage('Database Query Process: Attempting To Refresh Data from MySQL Database...')
@@ -443,12 +441,17 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         if event.key() == QtCore.Qt.Key_Space:
             print("EventKeyPressed: Space")
 
+
+class Route88_WindowController(Route88_LoginCore, Route88_InventoryCore):
+    def __init__(self):
+        pass
+    def 
 # Literal Procedural Programming Part
 if __name__ == "__main__":
     sysCmdArgumentHandler('CLS') # Clear Output Buffer so we can debug with dignity.
     print('[Application App Startup] Route88_Core Application Version 0, Debug Output')
     app = QtWidgets.QApplication(sys.argv)
-    Route88_Instance = Route88_LoginCore()
-    Route88_Instance.show()
+    Route88_InstanceController = Route88_WindowController()
+    Route88_InstanceController.show()
     sys.exit(app.exec_())
     #print('[Application Shutdown] Terminating PyQt5 Engine...')
