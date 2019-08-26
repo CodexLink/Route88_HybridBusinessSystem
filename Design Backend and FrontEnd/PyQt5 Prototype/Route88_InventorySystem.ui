@@ -418,7 +418,7 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QTableWidget" name="InventoryView_Supplies">
+        <widget class="QTableWidget" name="InventoryTable_View">
          <property name="font">
           <font>
            <family>Roboto Mono</family>
@@ -606,7 +606,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Delete Entry</string>
+          <string>Delete Selected Entry</string>
          </property>
         </widget>
        </item>
