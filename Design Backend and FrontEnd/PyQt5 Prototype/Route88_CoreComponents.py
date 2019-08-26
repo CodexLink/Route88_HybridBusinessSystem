@@ -398,17 +398,22 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
 
     def InventorySys_DeleteEntry_Selected(self):
         try:
-            self.selectedRow = self.InventoryTable_View.currentRow()
-            self.selectedStatic_ItemCode = 0
-            self.selectedData = self.InventoryTable_View.item(self.selectedRow, self.selectedStatic_ItemCode).text()
-            print(self.selectedData)
-            # Make IL_ItemCode as Temporary here, change it into a variable next time.
-            print('[Database Query Process: Deletion Query] -> DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.TableParameter, self.selectedData))
-            self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {0}'.format(self.selectedRow))
-            self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.TableParameter, self.selectedData))
-            self.InventoryTable_View.removeRow(self.selectedRow)
-            self.MySQLDataWire.commit()
-            self.InventoryStatus.showMessage('Deletion Query Process Success! -> Row {} Deleted.'.format(self.selectedRow))
+            if self.InventoryTable_View.rowCount == 0:
+                self.StaffAct_Delete.setEnabled(False)
+                self.InventoryStatus.showMessage('Table Data Error -> You cannot delete anymore.')
+                raise ValueError('Table Data Error -> You cannot delete anymore.')
+            else:
+                self.selectedRow = self.InventoryTable_View.currentRow()
+                self.selectedStatic_ItemCode = 0
+                self.selectedData = self.InventoryTable_View.item(self.selectedRow, self.selectedStatic_ItemCode).text()
+                # Make IL_ItemCode as Temporary here, change it into a variable next time.
+                print('[Database Query Process: Deletion Query] -> DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.TableParameter, self.selectedData))
+                self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {0}'.format(self.selectedRow))
+
+                self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.TableParameter, self.selectedData))
+                self.InventoryTable_View.removeRow(self.selectedRow)
+                self.MySQLDataWire.commit()
+                self.InventoryStatus.showMessage('Deletion Query Process Success! -> Row {} Deleted.'.format(self.selectedRow))
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
             self.InventoryStatus.showMessage('Deletion Query Process Error -> {}'.format(DelectionErrMsg))
@@ -419,6 +424,9 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
             self.InventoryTable_View.clearContents()
             for RowLeftOver in range(10):
                 self.InventoryTable_View.removeRow(RowLeftOver)
+            
+            self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
+
             self.InventoryStatus.showMessage('[Data Query Process @ InventorySys_RefreshData] -> Attempting To Refresh Data from MySQL Database...')
             self.InventoryStatus.showMessage('Database Query Process: Attempting To Refresh Data from MySQL Database...')
             QtTest.QTest.qWait(900)

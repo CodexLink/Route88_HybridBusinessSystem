@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1133</width>
-    <height>608</height>
+    <height>598</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -467,11 +467,6 @@
          <attribute name="verticalHeaderStretchLastSection">
           <bool>false</bool>
          </attribute>
-         <row>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </row>
          <column>
           <property name="text">
            <string>ItemCode</string>
