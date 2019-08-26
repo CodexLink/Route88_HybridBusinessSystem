@@ -170,15 +170,21 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         # Button Binds for Window 'Route88_InventoryDesign'
         # > Search Query Binds
-        self.Query_ValueToSearch.editingFinished.connect(self.InventorySys_SearchVal)
-        self.SearchPattern_ExactOpt.clicked.connect(self.InventorySys_PatternEnable)
-        self.SearchPattern_ContainOpt.clicked.connect(self.InventorySys_PatternEnable)
+        self.Query_ColumnOpt.currentIndexChanged.connect(self.InventorySys_SearchFieldSet)
+        self.Query_Operator.currentIndexChanged.connect(self.InventorySys_OperatorSet)
+        self.Query_ValueToSearch.text.editingFinished.connect(self.InventorySys_PatternSet)
+        self.Query_ValueToSearch.text.editingFinished.connect(self.InventorySys_SearchVal)
+
+        self.SearchPattern_ExactOpt.clicked.connect(self.InventorySys_PatternEnabler)
+        self.SearchPattern_ContainOpt.clicked.connect(self.InventorySys_PatternEnabler)
+        
+        self.SearchPattern_ComboBox.currentIndexChanged.connect(self.InventorySys_PatternSet)
+
         # > Staff Action Binds 
         self.StaffAct_Add.clicked.connect(self.InventorySys_AddEntry)
         self.StaffAct_Edit.clicked.connect(self.InventorySys_EditEntry_Selected)
         self.StaffAct_Delete.clicked.connect(self.InventorySys_DeleteEntry_Selected)
         self.StaffAct_RefreshData.clicked.connect(self.InventorySys_RefreshData)
-    
         self.InventorySys_RunFuncAfterRender() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
@@ -189,14 +195,22 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         self.InventoryView_Supplies.setRowCount(currentRow + 1)
         for SetCellFixedElem in range(10):
             self.InventoryView_Supplies.horizontalHeader().setSectionResizeMode(SetCellFixedElem, QtWidgets.QHeaderView.ResizeToContents)
+        
+        self.Query_ColumnOpt.model().item(1).setEnabled(False)
 
         self.InventoryView_Supplies.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         self.InventoryView_Supplies.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
+        
 
     def InventorySys_RunFuncAfterRender(self):
         try:
             self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+            #Set All Parameters Without User Touching it for straight searching...
+            self.InventorySys_PatternEnabler()
+            self.InventorySys_SearchFieldSet()
+            self.InventorySys_OperatorSet()
+            self.InventorySys_PatternSet()
             self.InventorySys_LoadData()
         except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
@@ -238,84 +252,119 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
     # Table Selection Functions
     def InventorySys_SetTableFocus(self):
         pass
-    # Searcb Query Functions
-    def InventorySys_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
-        currentRow = 0
-        #self.EventTimer = QtCore.QTimer(self)
-        #self.EventTimer.setSingleShot(True)
-        #self.EventTimer.setInterval(2000) #.5 seconds
-        try:
-            self.InventoryStatus.showMessage('Looking for {0}...'.format(str(self.Query_ValueToSearch.text())))
-            self.InventoryView_Supplies.clearContents()
-            
-            for RowLeftOver in range(10):
-                self.InventoryView_Supplies.removeRow(RowLeftOver)
 
-            if self.Query_ColumnOpt.currentText == 'All Columns':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Item Code':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Supplier Code':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Item Name':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Type':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Quantity':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Expiry Date':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Menu Inclusion':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Data Created':
-                self.ColumnParameter = ''
-            elif self.Query_ColumnOpt.currentText == 'Last Modified':
-                self.ColumnParameter = ''
+    def InventorySys_SearchFieldSet(self):
+        if self.Query_ColumnOpt.currentText() == 'None':
+            self.Query_Operator.setEnabled(False)
+            self.Query_ValueToSearch.setEnabled(False)
+            self.SearchPattern_ContainOpt.setEnabled(False)
+            self.SearchPattern_ExactOpt.setEnabled(False)
+        else:
+            self.Query_Operator.setEnabled(True)
+            self.Query_ValueToSearch.setEnabled(True)
+            self.SearchPattern_ContainOpt.setEnabled(True)
+            self.SearchPattern_ExactOpt.setEnabled(True)
+            if self.Query_ColumnOpt.currentText() == 'All Columns':
+                self.FieldParameter = "CONCAT(IL_ItemCode, '', IL_SupplierCode ,'', IL_ItemName, '', IL_ItemType, '', IL_AvailableStock, '', IL_ExpiryDate, '', IL_MenuInclusion, '', IL_CreationTime, '', IL_LastUpdate)"
+            elif self.Query_ColumnOpt.currentText() == 'Item Code':
+                self.FieldParameter = 'IL_ItemCode'
+            elif self.Query_ColumnOpt.currentText() == 'Supplier Code':
+                self.FieldParameter = 'IL_SupplierCode'
+            elif self.Query_ColumnOpt.currentText() == 'Item Name':
+                self.FieldParameter = 'IL_ItemName'
+            elif self.Query_ColumnOpt.currentText() == 'Type':
+                self.FieldParameter = 'IL_ItemType'
+            elif self.Query_ColumnOpt.currentText() == 'Quantity':
+                self.FieldParameter = 'IL_AvailableStock'
+            elif self.Query_ColumnOpt.currentText() == 'Expiry Date':
+                self.FieldParameter = 'IL_ExpiryDate'
+            elif self.Query_ColumnOpt.currentText() == 'Menu Inclusion':
+                self.FieldParameter = 'IL_MenuInclusion'
+            elif self.Query_ColumnOpt.currentText() == 'Data Created':
+                self.FieldParameter = 'IL_CreationTime'
+            elif self.Query_ColumnOpt.currentText() == 'Last Modified':
+                self.FieldParameter = 'IL_LastUpdate'
             else:
                 print('')
                 raise ValueError('')
-            
-            # SELECT * FROM Employees WHERE <Var> = SearchText
-            # SELECT * FROM Employees WHERE <Var> = SearchText
-            self.MySQLDataWireCursor.execute('SELECT * FROM Employees WHERE {1} {2} {3}'.format(self.ColumnParameter, ))
-            InventoryTargetDataFetch = self.MySQLDataWireCursor.fetchall()
 
-            for InventoryData in InventoryTargetDataFetch:
-                self.InventoryView_Supplies.setRowCount(currentRow + 1)
-                self.InventoryView_Supplies.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemCode'])))
-                self.InventoryView_Supplies.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_SupplierCode'])))
-                self.InventoryView_Supplies.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemName'])))
-                self.InventoryView_Supplies.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemType'])))
-                self.InventoryView_Supplies.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemName'])))
-                self.InventoryView_Supplies.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ConsumerCost'])))
-                self.InventoryView_Supplies.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ExpiryDate'])))
-                self.InventoryView_Supplies.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_MenuInclusion'])))
-                self.InventoryView_Supplies.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_CreationTime'])))
-                self.InventoryView_Supplies.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_LastUpdate'])))
-                
-                for SetCellFixedWidth in range(10):
-                    self.ColumnPosFixer = self.InventoryView_Supplies.item(currentRow, SetCellFixedWidth)
-                    self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
-                currentRow += 1
+    def InventorySys_OperatorSet(self):
+        if self.SearchPattern_ExactOpt.isChecked():
+            self.OperatorParameter = self.Query_Operator.currentText()
+        elif self.SearchPattern_ContainOpt.isChecked():
+            self.OperatorParameter = 'LIKE'
+        else:
+            raise ValueError()
+            print()
+
+    def InventorySys_PatternEnabler(self):
+        if self.SearchPattern_ExactOpt.isChecked():
+            self.SearchPattern_ComboBox.setEnabled(False)
+            self.Query_Operator.setEnabled(True)
+            self.InventorySys_OperatorSet()
+            self.InventorySys_PatternSet()
+            self.InventoryStatus.showMessage('Search Pattern: Switched to Exact Mode...')
+        elif self.SearchPattern_ContainOpt.isChecked():
+            self.Query_Operator.setEnabled(False)
+            self.InventorySys_OperatorSet()
+            self.InventorySys_PatternSet()
+            self.SearchPattern_ComboBox.setEnabled(True)
+            self.InventoryStatus.showMessage('Search Pattern: Switched to Pattern String Mode...')
+        else:
+            self.InventoryStatus.showMessage('Application Error: No Other Radio Buttons has a state of Bool(True).')
+            raise ValueError('[Exception Thrown @ InventorySys_PatternSet] -> No Other Radio Buttons has a state of Bool(True).')
+
+    def InventorySys_PatternSet(self):
+        if self.SearchPattern_ExactOpt.isChecked():
+            #self.Query_ColumnOpt.model().item(1).setEnabled(False)
+            self.TargetParameter = '{}'.format(self.Query_ValueToSearch.text())
+
+        elif self.SearchPattern_ContainOpt.isChecked():
+            #self.Query_ColumnOpt.model().item(1).setEnabled(True)
+            if self.SearchPattern_ComboBox.currentText() == 'Between':
+                self.TargetParameter = '%{}%'.format(self.Query_ValueToSearch.text())
+            elif self.SearchPattern_ComboBox.currentText() == 'Starting With':
+                self.TargetParameter = '%{}'.format(self.Query_ValueToSearch.text())
+            elif self.SearchPattern_ComboBox.currentText() == 'Ends With':
+                self.TargetParameter = '{}%'.format(self.Query_ValueToSearch.text())
+        else:
+            raise ValueError()
+            print()
+        # Actual Search Function
+    def InventorySys_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
+        currentRow = 0
+        try:
+            self.InventoryStatus.showMessage('Looking for {0}...'.format(str(self.Query_ValueToSearch.text())))
+            self.InventoryView_Supplies.clearContents()
+            for RowLeftOver in range(self.InventoryView_Supplies.rowCount()):
+                self.InventoryView_Supplies.removeRow(RowLeftOver)
+            
+            print('[Search Parameters] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+            print('[Search Query] SELECT * FROM Employees WHERE {} {} {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+            #InventoryTargetDataFetch = self.MySQLDataWireCursor.fetchall()
+            #for InventoryData in InventoryTargetDataFetch:
+            #    self.InventoryView_Supplies.setRowCount(currentRow + 1)
+            #    self.InventoryView_Supplies.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemCode'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_SupplierCode'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemName'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemType'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemName'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ConsumerCost'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ExpiryDate'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_MenuInclusion'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_CreationTime'])))
+            #    self.InventoryView_Supplies.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_LastUpdate'])))
+            #    
+            #    for SetCellFixedWidth in range(10):
+            #        self.ColumnPosFixer = self.InventoryView_Supplies.item(currentRow, SetCellFixedWidth)
+            #        self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
+            #    currentRow += 1
+
             #self.EventTimer.timeout.connect(self.readListValues)
         except (Exception, MySQL.Error, MySQL.OperationalError) as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(SearchQueryError))
             print('[Exception Thrown @ InventorySys_SearchVal] -> {0}'.format(SearchQueryError))
-    def InventorySys_OperatorQuery(self):
-        pass
 
-    def InventorySys_PatternEnable(self):
-        if self.SearchPattern_ExactOpt.isChecked():
-            self.SearchPattern_ComboBox.setEnabled(False)
-            self.Query_Operator.setEnabled(True)
-            self.InventoryStatus.showMessage('Search Pattern: Switched to Exact Mode...')
-        elif self.SearchPattern_ContainOpt.isChecked():
-            self.Query_Operator.setEnabled(False)
-            self.SearchPattern_ComboBox.setEnabled(True)
-            self.InventoryStatus.showMessage('Search Pattern: Switched to BetweenString Mode...')
-        else:
-            self.InventoryStatus.showMessage('Application Error: No Other Radio Buttons has a state of Bool(True).')
-            raise ValueError('[Exception Thrown @ InventorySys_PatternEnable] -> No Other Radio Buttons has a state of Bool(True).')
 
     # Staff Action Functions
     def InventorySys_AddEntry(self):
