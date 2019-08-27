@@ -342,7 +342,7 @@ class Ui_Route88_InventorySystemView(QtWidgets.QMainWindow):
 
     def retranslateUi(self, Route88_InventorySystemView):
         _translate = QtCore.QCoreApplication.translate
-        Route88_InventorySystemView.setWindowTitle(_translate("Route88_InventorySystemView", "Route88 System | Inventory SystemView"))
+        Route88_InventorySystemView.setWindowTitle(_translate("Route88_InventorySystemView", "Route88 System | Data Management SystemView"))
         self.groupBox_5.setTitle(_translate("Route88_InventorySystemView", "Table Selection"))
         self.TableSystem_Selection.setItemText(0, _translate("Route88_InventorySystemView", "Inventory Management"))
         self.TableSystem_Selection.setItemText(1, _translate("Route88_InventorySystemView", "Employee Management"))
