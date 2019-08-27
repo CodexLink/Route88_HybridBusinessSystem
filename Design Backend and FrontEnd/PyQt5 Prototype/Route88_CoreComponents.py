@@ -47,6 +47,8 @@ import sys
 from os import system as sysCmdArgumentHandler
 from Route88_LoginForm import Ui_Route88_LoginWindow
 from Route88_InventorySystem import Ui_Route88_InventorySystemView 
+
+from Route88_Inventory_ModifierEntry import Ui_Route88_Management_Modifier
 #from Route88_POSSystem import ???
 
 # This class contains all technical function that would be used by these multiple class of multiple window.
@@ -165,8 +167,10 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
 class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_InventoryCore, self).__init__(Parent=Parent)
-        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint)
+        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
         self.setupUi(self)
+        self.setFocus(True)
+        self.raise_()
         self.InventorySys_LoadUIElement_Explicit()
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         # Button Binds for Window 'Route88_InventoryDesign'
@@ -194,7 +198,8 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         self.StaffAct_Delete.clicked.connect(self.InventorySys_DeleteEntry_Selected)
         self.StaffAct_RefreshData.clicked.connect(self.InventorySys_RefreshData)
 
-        self.Window_Quit.triggered.connect(self.close)
+        self.Window_Quit.triggered.connect(self.hide)
+        #self.Window_Quit.triggered.connect()
 
         self.TableParameter = 'InventoryList' # Sets Current Table Tempporarily
         self.InventorySys_RunFuncAfterRender() #Run This Function After UI Initialization
@@ -346,6 +351,7 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         else:
             raise ValueError()
             print()
+            
         # Actual Search Function
     def InventorySys_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
         currentRow = 0
@@ -383,15 +389,18 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
                         self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
                     currentRow += 1
 
-                #self.EventTimer.timeout.connect(self.readListValues)
         except (Exception, MySQL.Error, MySQL.OperationalError) as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(SearchQueryError))
             print('[Exception Thrown @ InventorySys_SearchVal] -> {0}'.format(SearchQueryError))
 
-
     # Staff Action Functions
-    def InventorySys_AddEntry(self):
+
+    def InventorySys_ModifierInit(self):
         pass
+    def InventorySys_AddEntry(self):
+        self.ModifierDialog = Route88_ModifierCore()
+        self.ModifierDialog.show()
+        #self.ModifierDialog = 
 
     def InventorySys_EditEntry_Selected(self):
         pass
@@ -441,17 +450,46 @@ class Route88_InventoryCore(Ui_Route88_InventorySystemView, Route88_TechnicalCor
         if event.key() == QtCore.Qt.Key_Space:
             print("EventKeyPressed: Space")
 
+class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore):
+    def __init__(self, Parent=None):
+        super(Route88_ModifierCore, self).__init__(Parent=Parent)
+        self.setupUi(self)
+        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint)
+        self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
 
-class Route88_WindowController(Route88_LoginCore, Route88_InventoryCore):
-    def __init__(self):
+    # Button Binds to Functions
+        for SetDisability in range(1,5):
+            self.Tab_SelectionSelectives.setTabEnabled(SetDisability, False)
+        
+        self.Modifier_CloseWindow.clicked.connect(self.close)
+
+    def GetInventorySys_ItemValue(self):
         pass
-    def 
+
+
+
+class Route88_WindowController(object):
+    def __init__(self, Parent=None):
+        #We cannot select initiate a subclass to variable here. So do manual initialization. Which is a standard as well.
+        self.Route88_InventoryInstance = Route88_InventoryCore()
+
+    def WindowSelectionHandler(self, WindowToHide, WindowToShow):
+        WindowToHide.hide()
+        WindowToShow.show()
+
+
+    def ShowLoginCore(self):
+        self.Route88_LoginInstance = Route88_LoginCore()
+        self.Route88_LoginInstance.show()
+
+
+
 # Literal Procedural Programming Part
 if __name__ == "__main__":
     sysCmdArgumentHandler('CLS') # Clear Output Buffer so we can debug with dignity.
     print('[Application App Startup] Route88_Core Application Version 0, Debug Output')
     app = QtWidgets.QApplication(sys.argv)
     Route88_InstanceController = Route88_WindowController()
-    Route88_InstanceController.show()
+    Route88_InstanceController.ShowLoginCore()
     sys.exit(app.exec_())
     #print('[Application Shutdown] Terminating PyQt5 Engine...')

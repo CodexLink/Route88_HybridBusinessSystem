@@ -3,21 +3,21 @@
  <class>Route88_InventorySystemView</class>
  <widget class="QMainWindow" name="Route88_InventorySystemView">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::ApplicationModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>999</width>
-    <height>416</height>
+    <height>598</height>
    </rect>
   </property>
   <property name="mouseTracking">
    <bool>true</bool>
   </property>
   <property name="focusPolicy">
-   <enum>Qt::NoFocus</enum>
+   <enum>Qt::TabFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Route88 System | Inventory SystemView</string>
@@ -27,7 +27,7 @@
     <normaloff>IcoDisplay/r_88.ico</normaloff>IcoDisplay/r_88.ico</iconset>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -478,7 +478,7 @@
           <bool>false</bool>
          </property>
          <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
+          <bool>true</bool>
          </attribute>
          <attribute name="verticalHeaderShowSortIndicator" stdset="0">
           <bool>true</bool>
