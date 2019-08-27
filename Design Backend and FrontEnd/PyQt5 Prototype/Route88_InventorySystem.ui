@@ -20,7 +20,7 @@
    <enum>Qt::NoFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Route88 System | Inventory SystemView</string>
+   <string>Route88 System | Data Management SystemView</string>
   </property>
   <property name="windowIcon">
    <iconset>

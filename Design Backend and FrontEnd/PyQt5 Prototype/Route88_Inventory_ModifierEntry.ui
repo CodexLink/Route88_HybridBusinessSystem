@@ -29,7 +29,7 @@
    <enum>Qt::NoFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Route88 System | Management Modifiers</string>
+   <string>Route88 System | Management Modifiers |</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -134,6 +134,9 @@
                 <pointsize>10</pointsize>
                </font>
               </property>
+              <property name="placeholderText">
+               <string>Required Value To Fill...</string>
+              </property>
               <property name="clearButtonEnabled">
                <bool>true</bool>
               </property>
@@ -171,6 +174,9 @@
                 <family>Roboto Mono</family>
                 <pointsize>10</pointsize>
                </font>
+              </property>
+              <property name="placeholderText">
+               <string>Required Value To Fill...</string>
               </property>
               <property name="clearButtonEnabled">
                <bool>true</bool>
@@ -225,6 +231,9 @@
                 <pointsize>10</pointsize>
                </font>
               </property>
+              <property name="placeholderText">
+               <string>Required Value To Fill...</string>
+              </property>
               <property name="clearButtonEnabled">
                <bool>true</bool>
               </property>
@@ -263,6 +272,9 @@
                 <pointsize>10</pointsize>
                </font>
               </property>
+              <property name="placeholderText">
+               <string>Required Value To Fill...</string>
+              </property>
               <property name="clearButtonEnabled">
                <bool>true</bool>
               </property>
@@ -273,9 +285,9 @@
           <widget class="QWidget" name="horizontalLayoutWidget_3">
            <property name="geometry">
             <rect>
-             <x>16</x>
+             <x>6</x>
              <y>120</y>
-             <width>751</width>
+             <width>761</width>
              <height>31</height>
             </rect>
            </property>
@@ -319,6 +331,9 @@
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::PlusMinus</enum>
               </property>
+              <property name="showGroupSeparator" stdset="0">
+               <bool>false</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -353,6 +368,9 @@
                 <family>Roboto Mono</family>
                 <pointsize>10</pointsize>
                </font>
+              </property>
+              <property name="prefix">
+               <string>₱ </string>
               </property>
              </widget>
             </item>
@@ -433,9 +451,6 @@
                <pointsize>10</pointsize>
               </font>
              </property>
-             <property name="statusTip">
-              <string>Add All Encoded Entries.</string>
-             </property>
              <property name="text">
               <string>Add Entry</string>
              </property>
@@ -461,9 +476,6 @@
                <pointsize>10</pointsize>
               </font>
              </property>
-             <property name="statusTip">
-              <string>Clear All Encoded Entries.</string>
-             </property>
              <property name="text">
               <string>Clear Entry</string>
              </property>
@@ -488,9 +500,6 @@
                <family>Roboto Mono</family>
                <pointsize>10</pointsize>
               </font>
-             </property>
-             <property name="statusTip">
-              <string>Close 'Add Entry' Window.</string>
              </property>
              <property name="text">
               <string>Close Window</string>
