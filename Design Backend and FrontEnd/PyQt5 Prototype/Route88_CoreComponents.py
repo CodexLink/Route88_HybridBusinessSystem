@@ -10,7 +10,7 @@
                 Jan Patrick Moreno "jaypeemrn" - https://github.com/jaypeemrn
                 Brenda Hernandez "imbrendzzz" - https://github.com/imbrendzzz
 
-    Multi-Level Inheritance Method of Application Architecture:
+    Multi-Level Inheritance Method of Application Architecture: 
         -> 
     Core Component Structure:
         Class Route88_TechnicalCore()
@@ -487,7 +487,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
                 raise Exception('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Type Entry')
             else:
                 TargetTable_Param = self.ModifierCore_GetTargetTable()
-                print('INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), ...))
+                print('INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text()))
         
         except (Exception, MySQL.Error, MySQL.OperationalError) as PushEntryErrMsg:
             print(PushEntryErrMsg)
