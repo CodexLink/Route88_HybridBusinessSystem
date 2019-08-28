@@ -69,7 +69,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Employee Management</string>
+             <string>Transaction Item Management</string>
             </property>
            </item>
            <item>
@@ -79,7 +79,17 @@
            </item>
            <item>
             <property name="text">
-             <string>Transaction Management</string>
+             <string>Supplier Transaction Management</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Receipt Management</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Employee Management</string>
             </property>
            </item>
            <item>
