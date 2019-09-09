@@ -49,7 +49,7 @@ import MySQLdb as MySQL
 import sys
 from os import system as sysCmdArgumentHandler
 from Route88_LoginForm import Ui_Route88_LoginWindow
-from Route88_InventorySystem1 import Ui_Route88_InventorySystemView 
+from Route88_InventorySystem import Ui_Route88_InventorySystemView 
 
 from Route88_Inventory_ModifierEntry import Ui_Route88_Management_Modifier
 #from Route88_POSSystem import ???
@@ -62,16 +62,16 @@ class Route88_TechnicalCore(object):
 
     # MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
     # Initialize MySQL Server Twice, One for Login and Last.... ???
-    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='Route88_EmployeeInfo'):
+    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='Route88_Staff'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
             print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredential, '???'))
         except MySQL.OperationalError as MySQL_ErrorMessage:
-            #self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
+            self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print(MySQL_ErrorMessage)
 
     # Sets CursorType for Iteration which outputs the following CursorType
-    def MySQL_CursorSet(self, CursorType=CursorUseResultMixIn):
+    def MySQL_CursorSet(self, CursorType=None):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
@@ -101,66 +101,69 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
         self.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
         #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
 
-        #self.hide()
-
         self.LoginForm_RFAR()
     # Technical Functions
     # Load Function After UI Rendering.
     def LoginForm_RFAR(self):
         try:
-            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_employeeinfo')
+            self.MySQL_ConnectDatabase()
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-            #self.MySQL_LoadScript()
-            self.LoginForm_ReadUserEnlisted()
-        
+            self.LoginForm_ParseUserEnlisted()
         except Exception as ErrorHandler:
             print(ErrorHandler)
 
     #Route88_LoginForm UI Window Functions - StartPoint
-    def LoginForm_ReadUserEnlisted(self):
+    def LoginForm_ParseUserEnlisted(self):
         try:
             currentRow = 0
-            self.MySQL_CursorSet()
-            self.MySQLDataWireCursor.execute("SELECT COUNT(*) FROM Employees")
-            self.UserEnlistedCount = self.MySQLDataWireCursor.fetchone()[0]
-            self.StatusLabel.setText("Database Loaded with {} Account/s: Ready!".format(self.UserEnlistedCount))
-            if self.UserEnlistedCount == 0:
-                self.MySQLDataWireCursor.execute("INSERT INTO JobPosition VALUES (1, 'Manager')")
-                self.MySQLDataWire.commit()
-                self.UserAcc_SubmitData.setDisabled(False)
-                # Insert Windwo of that window here.
-            else:
-                self.UserAcc_SubmitData.setDisabled(False)
+            self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+            self.MySQLDataWireCursor.execute("SELECT * FROM Employees")
+            UserDataTable = self.MySQLDataWireCursor.fetchall()
+
+            for UserData in UserDataTable:
+                self.UserAcc_Enlisted.setRowCount(currentRow + 1)
+                self.UserAcc_Enlisted.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}, {1}'.format(UserData['lname'], UserData['fname'])))
+                self.UserColumn_1 = self.UserAcc_Enlisted.item(currentRow, 0)
+                self.UserColumn_1.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.UserAcc_Enlisted.setItem(currentRow, 1, QtWidgets.QTableWidgetItem(UserData['JobPosition']))
+                self.UserColumn_2 = self.UserAcc_Enlisted.item(currentRow, 1)
+                self.UserColumn_2.setTextAlignment(QtCore.Qt.AlignCenter)
+                currentRow += 1
+
+            self.StatusLabel.setText("Database Loaded: Ready!")
 
         except MySQL.OperationalError as LoginQueryErrorMsg:
             print('MySQL.OperationalError -> {0}'.format(str(LoginQueryErrorMsg)))
-            self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
+            self.StatusLabel.setText("Database Error: Failed to Load User Data. Please restart the program.")
 
     def LoginForm_DataSubmission(self):
         try:
             self.MySQL_CursorSet(None)
-            QueryReturn = self.MySQLDataWireCursor.execute("SELECT * FROM employees WHERE EmployeeCode = %s AND EmployeePassword = %s", (self.UserAcc_Username.text(), self.UserAcc_Password.text()))
+            RowIndexSelected = self.UserAcc_Enlisted.selectionModel().selectedRows()
+            for RowIndexQuery in sorted(RowIndexSelected):
+                QueryReturn = self.MySQLDataWireCursor.execute("SELECT fname, lname FROM Employees WHERE concat(lname, ', ', fname) = %s AND password = %s", (
+                    RowIndexQuery.data(), self.UserAcc_Password.text()))
                 # After query we need to check if QueryReturn contains non-zero values. If it contains non-zero we proceed. Else not...
+
                 # We need to store the credentials that is equalled to what we expect.
-            if QueryReturn:
-                self.StatusLabel.setText("Login Success: Credential Input Matched!")
-                QSound.play("SysSounds/LoginSuccessNotify.wav")
-                QtTest.QTest.qWait(1500)
-                self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
-                QtTest.QTest.qWait(1500)
-                self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
-                self.hide()
-                self.Route88_InventoryInstance = Route88_ManagementCore()#'RouteTemp_FirstTimer', 'route88_group7')
-                self.Route88_InventoryInstance.show()
-            else:
-                self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
-                QSound.play("SysSounds/LoginFailedNotify.wav")
+                if QueryReturn:
+                    self.StatusLabel.setText("Login Success: Credential Input Matched!")
+                    QSound.play("SysSounds/LoginSuccessNotify.wav")
+                    QtTest.QTest.qWait(1500)
+                    self.StatusLabel.setText("Successfully Logged in as ...".format("Unknown User..."))
+                    QtTest.QTest.qWait(1500)
+                    self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
+                    self.hide()
+                    self.Route88_InventoryInstance = Route88_ManagementCore()
+                    self.Route88_InventoryInstance.show()
+                else:
+                    self.StatusLabel.setText("Login Error: Credential Input Not Matched! Check your Password!")
+                    QSound.play("SysSounds/LoginFailedNotify.wav")
 
         except Exception as LoginSubmissionErrorMsg:
             print(LoginSubmissionErrorMsg)
             self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
             QSound.play("SysSounds/LoginFailedNotify.wav")
-
     # Route88_LoginForm UI Window Functions - EndPoint
 
 
@@ -218,8 +221,7 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
 
     def ManagementSys_RFAR(self):
         try:
-            #self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
-            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_inventory')
+            self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             #Set All Parameters Without User Touching it for straight searching...
             self.ManagementSys_PatternEnabler()
@@ -234,7 +236,6 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
     def ManagementSys_LoadData(self):
         try:
             #Setups
-            
             currentRow = 0
             self.MySQLDataWireCursor.execute("SELECT * FROM InventoryList")
             InventoryDataFetch = self.MySQLDataWireCursor.fetchall()
@@ -551,8 +552,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
 class Route88_WindowController(object):
     def __init__(self, Parent=None):
         #We cannot select initiate a subclass to variable here. So do manual initialization. Which is a standard as well.
-        #self.Route88_InventoryInstance = Route88_ManagementCore()
-        pass
+        self.Route88_InventoryInstance = Route88_ManagementCore()
 
     def WindowSelectionHandler(self, WindowToHide, WindowToShow):
         WindowToHide.hide()

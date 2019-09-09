@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Route88_LoginForm.py'
+# Form implementation generated from reading ui file 'Route88_LoginForm.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #

@@ -3,31 +3,31 @@
  <class>Route88_InventorySystemView</class>
  <widget class="QMainWindow" name="Route88_InventorySystemView">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::ApplicationModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>999</width>
-    <height>416</height>
+    <height>598</height>
    </rect>
   </property>
   <property name="mouseTracking">
    <bool>true</bool>
   </property>
   <property name="focusPolicy">
-   <enum>Qt::NoFocus</enum>
+   <enum>Qt::TabFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Route88 System | Data Management SystemView</string>
+   <string>Route88 System | Inventory SystemView</string>
   </property>
   <property name="windowIcon">
    <iconset>
     <normaloff>IcoDisplay/r_88.ico</normaloff>IcoDisplay/r_88.ico</iconset>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -69,7 +69,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Transaction Item Management</string>
+             <string>Employee Management</string>
             </property>
            </item>
            <item>
@@ -79,17 +79,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Supplier Transaction Management</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Receipt Management</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Employee Management</string>
+             <string>Transaction Management</string>
             </property>
            </item>
            <item>
@@ -488,7 +478,7 @@
           <bool>false</bool>
          </property>
          <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
+          <bool>true</bool>
          </attribute>
          <attribute name="verticalHeaderShowSortIndicator" stdset="0">
           <bool>true</bool>
@@ -499,6 +489,11 @@
          <column>
           <property name="text">
            <string>ItemCode</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>SupplierCode</string>
           </property>
          </column>
          <column>

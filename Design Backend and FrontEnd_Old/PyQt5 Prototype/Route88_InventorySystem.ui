@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>IcoDisplay/r_88.ico</normaloff>IcoDisplay/r_88.ico</iconset>
+    <normaloff>C:/Users/janja/.designer/backup/IcoDisplay/r_88.ico</normaloff>C:/Users/janja/.designer/backup/IcoDisplay/r_88.ico</iconset>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>false</bool>
@@ -155,9 +155,6 @@
                <pointsize>10</pointsize>
               </font>
              </property>
-             <property name="statusTip">
-              <string>Selects a Particular Column To Start Searching For the Value Inputted.</string>
-             </property>
              <property name="currentText">
               <string>None</string>
              </property>
@@ -258,9 +255,6 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
-             </property>
-             <property name="statusTip">
-              <string>Sets a Conditional Operator for Exact Searching Method.</string>
              </property>
              <item>
               <property name="text">
@@ -408,9 +402,6 @@
              <family>Roboto Mono</family>
              <pointsize>10</pointsize>
             </font>
-           </property>
-           <property name="statusTip">
-            <string>Sets a Pattern Condition for Contains Pattern Method.</string>
            </property>
            <item>
             <property name="text">
@@ -576,9 +567,6 @@
            <pointsize>10</pointsize>
           </font>
          </property>
-         <property name="statusTip">
-          <string>Add an Item Entry as A New Data.</string>
-         </property>
          <property name="text">
           <string>Add Entry</string>
          </property>
@@ -602,9 +590,6 @@
           <font>
            <pointsize>10</pointsize>
           </font>
-         </property>
-         <property name="statusTip">
-          <string>Edit or Modify a Particular Selected Row Data.</string>
          </property>
          <property name="text">
           <string>Edit / Modify Selected Entry</string>
@@ -630,9 +615,6 @@
            <pointsize>10</pointsize>
           </font>
          </property>
-         <property name="statusTip">
-          <string>Delete a Particular Selected Row Data.</string>
-         </property>
          <property name="text">
           <string>Delete Selected Entry</string>
          </property>
@@ -656,9 +638,6 @@
           <font>
            <pointsize>10</pointsize>
           </font>
-         </property>
-         <property name="statusTip">
-          <string>Close Add Entry Window</string>
          </property>
          <property name="text">
           <string>Refresh Database</string>
@@ -715,6 +694,9 @@
    </property>
   </action>
   <action name="Staff_SwitchTo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Logout / Switch To...</string>
    </property>
@@ -723,6 +705,9 @@
    </property>
   </action>
   <action name="Staff_Manage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Manage Staffs...</string>
    </property>
@@ -731,6 +716,9 @@
    </property>
   </action>
   <action name="Window_SwitchSystemView">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Switch System...</string>
    </property>

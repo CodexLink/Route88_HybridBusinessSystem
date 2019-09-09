@@ -19,18 +19,24 @@
         Class Route88_LoginCore()
             Methods:
                 -> __init__()
+                    Includes
                 -> <ClassShortName>_RenderExplicitElem
                 -> <ClassShortName>_RFAR
+
         Class Route88_ManagementCore()
             Methods:
                 -> __init__()
+                    Includes
                 -> <ClassShortName>_RenderExplicitElem
                 -> <ClassShortName>_RFAR
+
         Class Route88_POSCore()
             Methods:
                 -> __init__()
+                    Includes
                 -> <ClassShortName>_RenderExplicitElem
                 -> <ClassShortName>_RFAR
+
     
     Legends:
         Definitions:
@@ -49,7 +55,7 @@ import MySQLdb as MySQL
 import sys
 from os import system as sysCmdArgumentHandler
 from Route88_LoginForm import Ui_Route88_LoginWindow
-from Route88_InventorySystem1 import Ui_Route88_InventorySystemView 
+from Route88_InventorySystem import Ui_Route88_InventorySystemView 
 
 from Route88_Inventory_ModifierEntry import Ui_Route88_Management_Modifier
 #from Route88_POSSystem import ???
@@ -67,11 +73,11 @@ class Route88_TechnicalCore(object):
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
             print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredential, '???'))
         except MySQL.OperationalError as MySQL_ErrorMessage:
-            #self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
+            self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print(MySQL_ErrorMessage)
 
     # Sets CursorType for Iteration which outputs the following CursorType
-    def MySQL_CursorSet(self, CursorType=CursorUseResultMixIn):
+    def MySQL_CursorSet(self, CursorType=None):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
@@ -101,8 +107,6 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
         self.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
         #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
 
-        #self.hide()
-
         self.LoginForm_RFAR()
     # Technical Functions
     # Load Function After UI Rendering.
@@ -110,9 +114,7 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
         try:
             self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_employeeinfo')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-            #self.MySQL_LoadScript()
             self.LoginForm_ReadUserEnlisted()
-        
         except Exception as ErrorHandler:
             print(ErrorHandler)
 
@@ -150,7 +152,7 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
                 QtTest.QTest.qWait(1500)
                 self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
                 self.hide()
-                self.Route88_InventoryInstance = Route88_ManagementCore()#'RouteTemp_FirstTimer', 'route88_group7')
+                self.Route88_InventoryInstance = Route88_ManagementCore() #'RouteTemp_FirstTimer', 'route88_group7')
                 self.Route88_InventoryInstance.show()
             else:
                 self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
@@ -218,9 +220,9 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
 
     def ManagementSys_RFAR(self):
         try:
-            #self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
-            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_inventory')
+            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='Route88_Inventory')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+            self.MySQLDataWireCursor.execute('set session transaction isolation level READ COMMITTED')
             #Set All Parameters Without User Touching it for straight searching...
             self.ManagementSys_PatternEnabler()
             self.ManagementSys_SearchFieldSet()
@@ -234,10 +236,10 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
     def ManagementSys_LoadData(self):
         try:
             #Setups
-            
             currentRow = 0
             self.MySQLDataWireCursor.execute("SELECT * FROM InventoryList")
             InventoryDataFetch = self.MySQLDataWireCursor.fetchall()
+            #print(InventoryDataFetch)
             # Fill Query_ColumnOpt First.
             #Fill Inventory Menu
             for InventoryData in InventoryDataFetch:
@@ -343,11 +345,11 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
         elif self.SearchPattern_ContainOpt.isChecked():
             #self.Query_ColumnOpt.model().item(1).setEnabled(True)
             if self.SearchPattern_ComboBox.currentText() == 'Between':
-                self.TargetParameter = '%{}%'.format(self.Query_ValueToSearch.text())
+                self.TargetParameter = "%{}%".format(self.Query_ValueToSearch.text())
             elif self.SearchPattern_ComboBox.currentText() == 'Starting With':
-                self.TargetParameter = '%{}'.format(self.Query_ValueToSearch.text())
+                self.TargetParameter = "%{}".format(self.Query_ValueToSearch.text())
             elif self.SearchPattern_ComboBox.currentText() == 'Ends With':
-                self.TargetParameter = '{}%'.format(self.Query_ValueToSearch.text())
+                self.TargetParameter = "{}%".format(self.Query_ValueToSearch.text())
         else:
             raise ValueError()
             print()
@@ -356,7 +358,7 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
     def ManagementSys_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
         currentRow = 0
         try:
-            if len(self.Query_ValueToSearch.text()) == 0:
+            if len(self.Query_ValueToSearch.text()) < 1:
                 self.InventoryStatus.showMessage('Query Empty... Resetting View...')
                 self.ManagementSys_RefreshData()
             else:
@@ -400,6 +402,8 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
     def ManagementSys_AddEntry(self):
         self.ModifierDialog = Route88_ModifierCore()
         self.ModifierDialog.show()
+
+        print('done')
         #self.ModifierDialog = 
 
     def ManagementSys_EditEntry_Selected(self):
@@ -430,6 +434,8 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
             
     def ManagementSys_RefreshData(self):
         try:
+           #self.MySQLDataWireCursor.close()
+           #self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_employeeinfo')
             self.InventoryTable_View.clearContents()
             for RowLeftOver in range(10):
                 self.InventoryTable_View.removeRow(RowLeftOver)
@@ -455,7 +461,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.ModifierCore_RenderExplicitElem()
-        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
 
 
@@ -472,24 +478,34 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
     # Staff Action Function Declarations
     def ModifierCore_AddEntry(self):
         try:
-            if len(self.AddEntry_ItemCode.text()) <= 3:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Code Entry.')
-                raise Exception('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Code Entry.')
-            if len(self.AddEntry_SupplierCode.text()) <= 3:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Supplier Code Entry')
-                raise Exception('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Supplier Code Entry')
-            if len(self.AddEntry_ItemName.text()) <= 3:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Name Entry')
-                raise Exception('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Name Entry')
-            if len(self.AddEntry_ItemType.text()) <= 3:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Type Entry')
-                raise Exception('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Type Entry')
+            self.MySQL_CursorSet(None)
+            QDateGet = self.AddEntry_DateExpiry.date() 
+            formattedDate = QDateGet.toPyDate()
+            #appendRowLast = self.InventoryTable_View.rowCount()
+            if len(self.AddEntry_ItemCode.text()) == 0:
+                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
+                raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
+            if len(self.AddEntry_SupplierCode.text()) == 0:
+                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Supplier Code Entry')
+                raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Supplier Code Entry')
+            if len(self.AddEntry_ItemName.text()) < 2:
+                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Name Entry')
+                raise Exception('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Name Entry')
+            if len(self.AddEntry_ItemType.text()) < 2:
+                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Type Entry')
+                raise Exception('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Type Entry')
             else:
                 TargetTable_Param = self.ModifierCore_GetTargetTable()
-                print('INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text()))
+                print('[Pushing Value to Table @ InventoryList] -> INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text(), self.AddEntry_Quantity.value(), self.AddEntry_Cost.value(), formattedDate, 1,formattedDate, formattedDate))
+
+                self.MySQLDataWireCursor.execute("INSERT INTO {} VALUES ({}, {}, '{}', '{}', {}, {}, '{}', {}, '{}', '{}')".format(str(TargetTable_Param), str(self.AddEntry_ItemCode.text()), str(self.AddEntry_SupplierCode.text()), str(self.AddEntry_ItemName.text()), str(self.AddEntry_ItemType.text()), str(self.AddEntry_Quantity.value()), str(self.AddEntry_Cost.value()), str(formattedDate), 1,str(formattedDate), str(formattedDate)))
+                self.MySQLDataWire.commit()
+                self.ModifierCore_Status.showMessage('Success Execution -> Successfully Added to Inventory!')
+
         
         except (Exception, MySQL.Error, MySQL.OperationalError) as PushEntryErrMsg:
-            print(PushEntryErrMsg)
+            self.ModifierCore_Status.showMessage('Add Entry Execution Error: Please check your fields!')
+            print('[Technical Information @ ModifierCore_AddEntry] -> {}'.format(PushEntryErrMsg))
             QSound.play("SysSounds/LoginFailedNotify.wav")
     
     def ModifierCore_ClearEntry(self):
@@ -524,7 +540,8 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
         self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def ModifierCore_RFAR(self):
-        pass
+        self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7',SQLDatabase_Target='route88_inventory')
+        self.MySQL_CursorSet(None)
 
     def GetManagementSys_ItemValue(self):
         pass
@@ -551,8 +568,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
 class Route88_WindowController(object):
     def __init__(self, Parent=None):
         #We cannot select initiate a subclass to variable here. So do manual initialization. Which is a standard as well.
-        #self.Route88_InventoryInstance = Route88_ManagementCore()
-        pass
+        self.Route88_InventoryInstance = Route88_ManagementCore()
 
     def WindowSelectionHandler(self, WindowToHide, WindowToShow):
         WindowToHide.hide()

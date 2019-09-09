@@ -49,8 +49,7 @@ import MySQLdb as MySQL
 import sys
 from os import system as sysCmdArgumentHandler
 from Route88_LoginForm import Ui_Route88_LoginWindow
-from Route88_InventorySystem1 import Ui_Route88_InventorySystemView 
-
+from Route88_InventorySystem import Ui_Route88_InventorySystemView
 from Route88_Inventory_ModifierEntry import Ui_Route88_Management_Modifier
 #from Route88_POSSystem import ???
 
@@ -67,11 +66,10 @@ class Route88_TechnicalCore(object):
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
             print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredential, '???'))
         except MySQL.OperationalError as MySQL_ErrorMessage:
-            #self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
-            print(MySQL_ErrorMessage)
+            print('Database Error: {}'.format(MySQL_ErrorMessage))
 
     # Sets CursorType for Iteration which outputs the following CursorType
-    def MySQL_CursorSet(self, CursorType=CursorUseResultMixIn):
+    def MySQL_CursorSet(self, CursorType=None):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
@@ -91,7 +89,6 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
         '''
         #self.Route88_LoginWindow = Ui_Route88_LoginWindow()
         #self.Login_TechnicalCoreHandler = Route88_TechnicalCore()
-
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
 
@@ -161,10 +158,16 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
             self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
             QSound.play("SysSounds/LoginFailedNotify.wav")
 
+    #def MySQL_LoadScript(self):
+    #    for EachCommand.strip() in open("SQLScript/Route88_SQLCreation.sql"):
+    #        self.MySQLDataWireCursor.execute(EachCommand)
+    #    self.MySQLDataWire.commit()
+
     # Route88_LoginForm UI Window Functions - EndPoint
 
 
 class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCore):
+    # QL_UCredentialParam='RouteTemp_FirstTimer', SQL_PCredentialParam='route88_group7'
     def __init__(self, Parent=None):
         super(Route88_ManagementCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
@@ -199,8 +202,8 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
         self.Window_Quit.triggered.connect(self.close)
         #self.Window_Quit.triggered.connect()
 
-        self.TableParameter = 'InventoryList' # Sets Current Table Tempporarily
-        self.ManagementSys_RFAR() #Run This Function After UI Initialization
+        self.TableSelectedParameter = 'inventory_itemlist' # Sets Current Table Tempporarily
+        self.ManagementSys_RFAR()#QL_UCredentialParam, SQL_PCredentialParam) #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
     def ManagementSys_RenderExplicitElem(self):
@@ -213,13 +216,13 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
         
         self.Query_ColumnOpt.model().item(1).setEnabled(False)
 
-        self.InventoryTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
-        self.InventoryTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
+        self.InventoryTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.InventoryTable_View.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Stretch)
 
     def ManagementSys_RFAR(self):
         try:
-            #self.MySQL_ConnectDatabase(SQL_UCredential='root', SQL_PCredential='', SQLDatabase_Target='mydb')
-            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_inventory')
+            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='Route88_Inventory')
+
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             #Set All Parameters Without User Touching it for straight searching...
             self.ManagementSys_PatternEnabler()
@@ -234,26 +237,24 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
     def ManagementSys_LoadData(self):
         try:
             #Setups
-            
             currentRow = 0
-            self.MySQLDataWireCursor.execute("SELECT * FROM InventoryList")
+            self.MySQLDataWireCursor.execute("SELECT * FROM Inventory_ItemList".format(''))
             InventoryDataFetch = self.MySQLDataWireCursor.fetchall()
             # Fill Query_ColumnOpt First.
             #Fill Inventory Menu
             for InventoryData in InventoryDataFetch:
                 self.InventoryTable_View.setRowCount(currentRow + 1)
-                self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemCode'])))
-                self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_SupplierCode'])))
-                self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemName'])))
-                self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ItemType'])))
-                self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_AvailableStock'])))
-                self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ConsumerCost'])))
-                self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_ExpiryDate'])))
-                self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_MenuInclusion'])))
-                self.InventoryTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_CreationTime'])))
-                self.InventoryTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['IL_LastUpdate'])))
+                self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemCode'])))
+                self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemName'])))
+                self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemType'])))
+                self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['AvailableStock'])))
+                self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['Cost'])))
+                self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ExpiryDate'])))
+                self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['MenuInclusion'])))
+                self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['CreationTime'])))
+                self.InventoryTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['LastUpdate'])))
                 
-                for SetCellFixedWidth in range(10):
+                for SetCellFixedWidth in range(8):
                     self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
                     self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
                 currentRow += 1
@@ -284,27 +285,27 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
                 self.SearchPattern_ComboBox.setEnabled(True)
 
             if self.Query_ColumnOpt.currentText() == 'All Columns':
-                self.FieldParameter = "CONCAT(IL_ItemCode, '', IL_SupplierCode ,'', IL_ItemName, '', IL_ItemType, '', IL_AvailableStock, '', IL_ExpiryDate, '', IL_MenuInclusion, '', IL_CreationTime, '', IL_LastUpdate)"
+                self.FieldParameter = "CONCAT(ItemCode, '', SupplierCode ,'', ItemName, '', ItemType, '', AvailableStock, '', ExpiryDate, '', MenuInclusion, '', CreationTime, '', LastUpdate)"
             elif self.Query_ColumnOpt.currentText() == 'Item Code':
-                self.FieldParameter = 'IL_ItemCode'
+                self.FieldParameter = 'ItemCode'
             elif self.Query_ColumnOpt.currentText() == 'Supplier Code':
                 self.FieldParameter = 'IL_SupplierCode'
             elif self.Query_ColumnOpt.currentText() == 'Item Name':
-                self.FieldParameter = 'IL_ItemName'
+                self.FieldParameter = 'ItemName'
             elif self.Query_ColumnOpt.currentText() == 'Type':
-                self.FieldParameter = 'IL_ItemType'
+                self.FieldParameter = 'ItemType'
             elif self.Query_ColumnOpt.currentText() == 'Cost':
-                self.FieldParameter = 'IL_ConsumerCost'
+                self.FieldParameter = 'ConsumerCost'
             elif self.Query_ColumnOpt.currentText() == 'Quantity':
-                self.FieldParameter = 'IL_AvailableStock'
+                self.FieldParameter = 'AvailableStock'
             elif self.Query_ColumnOpt.currentText() == 'Expiry Date':
-                self.FieldParameter = 'IL_ExpiryDate'
+                self.FieldParameter = 'ExpiryDate'
             elif self.Query_ColumnOpt.currentText() == 'Menu Inclusion':
-                self.FieldParameter = 'IL_MenuInclusion'
+                self.FieldParameter = 'MenuInclusion'
             elif self.Query_ColumnOpt.currentText() == 'Data Created':
-                self.FieldParameter = 'IL_CreationTime'
+                self.FieldParameter = 'CreationTime'
             elif self.Query_ColumnOpt.currentText() == 'Last Modified':
-                self.FieldParameter = 'IL_LastUpdate'
+                self.FieldParameter = 'LastUpdate'
             else:
                 print('')
                 raise ValueError('')
@@ -366,24 +367,22 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
                     self.InventoryTable_View.removeRow(RowLeftOver)
 
                 print('[Search Parameters] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
-                print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.TableParameter, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+                print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.TableSelectedParameter, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
 
-                self.MySQLDataWireCursor.execute("SELECT * FROM {} WHERE {} {} '{}'".format(self.TableParameter, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+                self.MySQLDataWireCursor.execute("SELECT * FROM {} WHERE {} {} '{}'".format(self.TableSelectedParameter, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 InventoryTargetDataFetch = self.MySQLDataWireCursor.fetchall()
 
                 for InventoryData in InventoryTargetDataFetch:
                     self.InventoryTable_View.setRowCount(currentRow + 1)
-                    self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemCode'])))
-                    self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_SupplierCode'])))
-                    self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemName'])))
-                    self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemType'])))
-                    self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_AvailableStock'])))
-                    self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ConsumerCost'])))
-                    self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ExpiryDate'])))
-                    self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_MenuInclusion'])))
-                    self.InventoryTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_CreationTime'])))
-                    self.InventoryTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_LastUpdate'])))
-                    
+                    self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemCode'])))
+                    self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemName'])))
+                    self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemType'])))
+                    self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['AvailableStock'])))
+                    self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['Cost'])))
+                    self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ExpiryDate'])))
+                    self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['MenuInclusion'])))
+                    self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['CreationTime'])))
+                    self.InventoryTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['LastUpdate'])))
                     for SetCellFixedWidth in range(10):
                         self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
                         self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -486,7 +485,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
                 raise Exception('Adding Entry Error: Constraint (> 3 Characters) Not Met @ Item Type Entry')
             else:
                 TargetTable_Param = self.ModifierCore_GetTargetTable()
-                print('INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text()))
+                #print('INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text(), self.AddEntry_Quantity.value(), self.AddEntry_Cost.value() )
         
         except (Exception, MySQL.Error, MySQL.OperationalError) as PushEntryErrMsg:
             print(PushEntryErrMsg)
@@ -551,9 +550,8 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
 class Route88_WindowController(object):
     def __init__(self, Parent=None):
         #We cannot select initiate a subclass to variable here. So do manual initialization. Which is a standard as well.
-        #self.Route88_InventoryInstance = Route88_ManagementCore()
+        #   self.Route88_InventoryInstance = Route88_ManagementCore()
         pass
-
     def WindowSelectionHandler(self, WindowToHide, WindowToShow):
         WindowToHide.hide()
         WindowToShow.show()
@@ -562,7 +560,6 @@ class Route88_WindowController(object):
     def ShowLoginCore(self):
         self.Route88_LoginInstance = Route88_LoginCore()
         self.Route88_LoginInstance.show()
-
 
 
 # Literal Procedural Programming Part
