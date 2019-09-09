@@ -1,29 +1,31 @@
-<h1 align="center">Route 88 Bike Cafe’s POS System</h1>
+<h1 align="center">Route 88 Bike Cafe’s Hybrid Management System</h1>
+<h5 align="center">Route 88's Inventory & POS System with Management All-In-One Integration, Specialized in Python PyQt5</h5>
+
 <div align="center" markdown="10">
-  <a href="https://travis-ci.com/CodexLink/DMBS_Route88_POSSystem">
-    <img src="https://badgen.net/travis/CodexLink/DMBS_Route88_POSSystem" alt="Build Status">
+  <a href="https://travis-ci.com/CodexLink/Route88_HybridSystem">
+    <img src="https://badgen.net/travis/CodexLink/Route88_HybridSystem" alt="Build Status">
   </a>
 <a href="https://www.codefactor.io/repository/github/codexlink/dmbs_route88_possystem">
-    <img src="https://www.codefactor.io/repository/github/codexlink/dmbs_route88_possystem/badge" alt="CodeFactor" />
+    <img src="https://www.codefactor.io/repository/github/codexlink/route88_hybridsystem/badge" alt="CodeFactor" />
 </a>
-<a href="https://www.codacy.com/app/CodexLink/DMBS_Route88_POSSystem?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CodexLink/DMBS_Route88_POSSystem&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/78fb2db215e1473e9bc4f4c0dfaa896f"/></a>
-  <a href="https://github.com/CodexLink/DMBS_Route88_POSSystem">
-    <img src="https://badgen.net/github/status/CodexLink/DMBS_Route88_POSSystem" alt="Repository Status">
+<a href="https://www.codacy.com/app/CodexLink/Route88_HybridSystem?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CodexLink/Route88_HybridSystem&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/78fb2db215e1473e9bc4f4c0dfaa896f"/></a>
+  <a href="https://github.com/CodexLink/Route88_HybridSystem">
+    <img src="https://badgen.net/github/status/CodexLink/Route88_HybridSystem" alt="Repository Status">
   </a>
-  <a href="https://github.com/CodexLink/DMBS_Route88_POSSystem">
-    <img src="https://badgen.net/github/open-issues/CodexLink/DMBS_Route88_POSSystem" alt="Current Opened Issues">
+  <a href="https://github.com/CodexLink/Route88_HybridSystem">
+    <img src="https://badgen.net/github/open-issues/CodexLink/Route88_HybridSystem" alt="Current Opened Issues">
   </a>
-  <a href="https://github.com/CodexLink/DMBS_Route88_POSSystem">
-    <img src="https://badgen.net/github/closed-issues/CodexLink/DMBS_Route88_POSSystem" alt="Closed Issues">
+  <a href="https://github.com/CodexLink/Route88_HybridSystem">
+    <img src="https://badgen.net/github/closed-issues/CodexLink/Route88_HybridSystem" alt="Closed Issues">
   </a>
-  <a href="https://github.com/CodexLink/DMBS_Route88_POSSystem">
-    <img src="https://badgen.net/github/last-commit/CodexLink/DMBS_Route88_POSSystem" alt="Repository Last Commit">
+  <a href="https://github.com/CodexLink/Route88_HybridSystem">
+    <img src="https://badgen.net/github/last-commit/CodexLink/Route88_HybridSystem" alt="Repository Last Commit">
   </a>
-  <a href="https://github.com/CodexLink/DMBS_Route88_POSSystem">
-    <img src="https://badgen.net/github/assets-dl/CodexLink/DMBS_Route88_POSSystem" alt="Repository Downloads">
+  <a href="https://github.com/CodexLink/Route88_HybridSystem">
+    <img src="https://badgen.net/github/assets-dl/CodexLink/Route88_HybridSystem" alt="Repository Downloads">
   </a>
-  <a href="https://github.com/CodexLink/DMBS_Route88_POSSystem">
-    <img src="https://badgen.net/github/license/CodexLink/DMBS_Route88_POSSystem" alt="Repository License">
+  <a href="https://github.com/CodexLink/Route88_HybridSystem">
+    <img src="https://badgen.net/github/license/CodexLink/Route88_HybridSystem" alt="Repository License">
   </a>
 </div>
 
@@ -97,5 +99,5 @@ Here are the list of authors who is taking part of the project.
 
 ## License
 
-This project is licensed under the GNU v3 License - see the [LICENSE.md](https://github.com/CodexLink/DMBS_Route88_POSSystem/blob/master/LICENSE) file for details
+This project is licensed under the GNU v3 License - see the [LICENSE.md](https://github.com/CodexLink/Route88_HybridSystem/blob/master/LICENSE) file for details
 
