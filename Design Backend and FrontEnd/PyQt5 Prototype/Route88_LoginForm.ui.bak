@@ -181,7 +181,7 @@
      </font>
     </property>
     <property name="title">
-     <string>User Code</string>
+     <string>User Name</string>
     </property>
     <property name="flat">
      <bool>false</bool>

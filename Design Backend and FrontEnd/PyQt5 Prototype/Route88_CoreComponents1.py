@@ -68,7 +68,7 @@ class Route88_TechnicalCore(object):
 
     # MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
     # Initialize MySQL Server Twice, One for Login and Last.... ???
-    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='Route88_EmployeeInfo'):
+    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_EmployeeInfo'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
             print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredential, '???'))
@@ -112,12 +112,14 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
     # Load Function After UI Rendering.
     def LoginForm_RFAR(self):
         try:
-            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_employeeinfo')
+            self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='route88_employees')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             self.LoginForm_ReadUserEnlisted()
         except Exception as ErrorHandler:
             print(ErrorHandler)
-
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
+            sys.exit() # Terminate the program at all cost.
     #Route88_LoginForm UI Window Functions - StartPoint
     def LoginForm_ReadUserEnlisted(self):
         try:
@@ -125,9 +127,10 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
             self.MySQL_CursorSet()
             self.MySQLDataWireCursor.execute("SELECT COUNT(*) FROM Employees")
             self.UserEnlistedCount = self.MySQLDataWireCursor.fetchone()[0]
-            self.StatusLabel.setText("Database Loaded with {} Account/s: Ready!".format(self.UserEnlistedCount))
+            self.StatusLabel.setText("Database Loaded. Ready~!")
             if self.UserEnlistedCount == 0:
-                self.MySQLDataWireCursor.execute("INSERT INTO JobPosition VALUES (1, 'Manager')")
+                self.MySQLDataWireCursor.execute("INSERT INTO Employees (EmployeeCode, FirstName, LastName, PositionCode, EmployeePassword) VALUES (1, 'Janrey', 'Licas', 1, 'CdxLnk121')")
+                self.MySQLDataWireCursor.execute("INSERT INTO JobPosition VALUES (1, 'Manager')") # Remove Comment If Necessary
                 self.MySQLDataWire.commit()
                 self.UserAcc_SubmitData.setDisabled(False)
                 # Insert Windwo of that window here.
@@ -137,17 +140,20 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
         except MySQL.OperationalError as LoginQueryErrorMsg:
             print('MySQL.OperationalError -> {0}'.format(str(LoginQueryErrorMsg)))
             self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(LoginQueryErrorMsg)), QtWidgets.QMessageBox.Ok)
+            sys.exit() # Terminate the program at all cost.
 
     def LoginForm_DataSubmission(self):
         try:
             self.MySQL_CursorSet(None)
-            QueryReturn = self.MySQLDataWireCursor.execute("SELECT * FROM employees WHERE EmployeeCode = %s AND EmployeePassword = %s", (self.UserAcc_Username.text(), self.UserAcc_Password.text()))
+            QueryReturn = self.MySQLDataWireCursor.execute("SELECT * FROM Employees WHERE EmployeeCode = %s AND EmployeePassword = %s", (self.UserAcc_Username.text(), self.UserAcc_Password.text()))
                 # After query we need to check if QueryReturn contains non-zero values. If it contains non-zero we proceed. Else not...
                 # We need to store the credentials that is equalled to what we expect.
             if QueryReturn:
                 self.StatusLabel.setText("Login Success: Credential Input Matched!")
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
-                QtTest.QTest.qWait(1500)
+                QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '{}'. ".format('NA'), QtWidgets.QMessageBox.Ok)
                 self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
                 QtTest.QTest.qWait(1500)
                 self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
@@ -157,6 +163,9 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
             else:
                 self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
                 QSound.play("SysSounds/LoginFailedNotify.wav")
+                QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Login Failed', "Login Failed! Credential Input Not Matched. Check your User Code or your Password which may be written in Caps Lock. Please Try Again.", QtWidgets.QMessageBox.Ok)
+
+                
 
         except Exception as LoginSubmissionErrorMsg:
             print(LoginSubmissionErrorMsg)
@@ -220,7 +229,7 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
 
     def ManagementSys_RFAR(self):
         try:
-            self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='Route88_Inventory')
+            self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Inventory')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             self.MySQLDataWireCursor.execute('set session transaction isolation level READ COMMITTED')
             #Set All Parameters Without User Touching it for straight searching...
@@ -435,7 +444,7 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
     def ManagementSys_RefreshData(self):
         try:
            #self.MySQLDataWireCursor.close()
-           #self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7', SQLDatabase_Target='route88_employeeinfo')
+           #self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='123456789', SQLDatabase_Target='route88_employeeinfo')
             self.InventoryTable_View.clearContents()
             for RowLeftOver in range(10):
                 self.InventoryTable_View.removeRow(RowLeftOver)
@@ -540,7 +549,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
         self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def ModifierCore_RFAR(self):
-        self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='route88_group7',SQLDatabase_Target='route88_inventory')
+        self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_inventory')
         self.MySQL_CursorSet(None)
 
     def GetManagementSys_ItemValue(self):
