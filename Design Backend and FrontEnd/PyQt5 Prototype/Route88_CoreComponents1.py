@@ -204,7 +204,7 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, QtWidgets.QMainWind
         self.StaffAct_Delete.clicked.connect(self.ManagementSys_DeleteEntry_Selected)
         self.StaffAct_RefreshData.clicked.connect(self.ManagementSys_RefreshData)
 
-        self.Window_Quit.triggered.connect(self.close)
+        self.Window_Quit.triggered.connect(self.ManagementSys_ReturnWindow)
         #self.Window_Quit.triggered.connect()
 
         self.TableParameter = 'InventoryList' # Sets Current Table Tempporarily
@@ -400,6 +400,11 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, QtWidgets.QMainWind
         except (Exception, MySQL.Error, MySQL.OperationalError) as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(SearchQueryError))
             print('[Exception Thrown @ ManagementSys_SearchVal] -> {0}'.format(SearchQueryError))
+
+    def ManagementSys_ReturnWindow(self):
+        self.close()
+        self.ReturnWinInst = Route88_WindowController()
+        self.ReturnWinInst.show()
 
     # Staff Action Functions
 
