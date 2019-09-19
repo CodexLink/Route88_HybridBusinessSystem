@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Route88_MainController(object):
+class Ui_Route88_MainController(QtWidgets.QMainWindow):
     def setupUi(self, Route88_MainController):
         Route88_MainController.setObjectName("Route88_MainController")
         Route88_MainController.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -34,8 +34,8 @@ class Ui_Route88_MainController(object):
         Route88_MainController.setToolTip("")
         Route88_MainController.setWhatsThis("")
         Route88_MainController.setStyleSheet("")
-        Route88_MainController.setSizeGripEnabled(True)
-        Route88_MainController.setModal(True)
+        #Route88_MainController.setSizeGripEnabled(True)
+        #Route88_MainController.setModal(True)
         self.GroupContainer_StaffAccount = QtWidgets.QGroupBox(Route88_MainController)
         self.GroupContainer_StaffAccount.setGeometry(QtCore.QRect(9, 116, 653, 311))
         self.GroupContainer_StaffAccount.setTitle("")

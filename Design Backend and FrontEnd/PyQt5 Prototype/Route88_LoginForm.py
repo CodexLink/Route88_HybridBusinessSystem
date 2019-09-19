@@ -190,7 +190,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.GroupContainer_PassCred.setTitle(_translate("Route88_LoginWindow", "Password"))
         self.UserAcc_Password.setPlaceholderText(_translate("Route88_LoginWindow", "Required Field..."))
         self.UserAcc_SubmitData.setText(_translate("Route88_LoginWindow", "Submit Data"))
-        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_LoginWindow", "User Name"))
+        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_LoginWindow", "User Code"))
         self.UserAcc_Username.setPlaceholderText(_translate("Route88_LoginWindow", "Required Field.."))
         self.label.setText(_translate("Route88_LoginWindow", "Route88 Bike Café"))
         self.label_2.setText(_translate("Route88_LoginWindow", " Point of Sale and Inventory System"))

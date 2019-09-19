@@ -56,8 +56,8 @@ import sys
 from os import system as sysCmdArgumentHandler
 from Route88_LoginForm import Ui_Route88_LoginWindow
 from Route88_InventorySystem import Ui_Route88_InventorySystemView 
-
 from Route88_Inventory_ModifierEntry import Ui_Route88_Management_Modifier
+from Route88_Controller import Ui_Route88_MainController
 #from Route88_POSSystem import ???
 
 # This class contains all technical function that would be used by these multiple class of multiple window.
@@ -82,7 +82,6 @@ class Route88_TechnicalCore(object):
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
             print(CursorErrMsg)
-
 
 class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
     # Class Initializer, __init__
@@ -133,7 +132,6 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
                 self.MySQLDataWireCursor.execute("INSERT INTO JobPosition VALUES (1, 'Manager')") # Remove Comment If Necessary
                 self.MySQLDataWire.commit()
                 self.UserAcc_SubmitData.setDisabled(False)
-                # Insert Windwo of that window here.
             else:
                 self.UserAcc_SubmitData.setDisabled(False)
 
@@ -157,9 +155,9 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
                 self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
                 QtTest.QTest.qWait(1500)
                 self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
-                self.hide()
-                self.Route88_InventoryInstance = Route88_ManagementCore() #'RouteTemp_FirstTimer', 'route88_group7')
-                self.Route88_InventoryInstance.show()
+                self.Route88_MCInst = Route88_WindowController() #'RouteTemp_FirstTimer', 'route88_group7')
+                self.Route88_MCInst.show()
+                self.close()
             else:
                 self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
                 QSound.play("SysSounds/LoginFailedNotify.wav")
@@ -173,7 +171,6 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
             QSound.play("SysSounds/LoginFailedNotify.wav")
 
     # Route88_LoginForm UI Window Functions - EndPoint
-
 
 class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCore):
     def __init__(self, Parent=None):
@@ -572,30 +569,36 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
             print('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
             raise ValueError('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
 
-
-
-class Route88_WindowController(object):
+class Route88_WindowController(Ui_Route88_MainController, Route88_TechnicalCore):
     def __init__(self, Parent=None):
-        #We cannot select initiate a subclass to variable here. So do manual initialization. Which is a standard as well.
-        self.Route88_InventoryInstance = Route88_ManagementCore()
+        super(Route88_WindowController, self).__init__(Parent=Parent)
+        self.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
 
-    def WindowSelectionHandler(self, WindowToHide, WindowToShow):
-        WindowToHide.hide()
-        WindowToShow.show()
-
+        self.ctrl_ManageSystem.clicked.connect(self.ShowManagementCore)
+        #self.ctrl_POSSystem.clicked.connect(self.)
+        self.ctrl_UserLogout.clicked.connect(self.ShowLoginCore)
+        
+        #self.Route88_POSInst = Route88_LoginCore()
 
     def ShowLoginCore(self):
-        self.Route88_LoginInstance = Route88_LoginCore()
-        self.Route88_LoginInstance.show()
-
-
+        self.close()
+        self.Route88_LoginInst = Route88_LoginCore()
+        self.Route88_LoginInst.show()
+    def ShowManagementCore(self):
+        self.close()
+        self.Route88_ManageInst = Route88_ManagementCore()
+        self.Route88_ManageInst.show()
+    def ShowPOSCore(self):
+        pass
 
 # Literal Procedural Programming Part
 if __name__ == "__main__":
     sysCmdArgumentHandler('CLS') # Clear Output Buffer so we can debug with dignity.
     print('[Application App Startup] Route88_Core Application Version 0, Debug Output')
     app = QtWidgets.QApplication(sys.argv)
-    Route88_InstanceController = Route88_WindowController()
-    Route88_InstanceController.ShowLoginCore()
+    Route88_InitialInst = Route88_LoginCore()
+    Route88_InitialInst.show()
     sys.exit(app.exec_())
     #print('[Application Shutdown] Terminating PyQt5 Engine...')
