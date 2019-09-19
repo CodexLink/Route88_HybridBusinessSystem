@@ -83,7 +83,7 @@ class Route88_TechnicalCore(object):
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
             print(CursorErrMsg)
 
-class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
+class Route88_LoginCore(Ui_Route88_LoginWindow, QtWidgets.QMainWindow, Route88_TechnicalCore):
     # Class Initializer, __init__
     def __init__(self, Parent=None):
         super(Route88_LoginCore, self).__init__(Parent=Parent)
@@ -172,7 +172,7 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, Route88_TechnicalCore):
 
     # Route88_LoginForm UI Window Functions - EndPoint
 
-class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCore):
+class Route88_ManagementCore(Ui_Route88_InventorySystemView, QtWidgets.QMainWindow, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_ManagementCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
@@ -462,7 +462,7 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, Route88_TechnicalCo
         if event.key() == QtCore.Qt.Key_Space:
             print("EventKeyPressed: Space")
 
-class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore):
+class Route88_ModifierCore(Ui_Route88_Management_Modifier, QtWidgets.QMainWindow, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
@@ -546,7 +546,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
         self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def ModifierCore_RFAR(self):
-        self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_inventory')
+        self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_management')
         self.MySQL_CursorSet(None)
 
     def GetManagementSys_ItemValue(self):
@@ -569,7 +569,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, Route88_TechnicalCore
             print('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
             raise ValueError('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
 
-class Route88_WindowController(Ui_Route88_MainController, Route88_TechnicalCore):
+class Route88_WindowController(Ui_Route88_MainController, QtWidgets.QMainWindow, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_WindowController, self).__init__(Parent=Parent)
         self.setupUi(self)

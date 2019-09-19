@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Route88_MainController(QtWidgets.QMainWindow):
+class Ui_Route88_MainController(object):
     def setupUi(self, Route88_MainController):
         Route88_MainController.setObjectName("Route88_MainController")
         Route88_MainController.setWindowModality(QtCore.Qt.ApplicationModal)
