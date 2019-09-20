@@ -129,3 +129,4 @@ build/
 *.db
 *.DS_Store
 .vscode/
+*.json

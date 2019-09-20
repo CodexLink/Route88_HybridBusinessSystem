@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Route88_LoginWindow</class>
- <widget class="QDialog" name="Route88_LoginWindow">
+ <class>Route88_Login_Window</class>
+ <widget class="QDialog" name="Route88_Login_Window">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -48,7 +48,7 @@
    <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string notr="true">Route88 System | Login</string>
+   <string notr="true">Route88 System | Login Access</string>
   </property>
   <property name="toolTip">
    <string notr="true"/>
@@ -181,12 +181,12 @@
      </font>
     </property>
     <property name="title">
-     <string>User Name</string>
+     <string>User Code</string>
     </property>
     <property name="flat">
      <bool>false</bool>
     </property>
-    <widget class="QLineEdit" name="UserAcc_Username">
+    <widget class="QLineEdit" name="UserAcc_UserCode">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -469,7 +469,7 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>UserAcc_Username</tabstop>
+  <tabstop>UserAcc_UserCode</tabstop>
   <tabstop>UserAcc_Password</tabstop>
   <tabstop>UserAcc_SubmitData</tabstop>
  </tabstops>

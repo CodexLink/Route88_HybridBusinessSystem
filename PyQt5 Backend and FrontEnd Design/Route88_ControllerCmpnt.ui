@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Route88_MainController</class>
- <widget class="QDialog" name="Route88_MainController">
+ <class>Route88_Controller_Window</class>
+ <widget class="QDialog" name="Route88_Controller_Window">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -48,7 +48,7 @@
    <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string notr="true">Route88 System | Controller</string>
+   <string notr="true">Route88 System | Controller Menu</string>
   </property>
   <property name="toolTip">
    <string notr="true"/>
@@ -93,7 +93,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Route 88 Controller Unknown Status...</string>
+     <string>...</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
@@ -112,7 +112,7 @@
      </font>
     </property>
     <property name="title">
-     <string>User Information</string>
+     <string>Welcome Back, Staff~!</string>
     </property>
     <widget class="QGroupBox" name="GroupContainer_PassCred_2">
      <property name="geometry">
@@ -155,7 +155,7 @@
        </font>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>...</string>
       </property>
      </widget>
     </widget>
@@ -200,14 +200,14 @@
        </font>
       </property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>...</string>
       </property>
      </widget>
     </widget>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>180</y>
        <width>251</width>
        <height>16</height>
@@ -238,6 +238,24 @@
      </property>
      <property name="text">
       <string>Log-out</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="ctrl_ExitProgram">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>210</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Quit</string>
      </property>
     </widget>
    </widget>
@@ -565,7 +583,7 @@
         <string notr="true">color: rgb(255, 255, 255)</string>
        </property>
        <property name="text">
-        <string>System Controller of POS and Management System</string>
+        <string>POS and Management System | [Add Time Here]</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

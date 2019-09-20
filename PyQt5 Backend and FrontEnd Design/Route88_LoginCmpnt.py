@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Route88_LoginForm.ui'
+# Form implementation generated from reading ui file 'Route88_LoginCmpnt.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -10,31 +10,33 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
-    def setupUi(self, Route88_LoginWindow):
-        Route88_LoginWindow.setObjectName("Route88_LoginWindow")
-        Route88_LoginWindow.setWindowModality(QtCore.Qt.ApplicationModal)
-        Route88_LoginWindow.resize(430, 316)
+class Ui_Route88_Login_Window(object):
+    def setupUi(self, Route88_Login_Window):
+        Route88_Login_Window.setObjectName("Route88_Login_Window")
+        Route88_Login_Window.setWindowModality(QtCore.Qt.ApplicationModal)
+        Route88_Login_Window.resize(430, 316)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(Route88_LoginWindow.sizePolicy().hasHeightForWidth())
-        Route88_LoginWindow.setSizePolicy(sizePolicy)
-        Route88_LoginWindow.setMinimumSize(QtCore.QSize(430, 316))
-        Route88_LoginWindow.setMaximumSize(QtCore.QSize(430, 316))
+        sizePolicy.setHeightForWidth(Route88_Login_Window.sizePolicy().hasHeightForWidth())
+        Route88_Login_Window.setSizePolicy(sizePolicy)
+        Route88_Login_Window.setMinimumSize(QtCore.QSize(430, 316))
+        Route88_Login_Window.setMaximumSize(QtCore.QSize(430, 316))
         font = QtGui.QFont()
         font.setFamily("Roboto")
         font.setBold(False)
         font.setWeight(50)
-        Route88_LoginWindow.setFont(font)
-        Route88_LoginWindow.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        Route88_LoginWindow.setTabletTracking(False)
-        Route88_LoginWindow.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        Route88_LoginWindow.setWindowTitle("Route88 System | Login")
-        Route88_LoginWindow.setToolTip("")
-        Route88_LoginWindow.setWhatsThis("")
-        Route88_LoginWindow.setStyleSheet("")
-        self.GroupContainer_StaffAccount = QtWidgets.QGroupBox(Route88_LoginWindow)
+        Route88_Login_Window.setFont(font)
+        Route88_Login_Window.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        Route88_Login_Window.setTabletTracking(False)
+        Route88_Login_Window.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        Route88_Login_Window.setWindowTitle("Route88 System | Login Access")
+        Route88_Login_Window.setToolTip("")
+        Route88_Login_Window.setWhatsThis("")
+        Route88_Login_Window.setStyleSheet("")
+        Route88_Login_Window.setSizeGripEnabled(True)
+        Route88_Login_Window.setModal(True)
+        self.GroupContainer_StaffAccount = QtWidgets.QGroupBox(Route88_Login_Window)
         self.GroupContainer_StaffAccount.setGeometry(QtCore.QRect(10, 110, 401, 171))
         self.GroupContainer_StaffAccount.setTitle("")
         self.GroupContainer_StaffAccount.setObjectName("GroupContainer_StaffAccount")
@@ -82,17 +84,17 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.GroupContainer_PassCred_2.setFont(font)
         self.GroupContainer_PassCred_2.setFlat(False)
         self.GroupContainer_PassCred_2.setObjectName("GroupContainer_PassCred_2")
-        self.UserAcc_Username = QtWidgets.QLineEdit(self.GroupContainer_PassCred_2)
-        self.UserAcc_Username.setGeometry(QtCore.QRect(0, 30, 371, 31))
+        self.UserAcc_UserCode = QtWidgets.QLineEdit(self.GroupContainer_PassCred_2)
+        self.UserAcc_UserCode.setGeometry(QtCore.QRect(0, 30, 371, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
-        self.UserAcc_Username.setFont(font)
-        self.UserAcc_Username.setInputMask("")
-        self.UserAcc_Username.setMaxLength(50)
-        self.UserAcc_Username.setEchoMode(QtWidgets.QLineEdit.Normal)
-        self.UserAcc_Username.setClearButtonEnabled(True)
-        self.UserAcc_Username.setObjectName("UserAcc_Username")
-        self.frame = QtWidgets.QFrame(Route88_LoginWindow)
+        self.UserAcc_UserCode.setFont(font)
+        self.UserAcc_UserCode.setInputMask("")
+        self.UserAcc_UserCode.setMaxLength(50)
+        self.UserAcc_UserCode.setEchoMode(QtWidgets.QLineEdit.Normal)
+        self.UserAcc_UserCode.setClearButtonEnabled(True)
+        self.UserAcc_UserCode.setObjectName("UserAcc_UserCode")
+        self.frame = QtWidgets.QFrame(Route88_Login_Window)
         self.frame.setGeometry(QtCore.QRect(0, 0, 431, 101))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -172,7 +174,7 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.StatusLabel = QtWidgets.QLabel(Route88_LoginWindow)
+        self.StatusLabel = QtWidgets.QLabel(Route88_Login_Window)
         self.StatusLabel.setGeometry(QtCore.QRect(10, 290, 421, 31))
         font = QtGui.QFont()
         font.setFamily("Roboto Mono")
@@ -180,28 +182,28 @@ class Ui_Route88_LoginWindow(QtWidgets.QMainWindow):
         self.StatusLabel.setFont(font)
         self.StatusLabel.setObjectName("StatusLabel")
 
-        self.retranslateUi(Route88_LoginWindow)
-        QtCore.QMetaObject.connectSlotsByName(Route88_LoginWindow)
-        Route88_LoginWindow.setTabOrder(self.UserAcc_Username, self.UserAcc_Password)
-        Route88_LoginWindow.setTabOrder(self.UserAcc_Password, self.UserAcc_SubmitData)
+        self.retranslateUi(Route88_Login_Window)
+        QtCore.QMetaObject.connectSlotsByName(Route88_Login_Window)
+        Route88_Login_Window.setTabOrder(self.UserAcc_UserCode, self.UserAcc_Password)
+        Route88_Login_Window.setTabOrder(self.UserAcc_Password, self.UserAcc_SubmitData)
 
-    def retranslateUi(self, Route88_LoginWindow):
+    def retranslateUi(self, Route88_Login_Window):
         _translate = QtCore.QCoreApplication.translate
-        self.GroupContainer_PassCred.setTitle(_translate("Route88_LoginWindow", "Password"))
-        self.UserAcc_Password.setPlaceholderText(_translate("Route88_LoginWindow", "Required Field..."))
-        self.UserAcc_SubmitData.setText(_translate("Route88_LoginWindow", "Submit Data"))
-        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_LoginWindow", "User Code"))
-        self.UserAcc_Username.setPlaceholderText(_translate("Route88_LoginWindow", "Required Field.."))
-        self.label.setText(_translate("Route88_LoginWindow", "Route88 Bike Café"))
-        self.label_2.setText(_translate("Route88_LoginWindow", " Point of Sale and Inventory System"))
-        self.StatusLabel.setText(_translate("Route88_LoginWindow", "Status Unknown..."))
+        self.GroupContainer_PassCred.setTitle(_translate("Route88_Login_Window", "Password"))
+        self.UserAcc_Password.setPlaceholderText(_translate("Route88_Login_Window", "Required Field..."))
+        self.UserAcc_SubmitData.setText(_translate("Route88_Login_Window", "Submit Data"))
+        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_Login_Window", "User Code"))
+        self.UserAcc_UserCode.setPlaceholderText(_translate("Route88_Login_Window", "Required Field.."))
+        self.label.setText(_translate("Route88_Login_Window", "Route88 Bike Café"))
+        self.label_2.setText(_translate("Route88_Login_Window", " Point of Sale and Inventory System"))
+        self.StatusLabel.setText(_translate("Route88_Login_Window", "Status Unknown..."))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Route88_LoginWindow = QtWidgets.QDialog()
-    ui = Ui_Route88_LoginWindow()
-    ui.setupUi(Route88_LoginWindow)
-    Route88_LoginWindow.show()
+    Route88_Login_Window = QtWidgets.QDialog()
+    ui = Ui_Route88_Login_Window()
+    ui.setupUi(Route88_Login_Window)
+    Route88_Login_Window.show()
     sys.exit(app.exec_())

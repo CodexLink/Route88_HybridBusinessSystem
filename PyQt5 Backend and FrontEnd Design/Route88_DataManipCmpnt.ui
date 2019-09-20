@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Route88_Management_Modifier</class>
- <widget class="QMainWindow" name="Route88_Management_Modifier">
+ <class>Route88_DataManipulation_Window</class>
+ <widget class="QMainWindow" name="Route88_DataManipulation_Window">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -29,7 +29,7 @@
    <enum>Qt::NoFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Route88 System | Management Modifiers |</string>
+   <string>Route88 System | Data Manipulation |</string>
   </property>
   <property name="windowIcon">
    <iconset>
