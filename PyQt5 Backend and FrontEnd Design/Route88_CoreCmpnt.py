@@ -84,7 +84,7 @@ class Route88_TechnicalCore(object):
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
             print(CursorErrMsg)
 
-class Route88_LoginCore(Ui_Route88_LoginWindow, QtWidgets.QMainWindow, Route88_TechnicalCore):
+class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     # Class Initializer, __init__
     def __init__(self, Parent=None):
         super(Route88_LoginCore, self).__init__(Parent=Parent)
@@ -174,7 +174,7 @@ class Route88_LoginCore(Ui_Route88_LoginWindow, QtWidgets.QMainWindow, Route88_T
 
     # Route88_LoginForm UI Window Functions - EndPoint
 
-class Route88_ManagementCore(Ui_Route88_InventorySystemView, QtWidgets.QMainWindow, Route88_TechnicalCore):
+class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_ManagementCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
@@ -481,7 +481,7 @@ class Route88_ManagementCore(Ui_Route88_InventorySystemView, QtWidgets.QMainWind
         if event.key() == QtCore.Qt.Key_Space:
             print("EventKeyPressed: Space")
 
-class Route88_ModifierCore(Ui_Route88_Management_Modifier, QtWidgets.QMainWindow, Route88_TechnicalCore):
+class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWindow, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
@@ -588,7 +588,7 @@ class Route88_ModifierCore(Ui_Route88_Management_Modifier, QtWidgets.QMainWindow
             print('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
             raise ValueError('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
 
-class Route88_WindowController(Ui_Route88_MainController, QtWidgets.QMainWindow, Route88_TechnicalCore):
+class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_WindowController, self).__init__(Parent=Parent)
         self.setupUi(self)
