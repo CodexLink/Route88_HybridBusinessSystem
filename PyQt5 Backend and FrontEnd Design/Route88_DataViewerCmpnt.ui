@@ -51,7 +51,7 @@
          </font>
         </property>
         <property name="title">
-         <string>Table Selection</string>
+         <string>Data Table Selection</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
@@ -64,37 +64,37 @@
            </property>
            <item>
             <property name="text">
-             <string>Inventory Management</string>
+             <string>Inventory Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Transaction Item Management</string>
+             <string>Transaction Item Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Supplier Management</string>
+             <string>Supplier Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Supplier Transaction Management</string>
+             <string>Supplier Transaction Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Receipt Management</string>
+             <string>Receipt Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Employee Management</string>
+             <string>Employee Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Position Management</string>
+             <string>Position Data</string>
             </property>
            </item>
           </widget>
@@ -443,7 +443,7 @@
        </font>
       </property>
       <property name="title">
-       <string>Management Table View</string>
+       <string>Data Table View</string>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -506,6 +506,7 @@
       <property name="font">
        <font>
         <family>Roboto Mono</family>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="title">

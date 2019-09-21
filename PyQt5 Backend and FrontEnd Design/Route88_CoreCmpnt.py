@@ -423,11 +423,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     def DataVCore_ModifierInit(self):
         pass
     def DataVCore_AddEntry(self):
-        # Make ModifierDialog as QDialod To Block Functions
         self.ModifierDialog = Route88_ModifierCore()
-        self.ModifierDialog.show()
-
-        #self.ModifierDialog = 
+        self.ModifierDialog.exec_()
+        self.DataVCore_RefreshData()
 
     def DataVCore_EditEntry_Selected(self):
         pass
@@ -479,7 +477,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         if event.key() == QtCore.Qt.Key_Space:
             print("EventKeyPressed: Space")
 
-class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWindow, Route88_TechnicalCore):
+class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
@@ -489,8 +487,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
 
 
     # Button Binds to Functions
-        for SetDisability in range(1, 5):
-            self.Tab_SelectionSelectives.setTabEnabled(SetDisability, False)
+        #for SetDisability in range(1, 5):
+        #    self.Tab_SelectionSelectives.setTabEnabled(SetDisability, False)
         
         self.Modifier_CloseWindow.clicked.connect(self.close)
         self.Modifier_AddEntry.clicked.connect(self.DataMCore_AddEntry)
@@ -509,15 +507,16 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
             if len(self.AddEntry_ItemCode.text()) == 0:
                 self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
                 raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
-            if len(self.AddEntry_SupplierCode.text()) == 0:
+            elif len(self.AddEntry_SupplierCode.text()) == 0:
                 self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Supplier Code Entry')
                 raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Supplier Code Entry')
-            if len(self.AddEntry_ItemName.text()) < 2:
+            elif len(self.AddEntry_ItemName.text()) < 2:
                 self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Name Entry')
                 raise Exception('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Name Entry')
-            if len(self.AddEntry_ItemType.text()) < 2:
+            elif len(self.AddEntry_ItemType.text()) < 2:
                 self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Type Entry')
                 raise Exception('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Type Entry')
+            #elif len()
             else:
                 TargetTable_Param = self.DataMCore_GetTargetTable()
                 print('[Pushing Value to Table @ InventoryList] -> INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text(), self.AddEntry_Quantity.value(), self.AddEntry_Cost.value(), formattedDate, 1,formattedDate, formattedDate))
@@ -565,8 +564,6 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
     
         # Technical Functions
     def DataMCore_RenderExplicitElem(self):
-        self.DataMCore_Status = QtWidgets.QStatusBar()
-        self.setStatusBar(self.DataMCore_Status)
         self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def DataMCore_RFAR(self):
