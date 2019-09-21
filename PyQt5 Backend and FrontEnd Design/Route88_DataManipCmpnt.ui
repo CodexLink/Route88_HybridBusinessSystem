@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>491</height>
+    <height>388</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -69,7 +69,7 @@
        </property>
        <widget class="QWidget" name="InventoryEntryWindow">
         <attribute name="title">
-         <string>Inventory Entries</string>
+         <string>Inventory</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
@@ -425,9 +425,14 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="TransactionEntries">
+        <attribute name="title">
+         <string>Item Transaction</string>
+        </attribute>
+       </widget>
        <widget class="QWidget" name="EmployeeEntryWindow">
         <attribute name="title">
-         <string>Employee Entries</string>
+         <string>Employee</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
@@ -953,17 +958,22 @@
        </widget>
        <widget class="QWidget" name="SupplierEntryWindow">
         <attribute name="title">
-         <string>Supplier Entries</string>
+         <string>Supplier</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Supplier Transaction</string>
         </attribute>
        </widget>
        <widget class="QWidget" name="TransactionEntryWindow">
         <attribute name="title">
-         <string>Transaction Entries</string>
+         <string>Customer Transaction</string>
         </attribute>
        </widget>
        <widget class="QWidget" name="PositionEntryTable">
         <attribute name="title">
-         <string>Position Entries</string>
+         <string>Job Position</string>
         </attribute>
         <widget class="QWidget" name="horizontalLayoutWidget_7">
          <property name="geometry">
@@ -1106,7 +1116,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Add Entry</string>
+         <string>Add / Apply Modified Entry</string>
         </property>
        </widget>
       </item>

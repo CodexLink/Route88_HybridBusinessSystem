@@ -482,7 +482,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.DataMCore_RenderExplicitElem()
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
 
 
@@ -546,7 +546,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.AddEntry_Quantity.setValue(0)
             self.AddEntry_Cost.setValue(0.0)
             self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
-            self.DataMCore_Status.showMessage('Fields Cleared. Ready To Get Inputs~!'.format(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())))
+            self.DataMCore_Status.showMessage('Fields Cleared. Ready To Get Inputs~!')
+            #(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex()))) WTF is this?
             print('[Execution @ DataMCore_ClearEntry] ->  Finished. Ready!'.format(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())))
         elif self.Tab_SelectionSelectives.currentIndex() == 1:
             pass

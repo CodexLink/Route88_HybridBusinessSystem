@@ -144,7 +144,7 @@
      <property name="flat">
       <bool>false</bool>
      </property>
-     <widget class="QLabel" name="user_FirstName">
+     <widget class="QLabel" name="user_StaffName">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -297,6 +297,27 @@
       <property name="verticalSpacing">
        <number>30</number>
       </property>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="ctrl_POSSystem">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Launch POS System</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QPushButton" name="ctrl_ManageSystem">
         <property name="sizePolicy">
@@ -315,39 +336,19 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="ctrl_POSSystem">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Launch POS System</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
-       <widget class="QCheckBox" name="ctrl_optHideOnLaunch">
+       <widget class="QPushButton" name="ctrl_AboutSystem">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
         <property name="text">
-         <string>Hide Window On Launch</string>
+         <string>About This System</string>
         </property>
        </widget>
       </item>
@@ -515,7 +516,7 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>60</x>
       <y>10</y>
       <width>81</width>
       <height>81</height>
@@ -525,7 +526,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Design Component Experimentations/PyQt5 Design Attempt/r_88.ico</pixmap>
+     <pixmap>IcoDisplay/r_88.ico</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -587,7 +588,7 @@
         <string notr="true">color: rgb(255, 255, 255)</string>
        </property>
        <property name="text">
-        <string>POS and Management System | [Add Time Here]</string>
+        <string>Point-Of-Sales and Data Management System</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -602,7 +603,6 @@
   <tabstop>ctrl_UserLogout</tabstop>
   <tabstop>ctrl_ManageSystem</tabstop>
   <tabstop>ctrl_POSSystem</tabstop>
-  <tabstop>ctrl_optHideOnLaunch</tabstop>
  </tabstops>
  <resources/>
  <connections/>

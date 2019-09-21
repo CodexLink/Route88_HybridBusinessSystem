@@ -164,7 +164,7 @@ class Ui_Route88_Login_Window(object):
         self.label_3 = QtWidgets.QLabel(self.frame)
         self.label_3.setGeometry(QtCore.QRect(10, 10, 81, 81))
         self.label_3.setText("")
-        self.label_3.setPixmap(QtGui.QPixmap("../../Design Component Experimentations/PyQt5 Design Attempt/r_88.ico"))
+        self.label_3.setPixmap(QtGui.QPixmap("IcoDisplay/r_88.ico"))
         self.label_3.setScaledContents(True)
         self.label_3.setObjectName("label_3")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.frame)
@@ -174,6 +174,10 @@ class Ui_Route88_Login_Window(object):
         self.horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label.raise_()
+        self.label_2.raise_()
+        self.horizontalLayoutWidget.raise_()
+        self.label_3.raise_()
         self.StatusLabel = QtWidgets.QLabel(Route88_Login_Window)
         self.StatusLabel.setGeometry(QtCore.QRect(10, 290, 421, 31))
         font = QtGui.QFont()
@@ -189,13 +193,13 @@ class Ui_Route88_Login_Window(object):
 
     def retranslateUi(self, Route88_Login_Window):
         _translate = QtCore.QCoreApplication.translate
-        self.GroupContainer_PassCred.setTitle(_translate("Route88_Login_Window", "Password"))
+        self.GroupContainer_PassCred.setTitle(_translate("Route88_Login_Window", "Staff Password"))
         self.UserAcc_Password.setPlaceholderText(_translate("Route88_Login_Window", "Required Field..."))
         self.UserAcc_SubmitData.setText(_translate("Route88_Login_Window", "Submit Data"))
-        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_Login_Window", "User Code"))
+        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_Login_Window", "Staff Username"))
         self.UserAcc_UserCode.setPlaceholderText(_translate("Route88_Login_Window", "Required Field.."))
         self.label.setText(_translate("Route88_Login_Window", "Route88 Bike Café"))
-        self.label_2.setText(_translate("Route88_Login_Window", " Point of Sale and Inventory System"))
+        self.label_2.setText(_translate("Route88_Login_Window", " Point of Sale and Management System"))
         self.StatusLabel.setText(_translate("Route88_Login_Window", "..."))
 
 

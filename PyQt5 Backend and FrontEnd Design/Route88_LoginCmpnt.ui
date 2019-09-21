@@ -99,7 +99,7 @@
      </font>
     </property>
     <property name="title">
-     <string>Password</string>
+     <string>Staff Password</string>
     </property>
     <property name="flat">
      <bool>false</bool>
@@ -181,7 +181,7 @@
      </font>
     </property>
     <property name="title">
-     <string>User Code</string>
+     <string>Staff Username</string>
     </property>
     <property name="flat">
      <bool>false</bool>
@@ -410,7 +410,7 @@
      <string notr="true">color: rgb(255, 255, 255)</string>
     </property>
     <property name="text">
-     <string> Point of Sale and Inventory System</string>
+     <string> Point of Sale and Management System</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -426,7 +426,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../Design Component Experimentations/PyQt5 Design Attempt/r_88.ico</pixmap>
+     <pixmap>IcoDisplay/r_88.ico</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -447,6 +447,10 @@
      </property>
     </layout>
    </widget>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>label_3</zorder>
   </widget>
   <widget class="QLabel" name="StatusLabel">
    <property name="geometry">
