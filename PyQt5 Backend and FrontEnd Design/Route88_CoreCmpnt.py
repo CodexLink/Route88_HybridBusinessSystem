@@ -20,33 +20,33 @@
             Methods:
                 -> __init__()
                     Includes
-                -> <ClassShortName>_RenderExplicitElem
-                -> <ClassShortName>_RFAR
+                -> <ClassShortName>_RenderExplicits
+                -> <ClassShortName>_RunAfterRender
 
         Class Route88_ManagementCore()
             Methods:
                 -> __init__()
                     Includes
-                -> <ClassShortName>_RenderExplicitElem
-                -> <ClassShortName>_RFAR
+                -> <ClassShortName>_RenderExplicits
+                -> <ClassShortName>_RunAfterRender
 
         Class Route88_POSCore()
             Methods:
                 -> __init__()
                     Includes
-                -> <ClassShortName>_RenderExplicitElem
-                -> <ClassShortName>_RFAR
+                -> <ClassShortName>_RenderExplicits
+                -> <ClassShortName>_RunAfterRender
 
     
     Legends:
         Definitions:
-            _RenderExplicitElem -> Render Explicit Elements
-            _RFAR -> Run Function After Render
+            _RenderExplicits -> Render Explicit Elements
+            _RunAfterRender -> Run Function After Render
         Functions:
             __init__() -> Class Initializers, Possibly Constructors
-            <ClassShortName>_RenderExplicitElem -> Load Extra Elements from 'That' UI
+            <ClassShortName>_RenderExplicits -> Load Extra Elements from 'That' UI
                 > This was implemented to ensure that changes from the UI file will not     affect any additional elements that we just manually added which cannot be initiated with Qt Designer, this would result to extra elements  remains whatver UI file changes after generating using 'pyuic5' module.
-            <ClassShortName>_RFAR -> Condition, Must Be After setupUi()
+            <ClassShortName>_RunAfterRender -> Condition, Must Be After setupUi()
                 > This was implemented right after setupUi(). Because, we have to   initialize every value from the database which would then be shown after  UI has been render. So that when the engine initiates .show(). All   values is already there. So in sort, setup Values and Elements.
 '''
 from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
@@ -61,93 +61,93 @@ from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
 from Route88_ControllerCmpnt import Ui_Route88_Controller_Window
 #from Route88_POSSystem import ???
 
-# This class contains all technical function that would be used by these multiple class of multiple window.
-
+# This class is a database controller by wrapping all confusing parts into a callable function...
 class Route88_TechnicalCore(object):
     def __init__(self, Parent=None):
         super().__init__()
 
-    # MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
-    # Initialize MySQL Server Twice, One for Login and Last.... ???
-    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management'):
+    def MySQL_OpenCon(self, HostServerIP='localhost', SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
             print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is now logged as {}.".format("...", SQL_UCredential, '???'))
 
-        except MySQL.OperationalError as MySQL_ErrorMessage:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ErrorMessage:
+            QSound.play("SysSounds/LoginFailedNotify.wav")
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
-            print(MySQL_ErrorMessage)
+            print('[Exception @ MySQL_OpenCon] > Cannot Open / Establish Connection with the MySQL Database. Technical Error |> {}'.format(str(MySQL_ErrorMessage)))
 
-    # Sets CursorType for Iteration which outputs the following CursorType
     def MySQL_CursorSet(self, CursorType=None):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
-        except (Exception, MySQL.OperationalError) as CursorErrMsg:
-            print(CursorErrMsg)
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as CursorErrMsg:
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            print('[Exception @ MySQL_CursorSet] > Invalid Cursor Set. Report this problem to the developers. Technical Error |> {}'.format(str(CursorErrMsg)))
 
     def MySQL_ExecuteState(self, MySQLStatement):
         try:
             self.MySQLDataWireCursor.execute(str(MySQLStatement))
-        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
-            print(MySQL_ExecError) # Style This One Soon.
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            print('[Exception @ MySQL_ExecuteState] > Error in SQL Statements. Double check your statements. Technical Error |> {}'.format(str(MySQL_ExecError))) # Style This One Soon.
     
     def MySQL_FetchOneData(self, TupleIndex):
         try:
             return self.MySQLDataWireCursor.fetchone()[TupleIndex]
-        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
-            print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index.')
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_FetchOError:
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Technical Error |> {}'.format(str(MySQL_FetchOError)))
     
     def MySQL_FetchAllData(self):
         try:
             return self.MySQLDataWireCursor.fetchall()
-        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
-            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your statements.')
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_FetchAError:
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your statements. Technical Error |> {}'.format(str(MySQL_FetchAError)))
     
     def MySQL_CommitData(self):
         try:
             return self.MySQLDataWire.commit()
-        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
-            print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.')
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_CommitError:
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Technical Error |> {}'.format(str(MySQL_CommitError)))
+
+    def MySQL_CloseCon(self):
+        try:
+            return self.MySQLDataWire.close()
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as ClosingErr:
+            QSound.play("SysSounds/LoginFailedNotify.wav")
+            print('[Exception @ MySQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Technical Error |> {}'.format(str(ClosingErr)))
+            
+            
 
 class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    # Class Initializer, __init__
     def __init__(self, Parent=None):
         super(Route88_LoginCore, self).__init__(Parent=Parent)
-        '''
-            LoginWindow is Not Initialized / Seperate as a Function for Initialization.
-                Note: The reason why we did this is because I don't things to be more complicated as it should be.
-                So that when my other members start to read my code, it is exactly stated here that we want first to initialize LoginWindow
-                other than anything that they thought, 'what the hell is this argument that you pass?'
-                ~ All other window will be seperately initialized...
-        '''
-
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-
+        # Window Flags
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
         # Button Binds for Window 'Route88_LoginForm'
         self.UserAcc_UserCode.returnPressed.connect(self.UserAcc_SubmitData.click)
         self.UserAcc_Password.returnPressed.connect(self.UserAcc_SubmitData.click)
-        self.UserAcc_SubmitData.clicked.connect(self.LoginForm_DataSubmission)
-        #Run The Following Functions for Initializing User Data @ Window 'Route88_LoginForm'
+        self.UserAcc_SubmitData.clicked.connect(self.LoginCore_DataSubmission)
+        # RunAfterRender Slot
+        self.LoginCore_RunAfterRender()
 
-        self.LoginForm_RFAR()
-    # Technical Functions
-    # Load Function After UI Rendering.
-    def LoginForm_RFAR(self):
+    def LoginCore_RunAfterRender(self):
         try:
-            self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='route88_employees')
+            self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='route88_employees')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-            self.LoginForm_ReadUserEnlisted()
+            self.LoginCore_CheckEnlisted()
 
         except Exception as ErrorHandler:
             QSound.play("SysSounds/LoginFailedNotify.wav")
-            print('[Exception @ LoginForm_RFAR] > {}'.format(str(ErrorHandler)))
+            print('[Exception @ LoginCore_RunAfterRender] > {}'.format(str(ErrorHandler)))
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
 
     #Route88_LoginForm UI Window Functions - StartPoint
-    def LoginForm_ReadUserEnlisted(self):
+    def LoginCore_CheckEnlisted(self):
         try:
             currentRow = 0
             self.MySQL_CursorSet()
@@ -171,18 +171,20 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(LoginQueryErrorMsg)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
 
-    def LoginForm_DataSubmission(self):
+    def LoginCore_DataSubmission(self):
         try:
             self.MySQL_CursorSet(None)
-            QueryReturn = self.MySQLDataWireCursor.execute("SELECT * FROM Employees WHERE EmployeeCode = %s AND EmployeePassword = %s", (self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
+            QueryReturn = self.MySQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = %s AND EmployeePassword = %s", (self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
                 # After query we need to check if QueryReturn contains non-zero values. If it contains non-zero we proceed. Else not...
                 # We need to store the credentials that is equalled to what we expect.
             if QueryReturn:
-                self.StatusLabel.setText("Login Success: Credential Input Matched!")
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
+                self.StatusLabel.setText("Login Success: Credential Input Matched!")
+
                 QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '{}'. ".format('NA'), QtWidgets.QMessageBox.Ok)
                 self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
-                QtTest.QTest.qWait(1500)
+
+                QtTest.QTest.qWait(1300)
                 self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
                 self.Route88_MCInst = Route88_WindowController() #'RouteTemp_FirstTimer', 'route88_group7')
                 self.Route88_MCInst.show()
@@ -206,7 +208,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         super(Route88_ManagementCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
         self.setupUi(self)
-        self.DataVCore_RenderExplicitElem()
+        self.DataVCore_RenderExplicits()
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         # Button Binds for Window 'Route88_InventoryDesign'
         # > Search Query Binds
@@ -237,10 +239,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         #self.Window_Quit.triggered.connect()
 
         self.DataTableTarget = 'InventoryList' # Sets Current Table Tempporarily
-        #self.DataVCore_RFAR() #Run This Function After UI Initialization
+        #self.DataVCore_RunAfterRender() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
-    def DataVCore_RenderExplicitElem(self): # Turn This To Render Columns According To Active Window
+    def DataVCore_RenderExplicits(self): # Turn This To Render Columns According To Active Window
         try:
             currentRow = 0
             self.InventoryStatus = QtWidgets.QStatusBar()
@@ -257,11 +259,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             #self.InventoryTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
         except (Exception, MySQL.OperationalError, BaseException) as RenderErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(RenderErrorMsg))
-            print('[Exception Thrown @ DataVCore_RenderExplicitElem] -> {0}'.format(RenderErrorMsg))
+            print('[Exception Thrown @ DataVCore_RenderExplicits] -> {0}'.format(RenderErrorMsg))
 
-    def DataVCore_RFAR(self):
+    def DataVCore_RunAfterRender(self):
         try:
-            self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management')
+            self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             self.MySQLDataWireCursor.execute('set session transaction isolation level READ COMMITTED')
             #Set All Parameters Without User Touching it for straight searching...
@@ -272,7 +274,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.DataVCore_LoadTableData()
         except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
-            print('[Exception Thrown @ DataVCore_RFAR] -> {0}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ DataVCore_RunAfterRender] -> {0}'.format(FunctionErrorMsg))
 
     def DataVCore_LoadTableColumn(self):
         pass
@@ -483,7 +485,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     def DataVCore_RefreshData(self):
         try:
            #self.MySQLDataWireCursor.close()
-           #self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='123456789', SQLDatabase_Target='route88_employeeinfo')
+           #self.MySQL_OpenCon(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='123456789', SQLDatabase_Target='route88_employeeinfo')
             self.InventoryTable_View.clearContents()
             for RowLeftOver in range(10):
                 self.InventoryTable_View.removeRow(RowLeftOver)
@@ -508,7 +510,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
     def __init__(self, Parent=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
-        self.DataMCore_RenderExplicitElem()
+        self.DataMCore_RenderExplicits()
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
 
@@ -521,7 +523,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         self.Modifier_AddEntry.clicked.connect(self.DataMCore_AddEntry)
         self.Modifier_ClearEntry.clicked.connect(self.DataMCore_ClearEntry)
 
-        self.DataMCore_RFAR()
+        self.DataMCore_RunAfterRender()
 
     # Staff Action Function Declarations
     def DataMCore_AddEntry(self):
@@ -591,11 +593,11 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             print('[Exception @ Modifier_ClearEntry] Current Index of Selected Tab does not match from any defined conditions.')
     
         # Technical Functions
-    def DataMCore_RenderExplicitElem(self):
+    def DataMCore_RenderExplicits(self):
         self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
-    def DataMCore_RFAR(self):
-        self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_management')
+    def DataMCore_RunAfterRender(self):
+        self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_management')
         self.MySQL_CursorSet(None)
 
     def GetDataVCore_ItemValue(self):
