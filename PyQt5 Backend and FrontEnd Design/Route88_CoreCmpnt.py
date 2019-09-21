@@ -179,41 +179,41 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         super(Route88_ManagementCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
         self.setupUi(self)
-        self.ManagementSys_RenderExplicitElem()
+        self.DataVCore_RenderExplicitElem()
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         # Button Binds for Window 'Route88_InventoryDesign'
         # > Search Query Binds
-        self.Query_ColumnOpt.currentIndexChanged.connect(self.ManagementSys_SearchFieldSet)
-        self.Query_Operator.currentIndexChanged.connect(self.ManagementSys_OperatorSet)
+        self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchFieldSet)
+        self.Query_Operator.currentIndexChanged.connect(self.DataVCore_OperatorSet)
 
-        self.Query_ColumnOpt.currentIndexChanged.connect(self.ManagementSys_SearchVal)
-        self.Query_Operator.currentIndexChanged.connect(self.ManagementSys_SearchVal)
+        self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchVal)
+        self.Query_Operator.currentIndexChanged.connect(self.DataVCore_SearchVal)
 
-        self.Query_ValueToSearch.textChanged.connect(self.ManagementSys_PatternSet)
-        self.Query_ValueToSearch.textChanged.connect(self.ManagementSys_SearchVal)
+        self.Query_ValueToSearch.textChanged.connect(self.DataVCore_PatternSet)
+        self.Query_ValueToSearch.textChanged.connect(self.DataVCore_SearchVal)
 
-        self.SearchPattern_ExactOpt.clicked.connect(self.ManagementSys_PatternEnabler)
-        self.SearchPattern_ContainOpt.clicked.connect(self.ManagementSys_PatternEnabler)
+        self.SearchPattern_ExactOpt.clicked.connect(self.DataVCore_PatternEnabler)
+        self.SearchPattern_ContainOpt.clicked.connect(self.DataVCore_PatternEnabler)
 
-        self.SearchPattern_ExactOpt.clicked.connect(self.ManagementSys_SearchVal)
-        self.SearchPattern_ContainOpt.clicked.connect(self.ManagementSys_SearchVal)
+        self.SearchPattern_ExactOpt.clicked.connect(self.DataVCore_SearchVal)
+        self.SearchPattern_ContainOpt.clicked.connect(self.DataVCore_SearchVal)
         
-        self.SearchPattern_ComboBox.currentIndexChanged.connect(self.ManagementSys_PatternSet)
+        self.SearchPattern_ComboBox.currentIndexChanged.connect(self.DataVCore_PatternSet)
 
         # > Staff Action Binds 
-        self.StaffAct_Add.clicked.connect(self.ManagementSys_AddEntry)
-        self.StaffAct_Edit.clicked.connect(self.ManagementSys_EditEntry_Selected)
-        self.StaffAct_Delete.clicked.connect(self.ManagementSys_DeleteEntry_Selected)
-        self.StaffAct_RefreshData.clicked.connect(self.ManagementSys_RefreshData)
+        self.StaffAct_Add.clicked.connect(self.DataVCore_AddEntry)
+        self.StaffAct_Edit.clicked.connect(self.DataVCore_EditEntry_Selected)
+        self.StaffAct_Delete.clicked.connect(self.DataVCore_DeleteEntry_Selected)
+        self.StaffAct_RefreshData.clicked.connect(self.DataVCore_RefreshData)
 
-        self.Window_Quit.triggered.connect(self.ManagementSys_ReturnWindow)
+        self.Window_Quit.triggered.connect(self.DataVCore_ReturnWindow)
         #self.Window_Quit.triggered.connect()
 
         self.TableParameter = 'InventoryList' # Sets Current Table Tempporarily
-        #self.ManagementSys_RFAR() #Run This Function After UI Initialization
+        #self.DataVCore_RFAR() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
-    def ManagementSys_RenderExplicitElem(self): # Turn This To Render Columns According To Active Window
+    def DataVCore_RenderExplicitElem(self): # Turn This To Render Columns According To Active Window
         try:
             currentRow = 0
             self.InventoryStatus = QtWidgets.QStatusBar()
@@ -230,27 +230,27 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             #self.InventoryTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
         except (Exception, MySQL.OperationalError, BaseException) as RenderErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(RenderErrorMsg))
-            print('[Exception Thrown @ ManagementSys_RenderExplicitElem] -> {0}'.format(RenderErrorMsg))
+            print('[Exception Thrown @ DataVCore_RenderExplicitElem] -> {0}'.format(RenderErrorMsg))
 
-    def ManagementSys_RFAR(self):
+    def DataVCore_RFAR(self):
         try:
             self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             self.MySQLDataWireCursor.execute('set session transaction isolation level READ COMMITTED')
             #Set All Parameters Without User Touching it for straight searching...
-            self.ManagementSys_PatternEnabler()
-            self.ManagementSys_SearchFieldSet()
-            self.ManagementSys_OperatorSet()
-            self.ManagementSys_PatternSet()
-            self.ManagementSys_LoadTableData()
+            self.DataVCore_PatternEnabler()
+            self.DataVCore_SearchFieldSet()
+            self.DataVCore_OperatorSet()
+            self.DataVCore_PatternSet()
+            self.DataVCore_LoadTableData()
         except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
-            print('[Exception Thrown @ ManagementSys_RFAR] -> {0}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ DataVCore_RFAR] -> {0}'.format(FunctionErrorMsg))
 
-    def ManagementSys_LoadTableColumn(self):
+    def DataVCore_LoadTableColumn(self):
         pass
 
-    def ManagementSys_LoadTableData(self):
+    def DataVCore_LoadTableData(self):
         try:
             #Setups
             currentRow = 0
@@ -277,16 +277,16 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
                 currentRow += 1
             self.InventoryStatus.showMessage('Database Query Process: TableView Data Refreshed from MySQL Database Sucess! Ready!')
-            print('[Database Query Process @ ManagementSys_LoadTableData] -> TableView Data Refreshed from MySQL Database Sucess! Ready!')
+            print('[Database Query Process @ DataVCore_LoadTableData] -> TableView Data Refreshed from MySQL Database Sucess! Ready!')
 
         except (Exception, MySQL.OperationalError, MySQL.Error) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
-            print('[Exception Thrown @ ManagementSys_LoadTableData] -> {0}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ DataVCore_LoadTableData] -> {0}'.format(FunctionErrorMsg))
 
     # Interactive Button to Function
     # Menu Bar Functions
     # Table Selection Functions
-    def ManagementSys_SearchFieldSet(self):
+    def DataVCore_SearchFieldSet(self):
         if self.Query_ColumnOpt.currentText() == 'None':
             self.Query_Operator.setEnabled(False)
             self.Query_ValueToSearch.setEnabled(False)
@@ -299,7 +299,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.Query_ValueToSearch.setEnabled(True)
             self.SearchPattern_ContainOpt.setEnabled(True)
             self.SearchPattern_ExactOpt.setEnabled(True)
+
             if self.SearchPattern_ContainOpt.isChecked():
+                self.Query_Operator.setEnabled(False)
                 self.SearchPattern_ComboBox.setEnabled(True)
 
             if self.Query_ColumnOpt.currentText() == 'All Columns':
@@ -328,7 +330,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('')
                 raise ValueError('')
 
-    def ManagementSys_OperatorSet(self):
+    def DataVCore_OperatorSet(self):
         if self.SearchPattern_ExactOpt.isChecked():
             self.OperatorParameter = self.Query_Operator.currentText()
         elif self.SearchPattern_ContainOpt.isChecked():
@@ -337,24 +339,24 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             raise ValueError()
             print()
 
-    def ManagementSys_PatternEnabler(self):
+    def DataVCore_PatternEnabler(self):
         if self.SearchPattern_ExactOpt.isChecked():
             self.SearchPattern_ComboBox.setEnabled(False)
             self.Query_Operator.setEnabled(True)
-            self.ManagementSys_OperatorSet()
-            self.ManagementSys_PatternSet()
+            self.DataVCore_OperatorSet()
+            self.DataVCore_PatternSet()
             self.InventoryStatus.showMessage('Search Pattern: Switched to Exact Mode...')
         elif self.SearchPattern_ContainOpt.isChecked():
             self.Query_Operator.setEnabled(False)
-            self.ManagementSys_OperatorSet()
-            self.ManagementSys_PatternSet()
+            self.DataVCore_OperatorSet()
+            self.DataVCore_PatternSet()
             self.SearchPattern_ComboBox.setEnabled(True)
             self.InventoryStatus.showMessage('Search Pattern: Switched to Pattern String Mode...')
         else:
             self.InventoryStatus.showMessage('Application Error: No Other Radio Buttons has a state of Bool(True).')
-            raise ValueError('[Exception Thrown @ ManagementSys_PatternSet] -> No Other Radio Buttons has a state of Bool(True).')
+            raise ValueError('[Exception Thrown @ DataVCore_PatternSet] -> No Other Radio Buttons has a state of Bool(True).')
 
-    def ManagementSys_PatternSet(self):
+    def DataVCore_PatternSet(self):
         if self.SearchPattern_ExactOpt.isChecked():
             #self.Query_ColumnOpt.model().item(1).setEnabled(False)
             self.TargetParameter = '{}'.format(self.Query_ValueToSearch.text())
@@ -372,12 +374,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             print()
             
         # Actual Search Function
-    def ManagementSys_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
+    def DataVCore_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
         currentRow = 0
         try:
             if len(self.Query_ValueToSearch.text()) < 1:
                 self.InventoryStatus.showMessage('Query Empty... Resetting View...')
-                self.ManagementSys_RefreshData()
+                self.DataVCore_RefreshData()
             else:
                 self.InventoryStatus.showMessage('Looking for {0}...'.format(str(self.Query_ValueToSearch.text())))
                 self.InventoryTable_View.clearContents()
@@ -410,31 +412,27 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(SearchQueryError))
-            print('[Exception Thrown @ ManagementSys_SearchVal] -> {0}'.format(SearchQueryError))
+            print('[Exception Thrown @ DataVCore_SearchVal] -> {0}'.format(SearchQueryError))
 
-    def ManagementSys_ReturnWindow(self):
+    def DataVCore_ReturnWindow(self):
         self.close()
         self.ReturnWinInst = Route88_WindowController()
         self.ReturnWinInst.show()
 
     # Staff Action Functions
-    def ManagementSys_ModifierInit(self):
+    def DataVCore_ModifierInit(self):
         pass
-    def ManagementSys_AddEntry(self):
+    def DataVCore_AddEntry(self):
         # Make ModifierDialog as QDialod To Block Functions
         self.ModifierDialog = Route88_ModifierCore()
         self.ModifierDialog.show()
 
-        #Get Some Blocking Function Here
-        self.ManagementSys_RefreshData()
-
-
         #self.ModifierDialog = 
 
-    def ManagementSys_EditEntry_Selected(self):
+    def DataVCore_EditEntry_Selected(self):
         pass
 
-    def ManagementSys_DeleteEntry_Selected(self):
+    def DataVCore_DeleteEntry_Selected(self):
         try:
             if self.InventoryTable_View.rowCount == 0:
                 self.StaffAct_Delete.setEnabled(False)
@@ -455,9 +453,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
             self.InventoryStatus.showMessage('Deletion Query Process Error -> {}'.format(DelectionErrMsg))
-            print('[Exception Thrown @ ManagementSys_DeleteEntry_Selected] -> {0}'.format(str(DelectionErrMsg)))
+            print('[Exception Thrown @ DataVCore_DeleteEntry_Selected] -> {0}'.format(str(DelectionErrMsg)))
             
-    def ManagementSys_RefreshData(self):
+    def DataVCore_RefreshData(self):
         try:
            #self.MySQLDataWireCursor.close()
            #self.MySQL_ConnectDatabase(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='123456789', SQLDatabase_Target='route88_employeeinfo')
@@ -465,13 +463,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for RowLeftOver in range(10):
                 self.InventoryTable_View.removeRow(RowLeftOver)
 
-            self.InventoryStatus.showMessage('[Data Query Process @ ManagementSys_RefreshData] -> Attempting To Refresh Data from MySQL Database...')
+            self.InventoryStatus.showMessage('[Data Query Process @ DataVCore_RefreshData] -> Attempting To Refresh Data from MySQL Database...')
             self.InventoryStatus.showMessage('Database Query Process: Attempting To Refresh Data from MySQL Database...')
             QtTest.QTest.qWait(900)
-            self.ManagementSys_LoadTableData()
+            self.DataVCore_LoadTableData()
         except (Exception, MySQL.Error, MySQL.OperationalError) as RefreshError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(str(RefreshError)))
-            raise Exception('[Exception Thrown @ ManagementSys_RefreshData] -> {0}'.format(str(RefreshError)))
+            raise Exception('[Exception Thrown @ DataVCore_RefreshData] -> {0}'.format(str(RefreshError)))
 
     # Event Handlers
     def keyPressEvent(self, event):
@@ -485,7 +483,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
     def __init__(self, Parent=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
-        self.ModifierCore_RenderExplicitElem()
+        self.DataMCore_RenderExplicitElem()
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
 
@@ -495,45 +493,52 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
             self.Tab_SelectionSelectives.setTabEnabled(SetDisability, False)
         
         self.Modifier_CloseWindow.clicked.connect(self.close)
-        self.Modifier_AddEntry.clicked.connect(self.ModifierCore_AddEntry)
-        self.Modifier_ClearEntry.clicked.connect(self.ModifierCore_ClearEntry)
+        self.Modifier_AddEntry.clicked.connect(self.DataMCore_AddEntry)
+        self.Modifier_ClearEntry.clicked.connect(self.DataMCore_ClearEntry)
 
-        self.ModifierCore_RFAR()
+        self.DataMCore_RFAR()
 
     # Staff Action Function Declarations
-    def ModifierCore_AddEntry(self):
+    def DataMCore_AddEntry(self):
         try:
             self.MySQL_CursorSet(None)
             QDateGet = self.AddEntry_DateExpiry.date() 
             formattedDate = QDateGet.toPyDate()
+            # Add More Options Here
             #appendRowLast = self.InventoryTable_View.rowCount()
             if len(self.AddEntry_ItemCode.text()) == 0:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
+                self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
                 raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
             if len(self.AddEntry_SupplierCode.text()) == 0:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Supplier Code Entry')
+                self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Supplier Code Entry')
                 raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Supplier Code Entry')
             if len(self.AddEntry_ItemName.text()) < 2:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Name Entry')
+                self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Name Entry')
                 raise Exception('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Name Entry')
             if len(self.AddEntry_ItemType.text()) < 2:
-                self.ModifierCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Type Entry')
+                self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Type Entry')
                 raise Exception('Adding Entry Error: Constraint (> 2 Characters) Not Met @ Item Type Entry')
             else:
-                TargetTable_Param = self.ModifierCore_GetTargetTable()
+                TargetTable_Param = self.DataMCore_GetTargetTable()
                 print('[Pushing Value to Table @ InventoryList] -> INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text(), self.AddEntry_Quantity.value(), self.AddEntry_Cost.value(), formattedDate, 1,formattedDate, formattedDate))
 
-                self.MySQLDataWireCursor.execute("INSERT INTO {} VALUES ({}, {}, '{}', '{}', {}, {}, '{}', {}, '{}', '{}')".format(str(TargetTable_Param), str(self.AddEntry_ItemCode.text()), str(self.AddEntry_SupplierCode.text()), str(self.AddEntry_ItemName.text()), str(self.AddEntry_ItemType.text()), str(self.AddEntry_Quantity.value()), str(self.AddEntry_Cost.value()), str(formattedDate), 1,str(formattedDate), str(formattedDate)))
-                self.MySQLDataWire.commit()
-                self.ModifierCore_Status.showMessage('Success Execution -> Successfully Added to Inventory!')
+                #self.MySQLDataWireCursor.execute("INSERT INTO {} VALUES ({}, {}, '{}', '{}', {}, {}, '{}', {}, '{}', '{}')".format(str(TargetTable_Param), str(self.AddEntry_ItemCode.text()), str(self.AddEntry_SupplierCode.text()), str(self.AddEntry_ItemName.text()), str(self.AddEntry_ItemType.text()), str(self.AddEntry_Quantity.value()), str(self.AddEntry_Cost.value()), str(formattedDate), 1,str(formattedDate), str(formattedDate)))
+                #self.MySQLDataWire.commit()
+                self.DataMCore_Status.showMessage('Success Execution -> Successfully Added to Inventory!')
+                #Get Some Blocking Function Here
+                self.Route88_ManagementCore().DataVCore_RefreshData()
+                print('Database Refreshed...')
+
+
 
         
         except (Exception, MySQL.Error, MySQL.OperationalError) as PushEntryErrMsg:
-            self.ModifierCore_Status.showMessage('Add Entry Execution Error: Please check your fields!')
-            print('[Technical Information @ ModifierCore_AddEntry] -> {}'.format(PushEntryErrMsg))
             QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.DataMCore_Status.showMessage('Add Entry Execution Error: Please check your SQL connection or your fields!')
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. But in any case, here is the error output: {}".format(str(PushEntryErrMsg)), QtWidgets.QMessageBox.Ok)
+            print('[Technical Information @ DataMCore_AddEntry] -> {}'.format(PushEntryErrMsg))
     
-    def ModifierCore_ClearEntry(self):
+    def DataMCore_ClearEntry(self):
         if self.Tab_SelectionSelectives.currentIndex() == 0:
             self.AddEntry_ItemCode.clear()
             self.AddEntry_SupplierCode.clear()
@@ -542,8 +547,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
             self.AddEntry_Quantity.setValue(0)
             self.AddEntry_Cost.setValue(0.0)
             self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
-            self.ModifierCore_Status.showMessage('Clear Fields @ {} is Finished. Ready!'.format(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())))
-            print('[Execution @ ModifierCore_ClearEntry] -> Clear Fields @ {} is Finished. Ready!'.format(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())))
+            self.DataMCore_Status.showMessage('Fields Cleared. Ready To Get Inputs~!'.format(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())))
+            print('[Execution @ DataMCore_ClearEntry] ->  Finished. Ready!'.format(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())))
         elif self.Tab_SelectionSelectives.currentIndex() == 1:
             pass
         elif self.Tab_SelectionSelectives.currentIndex() == 2:
@@ -559,20 +564,20 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
             print('[Exception @ Modifier_ClearEntry] Current Index of Selected Tab does not match from any defined conditions.')
     
         # Technical Functions
-    def ModifierCore_RenderExplicitElem(self):
-        self.ModifierCore_Status = QtWidgets.QStatusBar()
-        self.setStatusBar(self.ModifierCore_Status)
+    def DataMCore_RenderExplicitElem(self):
+        self.DataMCore_Status = QtWidgets.QStatusBar()
+        self.setStatusBar(self.DataMCore_Status)
         self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
-    def ModifierCore_RFAR(self):
+    def DataMCore_RFAR(self):
         self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_management')
         self.MySQL_CursorSet(None)
 
-    def GetManagementSys_ItemValue(self):
+    def GetDataVCore_ItemValue(self):
         pass
 
     # We use this one to identify which table are we going to push some actions.
-    def ModifierCore_GetTargetTable(self):
+    def DataMCore_GetTargetTable(self):
         TabWindowCandidate = self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())
         if TabWindowCandidate == 'Inventory Entries':
             return 'InventoryList'
@@ -585,8 +590,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QMainWi
         elif TabWindowCandidate == 'Position Entries':
             return 'JobPosition'
         else:
-            print('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
-            raise ValueError('[Exception @ GetManagementSys_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
+            print('[Exception @ GetDataVCore_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
+            raise ValueError('[Exception @ GetDataVCore_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
 
 class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     def __init__(self, Parent=None):

@@ -196,7 +196,7 @@ class Ui_Route88_Login_Window(object):
         self.UserAcc_UserCode.setPlaceholderText(_translate("Route88_Login_Window", "Required Field.."))
         self.label.setText(_translate("Route88_Login_Window", "Route88 Bike Café"))
         self.label_2.setText(_translate("Route88_Login_Window", " Point of Sale and Inventory System"))
-        self.StatusLabel.setText(_translate("Route88_Login_Window", "Status Unknown..."))
+        self.StatusLabel.setText(_translate("Route88_Login_Window", "..."))
 
 
 if __name__ == "__main__":

@@ -50,6 +50,10 @@
   <property name="windowTitle">
    <string notr="true">Route88 System | Controller Menu</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>IcoDisplay/r_88.ico</normaloff>IcoDisplay/r_88.ico</iconset>
+  </property>
   <property name="toolTip">
    <string notr="true"/>
   </property>
