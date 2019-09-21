@@ -69,10 +69,11 @@ class Route88_TechnicalCore(object):
 
     # MySQL Mainstream Functions, Functions That Requires Calling MySQLdb Library
     # Initialize MySQL Server Twice, One for Login and Last.... ???
-    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_EmployeeInfo'):
+    def MySQL_ConnectDatabase(self, HostServerIP='localhost', SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
-            print('MySQL Database Connection Attempt: User {0} is now logged as {1} with Database Role of {2}.'.format('???', SQL_UCredential, '???'))
+            print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is now logged as {}.".format("...", SQL_UCredential, '???'))
+
         except MySQL.OperationalError as MySQL_ErrorMessage:
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print(MySQL_ErrorMessage)
@@ -83,6 +84,30 @@ class Route88_TechnicalCore(object):
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError) as CursorErrMsg:
             print(CursorErrMsg)
+
+    def MySQL_ExecuteState(self, MySQLStatement):
+        try:
+            self.MySQLDataWireCursor.execute(str(MySQLStatement))
+        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
+            print(MySQL_ExecError) # Style This One Soon.
+    
+    def MySQL_FetchOneData(self, TupleIndex):
+        try:
+            return self.MySQLDataWireCursor.fetchone()[TupleIndex]
+        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
+            print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index.')
+    
+    def MySQL_FetchAllData(self):
+        try:
+            return self.MySQLDataWireCursor.fetchall()
+        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
+            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your statements.')
+    
+    def MySQL_CommitData(self):
+        try:
+            return self.MySQLDataWire.commit()
+        except (MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
+            print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.')
 
 class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     # Class Initializer, __init__
@@ -95,8 +120,6 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 other than anything that they thought, 'what the hell is this argument that you pass?'
                 ~ All other window will be seperately initialized...
         '''
-        #self.Route88_LoginWindow = Ui_Route88_LoginWindow()
-        #self.Login_TechnicalCoreHandler = Route88_TechnicalCore()
 
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
@@ -116,31 +139,35 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
             self.MySQL_ConnectDatabase(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='route88_employees')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             self.LoginForm_ReadUserEnlisted()
+
         except Exception as ErrorHandler:
-            print(ErrorHandler)
             QSound.play("SysSounds/LoginFailedNotify.wav")
+            print('[Exception @ LoginForm_RFAR] > {}'.format(str(ErrorHandler)))
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
+
     #Route88_LoginForm UI Window Functions - StartPoint
     def LoginForm_ReadUserEnlisted(self):
         try:
             currentRow = 0
             self.MySQL_CursorSet()
-            self.MySQLDataWireCursor.execute("SELECT COUNT(*) FROM Employees")
-            self.UserEnlistedCount = self.MySQLDataWireCursor.fetchone()[0]
+            self.MySQL_ExecuteState("SELECT COUNT(*) FROM Employees")
+            self.UserEnlistedCount = self.MySQL_FetchOneData(0)
             self.StatusLabel.setText("Database Loaded. Ready~!")
             if self.UserEnlistedCount == 0:
-                self.MySQLDataWireCursor.execute("INSERT INTO Employees (EmployeeCode, FirstName, LastName, PositionCode, EmployeePassword) VALUES (1, 'Janrey', 'Licas', 1, '123')")
-                self.MySQLDataWireCursor.execute("INSERT INTO JobPosition VALUES (1, 'Manager')") # Remove Comment If Necessary
-                self.MySQLDataWire.commit()
+                self.MySQL_ExecuteState("INSERT INTO Employees (EmployeeCode, FirstName, LastName, PositionCode, EmployeePassword) VALUES (1, 'Janrey', 'Licas', 1, '123')")
+                self.MySQL_ExecuteState("INSERT INTO JobPosition VALUES (1, 'Manager')") # Remove Comment If Necessary
+                self.MySQL_CommitData()
                 self.UserAcc_SubmitData.setDisabled(False)
             else:
                 self.UserAcc_SubmitData.setDisabled(False)
 
         except MySQL.OperationalError as LoginQueryErrorMsg:
             print('MySQL.OperationalError -> {0}'.format(str(LoginQueryErrorMsg)))
+
             self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
             QSound.play("SysSounds/LoginFailedNotify.wav")
+
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(LoginQueryErrorMsg)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
 
@@ -209,7 +236,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.Window_Quit.triggered.connect(self.DataVCore_ReturnWindow)
         #self.Window_Quit.triggered.connect()
 
-        self.TableParameter = 'InventoryList' # Sets Current Table Tempporarily
+        self.DataTableTarget = 'InventoryList' # Sets Current Table Tempporarily
         #self.DataVCore_RFAR() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
@@ -254,7 +281,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         try:
             #Setups
             currentRow = 0
-            self.MySQLDataWireCursor.execute("SELECT * FROM Inventory_ItemList")
+            self.MySQLDataWireCursor.execute("SELECT * FROM InventoryItem")
             InventoryDataFetch = self.MySQLDataWireCursor.fetchall()
             #print(InventoryDataFetch)
             # Fill Query_ColumnOpt First.
@@ -387,9 +414,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     self.InventoryTable_View.removeRow(RowLeftOver)
 
                 print('[Search Parameters] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
-                print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.TableParameter, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+                print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
 
-                self.MySQLDataWireCursor.execute("SELECT * FROM {} WHERE {} {} '{}'".format(self.TableParameter, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+                self.MySQLDataWireCursor.execute("SELECT * FROM {} WHERE {} {} '{}'".format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 InventoryTargetDataFetch = self.MySQLDataWireCursor.fetchall()
 
                 for InventoryData in InventoryTargetDataFetch:
@@ -441,10 +468,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.selectedStatic_ItemCode = 0
                 self.selectedData = self.InventoryTable_View.item(self.selectedRow, self.selectedStatic_ItemCode).text()
                 # Make IL_ItemCode as Temporary here, change it into a variable next time.
-                print('[Database Query Process: Deletion Query] -> DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.TableParameter, self.selectedData))
+                print('[Database Query Process: Deletion Query] -> DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.DataTableTarget, self.selectedData))
                 self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {0}'.format(self.selectedRow))
 
-                self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.TableParameter, self.selectedData))
+                self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.DataTableTarget, self.selectedData))
                 self.InventoryTable_View.removeRow(self.selectedRow)
                 self.MySQLDataWire.commit()
                 self.InventoryStatus.showMessage('Deletion Query Process Success! -> Row {} Deleted.'.format(self.selectedRow + 1))
