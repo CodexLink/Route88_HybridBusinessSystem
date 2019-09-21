@@ -59,7 +59,7 @@ from Route88_LoginCmpnt import Ui_Route88_Login_Window
 from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
 from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
 from Route88_ControllerCmpnt import Ui_Route88_Controller_Window
-#from Route88_POSSystem import ???
+#from Route88_POSSystem import %s%s%s
 
 # This class is a database controller by wrapping all confusing parts into a callable function...
 class Route88_TechnicalCore(object):
@@ -69,9 +69,9 @@ class Route88_TechnicalCore(object):
     def MySQL_OpenCon(self, HostServerIP='localhost', SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management'):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
-            print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is now logged as {}.".format("...", SQL_UCredential, '???'))
+            print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is now logged as {}.".format("...", SQL_UCredential, '...'))
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ErrorMessage:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ErrorMessage:
             QSound.play("SysSounds/LoginFailedNotify.wav")
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print('[Exception @ MySQL_OpenCon] > Cannot Open / Establish Connection with the MySQL Database. Technical Error |> {}'.format(str(MySQL_ErrorMessage)))
@@ -79,42 +79,42 @@ class Route88_TechnicalCore(object):
     def MySQL_CursorSet(self, CursorType=None):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as CursorErrMsg:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as CursorErrMsg:
             QSound.play("SysSounds/LoginFailedNotify.wav")
             print('[Exception @ MySQL_CursorSet] > Invalid Cursor Set. Report this problem to the developers. Technical Error |> {}'.format(str(CursorErrMsg)))
 
     def MySQL_ExecuteState(self, MySQLStatement):
         try:
-            self.MySQLDataWireCursor.execute(str(MySQLStatement))
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_ExecError:
+            return self.MySQLDataWireCursor.execute(MySQLStatement)
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ExecError:
             QSound.play("SysSounds/LoginFailedNotify.wav")
             print('[Exception @ MySQL_ExecuteState] > Error in SQL Statements. Double check your statements. Technical Error |> {}'.format(str(MySQL_ExecError))) # Style This One Soon.
     
     def MySQL_FetchOneData(self, TupleIndex):
         try:
             return self.MySQLDataWireCursor.fetchone()[TupleIndex]
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_FetchOError:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchOError:
             QSound.play("SysSounds/LoginFailedNotify.wav")
             print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Technical Error |> {}'.format(str(MySQL_FetchOError)))
     
     def MySQL_FetchAllData(self):
         try:
             return self.MySQLDataWireCursor.fetchall()
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_FetchAError:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchAError:
             QSound.play("SysSounds/LoginFailedNotify.wav")
             print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your statements. Technical Error |> {}'.format(str(MySQL_FetchAError)))
     
     def MySQL_CommitData(self):
         try:
             return self.MySQLDataWire.commit()
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as MySQL_CommitError:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_CommitError:
             QSound.play("SysSounds/LoginFailedNotify.wav")
             print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Technical Error |> {}'.format(str(MySQL_CommitError)))
 
     def MySQL_CloseCon(self):
         try:
             return self.MySQLDataWire.close()
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning) as ClosingErr:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ClosingErr:
             QSound.play("SysSounds/LoginFailedNotify.wav")
             print('[Exception @ MySQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Technical Error |> {}'.format(str(ClosingErr)))
             
@@ -142,31 +142,33 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
         except Exception as ErrorHandler:
             QSound.play("SysSounds/LoginFailedNotify.wav")
-            print('[Exception @ LoginCore_RunAfterRender] > {}'.format(str(ErrorHandler)))
-            QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
+            print('[Exception @ LoginCore_RunAfterRender] > One of the MySQL Required Components Returns Error. Technical Error |> {}'.format(str(ErrorHandler)))
+            QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database. Please restart the program and re-run the XAMPP MySQL Instance. Technical Error |> {}".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
 
     #Route88_LoginForm UI Window Functions - StartPoint
     def LoginCore_CheckEnlisted(self):
         try:
-            currentRow = 0
             self.MySQL_CursorSet()
             self.MySQL_ExecuteState("SELECT COUNT(*) FROM Employees")
             self.UserEnlistedCount = self.MySQL_FetchOneData(0)
+            print('[Report @ LoginCore_CheckEnlisted] > User Account Count: {}'.format(self.UserEnlistedCount))
             self.StatusLabel.setText("Database Loaded. Ready~!")
+
             if self.UserEnlistedCount == 0:
-                self.MySQL_ExecuteState("INSERT INTO Employees (EmployeeCode, FirstName, LastName, PositionCode, EmployeePassword) VALUES (1, 'Janrey', 'Licas', 1, '123')")
-                self.MySQL_ExecuteState("INSERT INTO JobPosition VALUES (1, 'Manager')") # Remove Comment If Necessary
+                self.MySQL_ExecuteState("INSERT INTO Employees (EmployeeCode, FirstName, LastName, PositionCode, EmployeePassword) VALUES (%s, %s, %s, %s, %s)" % (1, 'Janrey', 'Licas', 1, '123',))
+                #  Create if and else here.
+                self.MySQL_ExecuteState("INSERT INTO JobPosition VALUES (%s, %s)" % (1, 'Manager',))
                 self.MySQL_CommitData()
                 self.UserAcc_SubmitData.setDisabled(False)
             else:
                 self.UserAcc_SubmitData.setDisabled(False)
 
-        except MySQL.OperationalError as LoginQueryErrorMsg:
-            print('MySQL.OperationalError -> {0}'.format(str(LoginQueryErrorMsg)))
-
-            self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginQueryErrorMsg:
             QSound.play("SysSounds/LoginFailedNotify.wav")
+
+            print('[Exception @ LoginCore_CheckEnlisted] > Error Checking User in Database. Check MySQL Database Connection. Technical Error |> {}'.format(str(LoginQueryErrorMsg)))
+            self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
 
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(LoginQueryErrorMsg)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
@@ -174,32 +176,35 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     def LoginCore_DataSubmission(self):
         try:
             self.MySQL_CursorSet(None)
-            QueryReturn = self.MySQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = %s AND EmployeePassword = %s", (self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
-                # After query we need to check if QueryReturn contains non-zero values. If it contains non-zero we proceed. Else not...
-                # We need to store the credentials that is equalled to what we expect.
-            if QueryReturn:
+            self.QueryReturn = self.MySQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = '%s' AND EmployeePassword = '%s'" %(self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
+
+            if self.QueryReturn:
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
                 self.StatusLabel.setText("Login Success: Credential Input Matched!")
-
+                self.UserAcc_SubmitData.setDisabled(True)
+                
                 QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '{}'. ".format('NA'), QtWidgets.QMessageBox.Ok)
                 self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
 
                 QtTest.QTest.qWait(1300)
-                self.MySQLDataWire.close() # Reconnect to Anothe SQ: Usage with Specific User Parameters
+                self.MySQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
                 self.Route88_MCInst = Route88_WindowController() #'RouteTemp_FirstTimer', 'route88_group7')
                 self.Route88_MCInst.show()
                 self.close()
+
             else:
-                self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
                 QSound.play("SysSounds/LoginFailedNotify.wav")
+                self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
+                self.UserAcc_SubmitData.setDisabled(False)
+
                 QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Login Failed', "Login Failed! Credential Input Not Matched. Check your User Code or your Password which may be written in Caps Lock. Please Try Again.", QtWidgets.QMessageBox.Ok)
 
                 
 
-        except Exception as LoginSubmissionErrorMsg:
-            print(LoginSubmissionErrorMsg)
-            self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginSubmissionErrorMsg:
             QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
+            print('[Exception @ LoginCore_DataSubmission] > Data Submission Failed. Technical Error |> {}'.format(str(LoginSubmissionErrorMsg)))
 
     # Route88_LoginForm UI Window Functions - EndPoint
 
@@ -215,39 +220,37 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchFieldSet)
         self.Query_Operator.currentIndexChanged.connect(self.DataVCore_OperatorSet)
 
-        self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchVal)
-        self.Query_Operator.currentIndexChanged.connect(self.DataVCore_SearchVal)
+        self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_ValSearch)
+        self.Query_Operator.currentIndexChanged.connect(self.DataVCore_ValSearch)
 
-        self.Query_ValueToSearch.textChanged.connect(self.DataVCore_PatternSet)
-        self.Query_ValueToSearch.textChanged.connect(self.DataVCore_SearchVal)
+        self.Query_ValueToSearch.textChanged.connect(self.DataVCore_PatternSetter)
+        self.Query_ValueToSearch.textChanged.connect(self.DataVCore_ValSearch)
 
         self.SearchPattern_ExactOpt.clicked.connect(self.DataVCore_PatternEnabler)
         self.SearchPattern_ContainOpt.clicked.connect(self.DataVCore_PatternEnabler)
 
-        self.SearchPattern_ExactOpt.clicked.connect(self.DataVCore_SearchVal)
-        self.SearchPattern_ContainOpt.clicked.connect(self.DataVCore_SearchVal)
+        self.SearchPattern_ExactOpt.clicked.connect(self.DataVCore_ValSearch)
+        self.SearchPattern_ContainOpt.clicked.connect(self.DataVCore_ValSearch)
         
-        self.SearchPattern_ComboBox.currentIndexChanged.connect(self.DataVCore_PatternSet)
+        self.SearchPattern_ComboBox.currentIndexChanged.connect(self.DataVCore_PatternSetter)
 
         # > Staff Action Binds 
         self.StaffAct_Add.clicked.connect(self.DataVCore_AddEntry)
-        self.StaffAct_Edit.clicked.connect(self.DataVCore_EditEntry_Selected)
-        self.StaffAct_Delete.clicked.connect(self.DataVCore_DeleteEntry_Selected)
+        self.StaffAct_Edit.clicked.connect(self.DataVCore_EditEntry)
+        self.StaffAct_Delete.clicked.connect(self.DataVCore_DeleteEntry)
         self.StaffAct_RefreshData.clicked.connect(self.DataVCore_RefreshData)
 
         self.Window_Quit.triggered.connect(self.DataVCore_ReturnWindow)
-        #self.Window_Quit.triggered.connect()
 
-        self.DataTableTarget = 'InventoryList' # Sets Current Table Tempporarily
         #self.DataVCore_RunAfterRender() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
     def DataVCore_RenderExplicits(self): # Turn This To Render Columns According To Active Window
         try:
-            currentRow = 0
+            currentRow = 1
             self.InventoryStatus = QtWidgets.QStatusBar()
             self.setStatusBar(self.InventoryStatus)
-            self.InventoryTable_View.setRowCount(currentRow + 1)
+            self.InventoryTable_View.setRowCount(currentRow)
 
             # Add Function To Detect And Fix Column Based on Selected Table
             #for SetCellFixedElem in range(10):
@@ -257,64 +260,69 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 #
             #self.InventoryTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
             #self.InventoryTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
-        except (Exception, MySQL.OperationalError, BaseException) as RenderErrorMsg:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as RenderErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(RenderErrorMsg))
-            print('[Exception Thrown @ DataVCore_RenderExplicits] -> {0}'.format(RenderErrorMsg))
+            print('[Exception Thrown @ DataVCore_RenderExplicits] > Technical Error |> {0}'.format(RenderErrorMsg))
 
     def DataVCore_RunAfterRender(self):
         try:
             self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management')
             self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-            self.MySQLDataWireCursor.execute('set session transaction isolation level READ COMMITTED')
+            self.MySQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
             #Set All Parameters Without User Touching it for straight searching...
             self.DataVCore_PatternEnabler()
             self.DataVCore_SearchFieldSet()
             self.DataVCore_OperatorSet()
-            self.DataVCore_PatternSet()
+            self.DataVCore_PatternSetter()
             self.DataVCore_LoadTableData()
-        except (Exception, MySQL.OperationalError) as FunctionErrorMsg:
+            
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ DataVCore_RunAfterRender] -> {0}'.format(FunctionErrorMsg))
 
+    #Render Table Columns
+
     def DataVCore_LoadTableColumn(self):
+        self.DataTableTarget = None # Sets Current Table Tempporarily
+        pass
+
+    def DataVCore_LoadOpt(self):
         pass
 
     def DataVCore_LoadTableData(self):
         try:
             #Setups
-            currentRow = 0
-            self.MySQLDataWireCursor.execute("SELECT * FROM InventoryItem")
-            InventoryDataFetch = self.MySQLDataWireCursor.fetchall()
+            self.currentRow = 0
+            self.MySQL_ExecuteState("SELECT * FROM %s") % self.DataTableTarget
+            self.InventoryDataFetch = self.MySQL_FetchAllData()
             #print(InventoryDataFetch)
             # Fill Query_ColumnOpt First.
             #Fill Inventory Menu
-            for InventoryData in InventoryDataFetch:
-                self.InventoryTable_View.setRowCount(currentRow + 1)
-                self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemCode'])))
-                self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemName'])))
-                self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemType'])))
-                self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ConsumerCost'])))
-                self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ExpiryDate'])))
-                self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['AvailableStock'])))
-                self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['CreationTime'])))
-                self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['LastUpdate'])))
-                #self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['SupplierCode'])))
-                #self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['MenuInclusion'])))
-                
-                for SetCellFixedWidth in range(10):
-                    self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
-                    self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
-                currentRow += 1
-            self.InventoryStatus.showMessage('Database Query Process: TableView Data Refreshed from MySQL Database Sucess! Ready!')
-            print('[Database Query Process @ DataVCore_LoadTableData] -> TableView Data Refreshed from MySQL Database Sucess! Ready!')
+            self.InventoryStatus.showMessage('Query Process: TableView Data Refreshed from MySQL Database Sucess! Ready!')
+            print('Report @ DataVCore_LoadTableData] -> TableView Data Refreshed from MySQL Database Sucess! Ready!')
 
-        except (Exception, MySQL.OperationalError, MySQL.Error) as FunctionErrorMsg:
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ DataVCore_LoadTableData] -> {0}'.format(FunctionErrorMsg))
+           
+            #for InventoryData in InventoryDataFetch:
+            #    self.InventoryTable_View.setRowCount(currentRow + 1)
+            #    self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemCode'])))
+            #    self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemName'])))
+            #    self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemType'])))
+            #    self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ConsumerCost'])))
+            #    self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ExpiryDate'])))
+            #    self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['AvailableStock'])))
+            #    self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTab)leWidgetItem('{0}'.format(InventoryData['CreationTime'])))
+            #    self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['LastUpdate'])))
+            #    #self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['SupplierCode'])))
+            #    #self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['MenuInclusion'])))
+            #    for SetCellFixedWidth in range(10):
+            #        self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
+            #        self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
+            #    currentRow += 1
 
-    # Interactive Button to Function
-    # Menu Bar Functions
-    # Table Selection Functions
+    # Table Search Functions / Logical Function
     def DataVCore_SearchFieldSet(self):
         if self.Query_ColumnOpt.currentText() == 'None':
             self.Query_Operator.setEnabled(False)
@@ -332,7 +340,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             if self.SearchPattern_ContainOpt.isChecked():
                 self.Query_Operator.setEnabled(False)
                 self.SearchPattern_ComboBox.setEnabled(True)
-
+        """
             if self.Query_ColumnOpt.currentText() == 'All Columns':
                 self.FieldParameter = "CONCAT(IL_ItemCode, '', IL_SupplierCode ,'', IL_ItemName, '', IL_ItemType, '', IL_AvailableStock, '', IL_ExpiryDate, '', IL_MenuInclusion, '', IL_CreationTime, '', IL_LastUpdate)"
             elif self.Query_ColumnOpt.currentText() == 'Item Code':
@@ -358,34 +366,33 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             else:
                 print('')
                 raise ValueError('')
-
+        """
+    # Sets Operator When Using Exact Method
     def DataVCore_OperatorSet(self):
         if self.SearchPattern_ExactOpt.isChecked():
             self.OperatorParameter = self.Query_Operator.currentText()
         elif self.SearchPattern_ContainOpt.isChecked():
             self.OperatorParameter = 'LIKE'
-        else:
-            raise ValueError()
-            print()
 
+    # Pattern Enabler, Function for Switching Methods
     def DataVCore_PatternEnabler(self):
         if self.SearchPattern_ExactOpt.isChecked():
             self.SearchPattern_ComboBox.setEnabled(False)
             self.Query_Operator.setEnabled(True)
             self.DataVCore_OperatorSet()
-            self.DataVCore_PatternSet()
+            self.DataVCore_PatternSetter()
             self.InventoryStatus.showMessage('Search Pattern: Switched to Exact Mode...')
         elif self.SearchPattern_ContainOpt.isChecked():
             self.Query_Operator.setEnabled(False)
             self.DataVCore_OperatorSet()
-            self.DataVCore_PatternSet()
+            self.DataVCore_PatternSetter()
             self.SearchPattern_ComboBox.setEnabled(True)
             self.InventoryStatus.showMessage('Search Pattern: Switched to Pattern String Mode...')
         else:
             self.InventoryStatus.showMessage('Application Error: No Other Radio Buttons has a state of Bool(True).')
-            raise ValueError('[Exception Thrown @ DataVCore_PatternSet] -> No Other Radio Buttons has a state of Bool(True).')
+            print('[Exception Thrown @ DataVCore_PatternSetter] > No Other Radio Buttons has a state of Bool(True).')
 
-    def DataVCore_PatternSet(self):
+    def DataVCore_PatternSetter(self):
         if self.SearchPattern_ExactOpt.isChecked():
             #self.Query_ColumnOpt.model().item(1).setEnabled(False)
             self.TargetParameter = '{}'.format(self.Query_ValueToSearch.text())
@@ -398,12 +405,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TargetParameter = "%{}".format(self.Query_ValueToSearch.text())
             elif self.SearchPattern_ComboBox.currentText() == 'Ends With':
                 self.TargetParameter = "{}%".format(self.Query_ValueToSearch.text())
-        else:
-            raise ValueError()
-            print()
             
         # Actual Search Function
-    def DataVCore_SearchVal(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
+    def DataVCore_ValSearch(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
         currentRow = 0
         try:
             if len(self.Query_ValueToSearch.text()) < 1:
@@ -421,27 +425,26 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.MySQLDataWireCursor.execute("SELECT * FROM {} WHERE {} {} '{}'".format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 InventoryTargetDataFetch = self.MySQLDataWireCursor.fetchall()
 
-                for InventoryData in InventoryTargetDataFetch:
-                    self.InventoryTable_View.setRowCount(currentRow + 1)
-                    self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemCode'])))
-                    self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_SupplierCode'])))
-                    self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemName'])))
-                    self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemType'])))
-                    self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_AvailableStock'])))
-                    self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ConsumerCost'])))
-                    self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ExpiryDate'])))
-                    self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_MenuInclusion'])))
-                    self.InventoryTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_CreationTime'])))
-                    self.InventoryTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_LastUpdate'])))
-                    
-                    for SetCellFixedWidth in range(10):
-                        self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
-                        self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
-                    currentRow += 1
-
         except (Exception, MySQL.Error, MySQL.OperationalError) as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(SearchQueryError))
-            print('[Exception Thrown @ DataVCore_SearchVal] -> {0}'.format(SearchQueryError))
+            print('[Exception Thrown @ DataVCore_ValSearch] -> {0}'.format(SearchQueryError))
+                #for InventoryData in InventoryTargetDataFetch:
+                #    self.InventoryTable_View.setRowCount(currentRow + 1)
+                #    self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemCode'])))
+                #    self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_SupplierCode'])))
+                #    self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemName'])))
+                #    self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemType'])))
+                #    self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_AvailableStock'])))
+                #    self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ConsumerCost'])))
+                #    self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ExpiryDate'])))
+                #    self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_MenuInclusion'])))
+                #    self.InventoryTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_CreationTime'])))
+                #    self.InventoryTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_LastUpdate'])))
+                #    
+                #    for SetCellFixedWidth in range(10):
+                #        self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
+                #        self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
+                #    currentRow += 1
 
     def DataVCore_ReturnWindow(self):
         self.close()
@@ -449,22 +452,21 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.ReturnWinInst.show()
 
     # Staff Action Functions
-    def DataVCore_ModifierInit(self):
-        pass
+
     def DataVCore_AddEntry(self):
         self.ModifierDialog = Route88_ModifierCore()
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
-    def DataVCore_EditEntry_Selected(self):
+    def DataVCore_EditEntry(self):
         pass
 
-    def DataVCore_DeleteEntry_Selected(self):
+    def DataVCore_DeleteEntry(self):
         try:
             if self.InventoryTable_View.rowCount == 0:
                 self.StaffAct_Delete.setEnabled(False)
-                self.InventoryStatus.showMessage('Table Data Error -> You cannot delete anymore.')
-                raise ValueError('Table Data Error -> You cannot delete anymore.')
+                self.InventoryStatus.showMessage('Table Data Error -> You cannot delete any data anymore.')
+                print('Report @ DataVCore_DeleteEntry] > You cannot delete any data anymore.')
             else:
                 self.selectedRow = self.InventoryTable_View.currentRow()
                 self.selectedStatic_ItemCode = 0
@@ -480,7 +482,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
             self.InventoryStatus.showMessage('Deletion Query Process Error -> {}'.format(DelectionErrMsg))
-            print('[Exception Thrown @ DataVCore_DeleteEntry_Selected] -> {0}'.format(str(DelectionErrMsg)))
+            print('[Exception Thrown @ DataVCore_DeleteEntry] -> {0}'.format(str(DelectionErrMsg)))
             
     def DataVCore_RefreshData(self):
         try:
@@ -492,19 +494,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
             self.InventoryStatus.showMessage('[Data Query Process @ DataVCore_RefreshData] -> Attempting To Refresh Data from MySQL Database...')
             self.InventoryStatus.showMessage('Database Query Process: Attempting To Refresh Data from MySQL Database...')
-            QtTest.QTest.qWait(900)
+            QtTest.QTest.qWait(1000)
             self.DataVCore_LoadTableData()
         except (Exception, MySQL.Error, MySQL.OperationalError) as RefreshError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(str(RefreshError)))
             raise Exception('[Exception Thrown @ DataVCore_RefreshData] -> {0}'.format(str(RefreshError)))
 
-    # Event Handlers
-    def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_F4 and (event.modifiers() & QtCore.Qt.AltModifier):
-            print("EventKeyPressed: ALT F4")
-            event.ignore()
-        if event.key() == QtCore.Qt.Key_Space:
-            print("EventKeyPressed: Space")
 
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     def __init__(self, Parent=None):
@@ -525,9 +520,20 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
         self.DataMCore_RunAfterRender()
 
+
+        # Technical Functions
+    def DataMCore_RenderExplicits(self):
+        self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
+
+    def DataMCore_RunAfterRender(self):
+        self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_management')
+        self.MySQL_CursorSet(None)
+
+
     # Staff Action Function Declarations
     def DataMCore_AddEntry(self):
         try:
+            # Add Check of Active Table Here
             self.MySQL_CursorSet(None)
             QDateGet = self.AddEntry_DateExpiry.date() 
             formattedDate = QDateGet.toPyDate()
@@ -566,7 +572,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. But in any case, here is the error output: {}".format(str(PushEntryErrMsg)), QtWidgets.QMessageBox.Ok)
             print('[Technical Information @ DataMCore_AddEntry] -> {}'.format(PushEntryErrMsg))
     
-    def DataMCore_ClearEntry(self):
+    def DataMCore_ClearEntry(self, ActiveEntryWindow):
         if self.Tab_SelectionSelectives.currentIndex() == 0:
             self.AddEntry_ItemCode.clear()
             self.AddEntry_SupplierCode.clear()
@@ -576,7 +582,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.AddEntry_Cost.setValue(0.0)
             self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
             self.DataMCore_Status.showMessage('Fields Cleared. Ready To Get Inputs~!')
-            #(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex()))) WTF is this?
+            #(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex()))) WTF is this%s
             print('[Execution @ DataMCore_ClearEntry] ->  Finished. Ready!'.format(self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())))
         elif self.Tab_SelectionSelectives.currentIndex() == 1:
             pass
@@ -591,19 +597,12 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         else:
             raise ValueError('[Exception @ Modifier_ClearEntry] Current Index of Selected Tab does not match from any defined conditions.')
             print('[Exception @ Modifier_ClearEntry] Current Index of Selected Tab does not match from any defined conditions.')
-    
-        # Technical Functions
-    def DataMCore_RenderExplicits(self):
-        self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
-    def DataMCore_RunAfterRender(self):
-        self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_management')
-        self.MySQL_CursorSet(None)
-
-    def GetDataVCore_ItemValue(self):
+    def GetDataVCore_ItemValue(self): # For Edit Functions
         pass
 
     # We use this one to identify which table are we going to push some actions.
+    # Going to be deprecated. Onces we are able to pass a user from another table then we are good to go.
     def DataMCore_GetTargetTable(self):
         TabWindowCandidate = self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())
         if TabWindowCandidate == 'Inventory Entries':
@@ -620,6 +619,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             print('[Exception @ GetDataVCore_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
             raise ValueError('[Exception @ GetDataVCore_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
 
+
 class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     def __init__(self, Parent=None):
         super(Route88_WindowController, self).__init__(Parent=Parent)
@@ -633,25 +633,28 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         #self.ctrl_POSSystem.clicked.connect(self.)
         
         #self.Route88_POSInst = Route88_LoginCore()
-        # Instances
 
     def ShowLoginCore(self):
         self.Route88_LoginInst = Route88_LoginCore()
         self.Route88_LoginInst.show()
         self.close()
+
     def ShowManagementCore(self):
         self.Route88_ManageInst = Route88_ManagementCore()
         self.Route88_ManageInst.show()
         self.close()
+
     def ShowPOSCore(self):
+        pass
+
+    def ShowAboutCore(self):
         pass
 
 # Literal Procedural Programming Part
 if __name__ == "__main__":
-    sysCmdArgumentHandler('CLS') # Clear Output Buffer so we can debug with dignity.
-    print('[Application App Startup] Route88_Core Application Version 0, Debug Output')
+    sysCmdArgumentHandler('CLS')
+    print('[Application App Startup] Route88 Hybrid Application, Debugger Output')
     app = QtWidgets.QApplication(sys.argv)
     Route88_InitialInst = Route88_LoginCore()
     Route88_InitialInst.show()
     sys.exit(app.exec_())
-    #print('[Application Shutdown] Terminating PyQt5 Engine...')
