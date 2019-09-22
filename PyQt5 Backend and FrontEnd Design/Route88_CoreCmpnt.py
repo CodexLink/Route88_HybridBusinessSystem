@@ -61,7 +61,7 @@ from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
 from Route88_ControllerCmpnt import Ui_Route88_Controller_Window
 #from Route88_POSSystem import %s%s%s
 
-# This class is a database controller by wrapping all confusing parts into a callable function...
+# This class is a database controller by wrapping all confusing parts into a callable function... and any other such that requires global function calling.
 class Route88_TechnicalCore(object):
     def __init__(self, Parent=None):
         super().__init__()
@@ -72,52 +72,61 @@ class Route88_TechnicalCore(object):
             print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is now logged as {}.".format("...", SQL_UCredential, '...'))
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ErrorMessage:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print('[Exception @ MySQL_OpenCon] > Cannot Open / Establish Connection with the MySQL Database. Technical Error |> {}'.format(str(MySQL_ErrorMessage)))
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(MySQL_ErrorMessage)), QtWidgets.QMessageBox.Ok)
+            sys.exit() # Terminate the program 
 
     def MySQL_CursorSet(self, CursorType=None):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as CursorErrMsg:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             print('[Exception @ MySQL_CursorSet] > Invalid Cursor Set. Report this problem to the developers. Technical Error |> {}'.format(str(CursorErrMsg)))
 
     def MySQL_ExecuteState(self, MySQLStatement):
         try:
             return self.MySQLDataWireCursor.execute(MySQLStatement)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ExecError:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             print('[Exception @ MySQL_ExecuteState] > Error in SQL Statements. Double check your statements. Technical Error |> {}'.format(str(MySQL_ExecError))) # Style This One Soon.
     
     def MySQL_FetchOneData(self, TupleIndex):
         try:
             return self.MySQLDataWireCursor.fetchone()[TupleIndex]
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchOError:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Technical Error |> {}'.format(str(MySQL_FetchOError)))
     
     def MySQL_FetchAllData(self):
         try:
             return self.MySQLDataWireCursor.fetchall()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchAError:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your statements. Technical Error |> {}'.format(str(MySQL_FetchAError)))
     
     def MySQL_CommitData(self):
         try:
             return self.MySQLDataWire.commit()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_CommitError:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Technical Error |> {}'.format(str(MySQL_CommitError)))
 
     def MySQL_CloseCon(self):
         try:
             return self.MySQLDataWire.close()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ClosingErr:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             print('[Exception @ MySQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Technical Error |> {}'.format(str(ClosingErr)))
-            
+    
+    #Non Database Callable Function
+    def TechnicalCore_Beep(self):
+        return QtWidgets.QApplication.beep()
+
+        
+    def TechnicalCore_MessageBox(self):
+        pass
             
 
 class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
@@ -141,7 +150,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
             self.LoginCore_CheckEnlisted()
 
         except Exception as ErrorHandler:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             print('[Exception @ LoginCore_RunAfterRender] > One of the MySQL Required Components Returns Error. Technical Error |> {}'.format(str(ErrorHandler)))
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database. Please restart the program and re-run the XAMPP MySQL Instance. Technical Error |> {}".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
@@ -165,7 +174,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.UserAcc_SubmitData.setDisabled(False)
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginQueryErrorMsg:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
 
             print('[Exception @ LoginCore_CheckEnlisted] > Error Checking User in Database. Check MySQL Database Connection. Technical Error |> {}'.format(str(LoginQueryErrorMsg)))
             self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
@@ -193,7 +202,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.close()
 
             else:
-                QSound.play("SysSounds/LoginFailedNotify.wav")
+                self.TechnicalCore_Beep()
                 self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
                 self.UserAcc_SubmitData.setDisabled(False)
 
@@ -202,7 +211,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginSubmissionErrorMsg:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
             print('[Exception @ LoginCore_DataSubmission] > Data Submission Failed. Technical Error |> {}'.format(str(LoginSubmissionErrorMsg)))
 
@@ -567,7 +576,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
         
         except (Exception, MySQL.Error, MySQL.OperationalError) as PushEntryErrMsg:
-            QSound.play("SysSounds/LoginFailedNotify.wav")
+            self.TechnicalCore_Beep()
             self.DataMCore_Status.showMessage('Add Entry Execution Error: Please check your SQL connection or your fields!')
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. But in any case, here is the error output: {}".format(str(PushEntryErrMsg)), QtWidgets.QMessageBox.Ok)
             print('[Technical Information @ DataMCore_AddEntry] -> {}'.format(PushEntryErrMsg))
