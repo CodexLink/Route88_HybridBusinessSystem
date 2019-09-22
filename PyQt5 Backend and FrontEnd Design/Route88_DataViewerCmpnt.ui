@@ -64,12 +64,17 @@
            </property>
            <item>
             <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>Inventory Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Customer Transaction Data</string>
+             <string>Item Transaction Data</string>
             </property>
            </item>
            <item>
@@ -84,7 +89,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Receipt Data</string>
+             <string>Customer Receipt Data</string>
             </property>
            </item>
            <item>
@@ -94,7 +99,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Position Data</string>
+             <string>Job Position Data</string>
             </property>
            </item>
           </widget>
@@ -143,8 +148,11 @@
            </item>
            <item>
             <widget class="QComboBox" name="Query_ColumnOpt">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -168,57 +176,7 @@
              </item>
              <item>
               <property name="text">
-               <string>All Columns</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Item Code</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Supplier Code</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Item Name</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Type</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Quantity</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Cost</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Expiry Date</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Menu Inclusion</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Data Created</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Last Modified</string>
+               <string>All Items</string>
               </property>
              </item>
             </widget>
