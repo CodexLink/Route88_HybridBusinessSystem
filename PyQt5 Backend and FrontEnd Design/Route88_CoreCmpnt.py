@@ -548,12 +548,28 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         try:
             if self.ActiveTable == "None":
                 self.TechnicalCore_RowClear()
+                self.StaffAct_Add.setEnabled(False)
+                self.StaffAct_Edit.setEnabled(False)
+                self.StaffAct_Delete.setEnabled(False)
+                self.StaffAct_RefreshData.setEnabled(False)
                 print('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
                 self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
             else:
                 self.TechnicalCore_RowClear()
                 self.MySQL_ExecuteState("SELECT * FROM %s" % (self.DataTableTarget,))
-                self.DataVCore_RenderTable(self.MySQL_FetchAllData())    
+                self.DataVCore_RenderTable(self.MySQL_FetchAllData())
+                
+                if self.DataTable_View.rowCount() == 0:
+                    self.StaffAct_Add.setEnabled(True)
+                    self.StaffAct_Edit.setEnabled(False)
+                    self.StaffAct_Delete.setEnabled(False)
+                    self.StaffAct_RefreshData.setEnabled(True)
+                else:
+                    self.StaffAct_Add.setEnabled(True)
+                    #self.StaffAct_Edit.setEnabled(False)
+                    self.StaffAct_Delete.setEnabled(True)
+                    self.StaffAct_RefreshData.setEnabled(True)
+
                 self.InventoryStatus.showMessage('Query Process > Data Table View for {} has been refreshed from MySQL Database. Ready~!'.format(self.DataTableTarget))
                 print('[Report @ DataVCore_LoadTableData] > Data Table View for {} has been refreshed from MySQL Database. Ready~!'.format(self.DataTableTarget))
 
@@ -574,7 +590,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             else:
                 self.InventoryStatus.showMessage('Looking At Requested Target Value {} @ {}...'.format(str(self.Query_ValueToSearch.text()), self.Query_ColumnOpt.currentText()))
                 
-                self.DataTable_View.clearContents()
+                self.TechnicalCore_RowClear()
 
                 print('[Search Operation] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
@@ -718,6 +734,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.DataVCore_RefreshData()
 
     def DataVCore_EditEntry(self):
+        #self.ModifierDialog = Route88_ModifierCore()
+        #self.ModifierDialog.exec_()
+        #self.DataVCore_RefreshData()
         pass
 
     def DataVCore_DeleteEntry(self):
@@ -729,7 +748,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             else:
                 self.StaffAct_Delete.setEnabled(True)
                 selectedData = self.DataTable_View.item(self.DataTable_View.currentRow(), 0).text()
-
                 print('[Database Query Process | Deletion Query] -> DELETE FROM {} WHERE {} = {}'.format(self.DataTableTarget, self.Target_TableCol, selectedData))
                 self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {}'.format(self.DataTable_View.currentRow()))
 
@@ -742,8 +760,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.InventoryStatus.showMessage('Deletion Query | > Row {} has been deleted!'.format(self.DataTable_View.currentRow() + 1))
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
-            self.InventoryStatus.showMessage('Deletion Query Process Error -> {}'.format(DelectionErrMsg))
-            print('[Exception Thrown @ DataVCore_DeleteEntry] -> {0}'.format(str(DelectionErrMsg)))
+            self.InventoryStatus.showMessage('[Database Query Process | Deletion Query] -> No Selected Row To Delete...')
+            print('[Exception Thrown @ DataVCore_DeleteEntry] -> There Might Be No Selected Row To Delete... Detailed Error |> {}'.format(str(DelectionErrMsg)))
     
     # Exit Function
     def DataVCore_ReturnWindow(self):
