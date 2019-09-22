@@ -524,7 +524,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_ColOptClear(self):
         try:
+
             ColOptIndex = 1
+            self.Query_ColumnOpt.setCurrentIndex(0)
             while self.Query_ColumnOpt.count() != 2:
                 self.Query_ColumnOpt.removeItem(ColOptIndex + 1)
 

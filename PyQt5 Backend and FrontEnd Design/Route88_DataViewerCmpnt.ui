@@ -602,14 +602,7 @@
     </property>
     <addaction name="Window_Quit"/>
    </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>About</string>
-    </property>
-    <addaction name="About_InfoSystem"/>
-   </widget>
    <addaction name="menuWindow"/>
-   <addaction name="menuAbout"/>
   </widget>
   <action name="About_InfoSystem">
    <property name="enabled">
