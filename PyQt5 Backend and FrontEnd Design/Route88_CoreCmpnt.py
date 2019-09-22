@@ -104,7 +104,7 @@ class Route88_TechnicalCore(object):
             return self.MySQLDataWireCursor.fetchall()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchAError:
             self.TechnicalCore_Beep()
-            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your statements. Technical Error |> {}'.format(str(MySQL_FetchAError)))
+            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your ExecuteState statements. Technical Error |> {}'.format(str(MySQL_FetchAError)))
     
     def MySQL_CommitData(self):
         try:
@@ -127,6 +127,14 @@ class Route88_TechnicalCore(object):
     #Not sure for this one...
     def TechnicalCore_MessageBox(self, MsgType, MsgString, MsgDetailInfo, MsgButtons):
         pass
+
+    def TechnicalCore_ColResp(self):
+        try:
+            self.DataTable_View.resizeColumnsToContents()
+            for SetCellFixedElem in range(1, self.DataTable_View.columnCount()):
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem,   QtWidgets.QHeaderView.ResizeToContents)
+        except Exception as ResponseError:
+            print('[Exception @ TechnicalCore_ColResp] > Error Responsive Rendering in Table View. Technical Error |> {}'.format(ResponseError))
             
 
 class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
@@ -223,7 +231,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
         self.setupUi(self)
         self.DataVCore_RenderExplicits()
-        self.DataTableTarget = "None" # Sets Current Table Tempporarily
+        self.DataTableTarget = None # Sets Current Table Tempporarily
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         # Button Binds for Window 'Route88_InventoryDesign'
         # > Search Query Binds
@@ -245,8 +253,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.SearchPattern_ComboBox.currentIndexChanged.connect(self.DataVCore_PatternSetter)
 
         # Table Seelection Binds
-        self.TableSystem_Selection.currentIndexChanged.connect(self.DataVCore_LoadTableColumn)
-        self.TableSystem_Selection.currentIndexChanged.connect(self.DataVCore_LoadOpt)
+        self.TableSystem_Selection.currentIndexChanged.connect(self.DataVCore_LoadTableSets)
 
         # Staff Action Binds 
         self.StaffAct_Add.clicked.connect(self.DataVCore_AddEntry)
@@ -256,24 +263,24 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
         self.Window_Quit.triggered.connect(self.DataVCore_ReturnWindow)
 
-        #self.DataVCore_RunAfterRender() #Run This Function After UI Initialization
+        self.DataVCore_RunAfterRender() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
     def DataVCore_RenderExplicits(self): # Turn This To Render Columns According To Active Window
         try:
-            self.currentRow = 1
+            #self.currentRow = 1
             self.InventoryStatus = QtWidgets.QStatusBar()
             self.setStatusBar(self.InventoryStatus)
-            self.InventoryTable_View.setRowCount(self.currentRow)
+            #self.DataTable_View.setRowCount(self.currentRow)
 
             # Add Function To Detect And Fix Column Based on Selected Table
             #for SetCellFixedElem in range(10):
-            #    self.InventoryTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem, QtWidgets.QHeaderView.ResizeToContents)
+            #    self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem, QtWidgets.QHeaderView.ResizeToContents)
 #
             #self.Query_ColumnOpt.model().item(1).setEnabled(False)
 #
-            #self.InventoryTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
-            #self.InventoryTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
+            #self.DataTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+            #self.DataTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as RenderErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(RenderErrorMsg))
             print('[Exception Thrown @ DataVCore_RenderExplicits] > Technical Error |> {0}'.format(RenderErrorMsg))
@@ -288,13 +295,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.DataVCore_SearchFieldSet()
             self.DataVCore_OperatorSet()
             self.DataVCore_PatternSetter()
-            self.DataVCore_LoadTableColumn()
-            self.DataVCore_LoadOpt()
-            self.DataVCore_LoadTableData()
+            self.DataVCore_LoadTableSets()
             
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
-            self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
-            print('[Exception Thrown @ DataVCore_RunAfterRender] -> {0}'.format(FunctionErrorMsg))
+            self.InventoryStatus.showMessage('Application Error: RunAfterRender Returns an Error. Technical Error |> {}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ DataVCore_RunAfterRender] > RunAfterRender Returns an Error. Technical Error |>  {}'.format(FunctionErrorMsg))
 
         # Pattern Enabler, Function for Switching Methods
     def DataVCore_PatternEnabler(self):
@@ -383,135 +388,185 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     #Render Table Columns
 
-    def DataVCore_LoadTableColumn(self):
-        pass
-    
-    def DataVCore_LoadOpt(self):
-        self.ActiveTable = self.TableSystem_Selection.currentText()
-    
-        if self.ActiveTable == "None":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.setEnabled(False)
+    def DataVCore_LoadTableSets(self):
+        try:
+            self.ActiveTable = self.TableSystem_Selection.currentText()
 
-        elif self.ActiveTable == "Inventory Data":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.setEnabled(True)
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.addItem("All Items")
-            self.Query_ColumnOpt.addItem("Item Code")
-            self.Query_ColumnOpt.addItem("Item Name")
-            self.Query_ColumnOpt.addItem("Cost")
-            self.Query_ColumnOpt.addItem("Expiry Date")
-            self.Query_ColumnOpt.addItem("Stock Available")
-            self.Query_ColumnOpt.addItem("Creation Time")
-            self.Query_ColumnOpt.addItem("Last Update")
+            if self.ActiveTable == "None":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.setEnabled(False)
+                self.DataTable_View.setColumnCount(0)
+                self.DataTableTarget = None
 
-        elif self.ActiveTable == "Item Transaction Data":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.setEnabled(True)
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.addItem("All Items")
-            self.Query_ColumnOpt.addItem("Transaction Code")
-            self.Query_ColumnOpt.addItem("Menu Code")
-            self.Query_ColumnOpt.addItem("Cost")
-            self.Query_ColumnOpt.addItem("Creation Time")
+            elif self.ActiveTable == "Inventory Data":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.addItem("All Items")
+                self.Query_ColumnOpt.addItem("Item Code")
+                self.Query_ColumnOpt.addItem("Item Name")
+                self.Query_ColumnOpt.addItem("Cost")
+                self.Query_ColumnOpt.addItem("Expiry Date")
+                self.Query_ColumnOpt.addItem("Stock Available")
+                self.Query_ColumnOpt.addItem("Creation Time")
+                self.Query_ColumnOpt.addItem("Last Update")
 
-        elif self.ActiveTable == "Supplier Data":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.setEnabled(True)
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.addItem("All Items")
-            self.Query_ColumnOpt.addItem("Supplier Code")
-            self.Query_ColumnOpt.addItem("Name")
-            self.Query_ColumnOpt.addItem("Last Delivery Date")
-            self.Query_ColumnOpt.addItem("Next Delivery Date")
-            self.Query_ColumnOpt.addItem("Creation Time")
-            self.Query_ColumnOpt.addItem("Last Update")
+                self.DataTable_View.setColumnCount(7)
+                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Item Name", "Cost", "Expiry    Date", "Stock Available", "Creation Time", "Last Update"))
+                self.TechnicalCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+                self.DataTableTarget = "InventoryItem"
 
-        elif self.ActiveTable == "Supplier Transaction Data":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.setEnabled(True)
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.addItem("All Items")
-            self.Query_ColumnOpt.addItem("Item Code")
-            self.Query_ColumnOpt.addItem("Order Code")
-            self.Query_ColumnOpt.addItem("Supplier Code")
-            self.Query_ColumnOpt.addItem("Order Date")
-            self.Query_ColumnOpt.addItem("Quantity Received")
-            self.Query_ColumnOpt.addItem("Creation Time")
-            self.Query_ColumnOpt.addItem("Last Update")
 
-        elif self.ActiveTable == "Customer Receipt Data":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.setEnabled(True)
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.addItem("All Items")
-            self.Query_ColumnOpt.addItem("Trasanction Code")
-            self.Query_ColumnOpt.addItem("Total Cost")
-            self.Query_ColumnOpt.addItem("VATable Cost")
-            self.Query_ColumnOpt.addItem("VAT Exempt")
-            self.Query_ColumnOpt.addItem("Zero Rated")
-            self.Query_ColumnOpt.addItem("Net VAT")
-            self.Query_ColumnOpt.addItem("VAT Rate")
-            self.Query_ColumnOpt.addItem("Creation Time")
+            elif self.ActiveTable == "Item Transaction Data":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.addItem("All Items")
+                self.Query_ColumnOpt.addItem("Transaction Code")
+                self.Query_ColumnOpt.addItem("Menu Code")
+                self.Query_ColumnOpt.addItem("Cost")
+                self.Query_ColumnOpt.addItem("Creation Time")
 
-        elif self.ActiveTable == "Employee Data":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.setEnabled(True)
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.addItem("All Items")
-            self.Query_ColumnOpt.addItem("Employee Code")
-            self.Query_ColumnOpt.addItem("First Name")
-            self.Query_ColumnOpt.addItem("Last Name")
-            self.Query_ColumnOpt.addItem("Position Code")
-            self.Query_ColumnOpt.addItem("Date of Birth")
-            self.Query_ColumnOpt.addItem("Address")
-            self.Query_ColumnOpt.addItem("SSS")
-            self.Query_ColumnOpt.addItem("TIN")
-            self.Query_ColumnOpt.addItem("PhilHealth")
-            self.Query_ColumnOpt.addItem("TIN")
-            self.Query_ColumnOpt.addItem("Creation Time")
-            self.Query_ColumnOpt.addItem("Last Update")
-                    
-        elif self.ActiveTable == "Job Position Data":
-            self.Query_ColumnOpt.clear()
-            self.Query_ColumnOpt.setEnabled(True)
-            self.Query_ColumnOpt.addItem("None")
-            self.Query_ColumnOpt.addItem("All Items")
-            self.Query_ColumnOpt.addItem("Position Code")
-            self.Query_ColumnOpt.addItem("Job Name")
+                self.DataTable_View.setColumnCount(4)
+                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Transaction Code", "Menu Code",    "Cost", "Creation Time"))
+                self.TechnicalCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+                self.DataTableTarget = "ItemTransaction"
+
+            elif self.ActiveTable == "Supplier Data":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.addItem("All Items")
+                self.Query_ColumnOpt.addItem("Supplier Code")
+                self.Query_ColumnOpt.addItem("Supplier Name")
+                self.Query_ColumnOpt.addItem("Last Delivery Date")
+                self.Query_ColumnOpt.addItem("Next Delivery Date")
+                self.Query_ColumnOpt.addItem("Creation Time")
+                self.Query_ColumnOpt.addItem("Last Update")
+
+                self.DataTable_View.setColumnCount(6)
+                self.DataTable_View.setHorizontalHeaderLabels(("Supplier Code", "Supplier Name", "Cost",    "Last Delivery Date", "Next Delivery Date", "Creation Time", "Last Update"))
+                self.TechnicalCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+                self.DataTableTarget = "SupplierReference"
+
+            elif self.ActiveTable == "Supplier Transaction Data":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.addItem("All Items")
+                self.Query_ColumnOpt.addItem("Item Code")
+                self.Query_ColumnOpt.addItem("Order Code")
+                self.Query_ColumnOpt.addItem("Supplier Code")
+                self.Query_ColumnOpt.addItem("Order Date")
+                self.Query_ColumnOpt.addItem("Quantity Received")
+                self.Query_ColumnOpt.addItem("Creation Time")
+                self.Query_ColumnOpt.addItem("Last Update")
+
+                self.DataTable_View.setColumnCount(7)
+                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Item Name", "Cost", "Expiry    Date", "Stock Available", "Creation Time", "Last Update"))
+                self.TechnicalCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+                self.DataTableTarget = "SupplierTransaction"
+
+            elif self.ActiveTable == "Customer Receipt Data":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.addItem("All Items")
+                self.Query_ColumnOpt.addItem("Trasanction Code")
+                self.Query_ColumnOpt.addItem("Total Cost")
+                self.Query_ColumnOpt.addItem("VATable Cost")
+                self.Query_ColumnOpt.addItem("VAT Exempt")
+                self.Query_ColumnOpt.addItem("Zero Rated")
+                self.Query_ColumnOpt.addItem("Net VAT")
+                self.Query_ColumnOpt.addItem("VAT Rate")
+                self.Query_ColumnOpt.addItem("Creation Time")
+
+                self.DataTable_View.setColumnCount(8)
+                self.DataTable_View.setHorizontalHeaderLabels(("Trasanction Code", "Total Cost", "VATable   Cost", "VAT Exempt", "Zero Rated", "Net VAT", "VAT Rate", "Creation Time"))
+                self.TechnicalCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+                self.DataTableTarget = "CustReceipts"
+
+            elif self.ActiveTable == "Employee Data":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.addItem("All Items")
+                self.Query_ColumnOpt.addItem("Employee Code")
+                self.Query_ColumnOpt.addItem("First Name")
+                self.Query_ColumnOpt.addItem("Last Name")
+                self.Query_ColumnOpt.addItem("Position Code")
+                self.Query_ColumnOpt.addItem("Date of Birth")
+                self.Query_ColumnOpt.addItem("Address")
+                self.Query_ColumnOpt.addItem("SSS")
+                self.Query_ColumnOpt.addItem("TIN")
+                self.Query_ColumnOpt.addItem("PhilHealth")
+                self.Query_ColumnOpt.addItem("TIN")
+                self.Query_ColumnOpt.addItem("Creation Time")
+                self.Query_ColumnOpt.addItem("Last Update")
+
+                self.DataTable_View.setColumnCount(12)
+                self.DataTable_View.setHorizontalHeaderLabels(("Employee Code", "First Name", "Last Name",  "Position Code", "Date of Birth", "Address", "SSS", "TIN", "PhilHealth", "TIN", "Creation    Time", "Last Update"))
+                self.TechnicalCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Stretch)
+                self.DataTableTarget = "Employees"
+
+            elif self.ActiveTable == "Job Position Data":
+                self.Query_ColumnOpt.clear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("None")
+                self.Query_ColumnOpt.addItem("All Items")
+                self.Query_ColumnOpt.addItem("Position Code")
+                self.Query_ColumnOpt.addItem("Job Name")
+
+                self.DataTable_View.setColumnCount(2)
+                self.DataTable_View.setHorizontalHeaderLabels(("Position Code", "Job Name"))
+                self.TechnicalCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+                self.DataTableTarget = "JobPosition"
+
+        except Exception as RenderTableViewMsg:
+            self.TechnicalCore_Beep()
+            print('[Exception @ DataVCore_LoadTableSets] > Table Sets Rendering Error. Check your arguments. Technical Error |> {}'.format(str(RenderTableViewMsg)))
 
     def DataVCore_LoadTableData(self):
         try:
             #Setups
             self.currentRow = 0
-            self.MySQL_ExecuteState("SELECT * FROM %s") % self.DataTableTarget
+            self.MySQL_ExecuteState("SELECT * FROM %s" % (self.DataTableTarget,))
             self.InventoryDataFetch = self.MySQL_FetchAllData()
             #print(InventoryDataFetch)
             # Fill Query_ColumnOpt First.
             #Fill Inventory Menu
-            self.InventoryStatus.showMessage('Query Process: TableView Data Refreshed from MySQL Database Sucess! Ready!')
-            print('Report @ DataVCore_LoadTableData] -> TableView Data Refreshed from MySQL Database Sucess! Ready!')
+            self.InventoryStatus.showMessage('Query Process > TableView Data Refreshed from MySQL Database Sucess! Ready!')
+            print('[Report @ DataVCore_LoadTableData] > TableView Data Refreshed from MySQL Database Sucess! Ready!')
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ DataVCore_LoadTableData] -> {0}'.format(FunctionErrorMsg))
            
             #for InventoryData in InventoryDataFetch:
-            #    self.InventoryTable_View.setRowCount(currentRow + 1)
-            #    self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemCode'])))
-            #    self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemName'])))
-            #    self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemType'])))
-            #    self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ConsumerCost'])))
-            #    self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ExpiryDate'])))
-            #    self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['AvailableStock'])))
-            #    self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTab)leWidgetItem('{0}'.format(InventoryData['CreationTime'])))
-            #    self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['LastUpdate'])))
-            #    #self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['SupplierCode'])))
-            #    #self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['MenuInclusion'])))
+            #    self.DataTable_View.setRowCount(currentRow + 1)
+            #    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemCode'])))
+            #    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemName'])))
+            #    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ItemType'])))
+            #    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ConsumerCost'])))
+            #    self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['ExpiryDate'])))
+            #    self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['AvailableStock'])))
+            #    self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTab)leWidgetItem('{0}'.format(InventoryData['CreationTime'])))
+            #    self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['LastUpdate'])))
+            #    #self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['SupplierCode'])))
+            #    #self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format(InventoryData['MenuInclusion'])))
             #    for SetCellFixedWidth in range(10):
-            #        self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
+            #        self.ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
             #        self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
             #    currentRow += 1
     
@@ -523,10 +578,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.InventoryStatus.showMessage('Query Empty... Resetting View...')
                 self.DataVCore_RefreshData()
             else:
-                self.InventoryStatus.showMessage('Looking for {0}...'.format(str(self.Query_ValueToSearch.text())))
-                self.InventoryTable_View.clearContents()
-                for RowLeftOver in range(self.InventoryTable_View.rowCount()):
-                    self.InventoryTable_View.removeRow(RowLeftOver)
+                self.InventoryStatus.showMessage('Looking for {}... @ '.format(str(self.Query_ValueToSearch.text())))
+                self.DataTable_View.clearContents()
+                for RowLeftOver in range(self.DataTable_View.rowCount()):
+                    self.DataTable_View.removeRow(RowLeftOver)
 
                 print('[Search Parameters] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
@@ -538,20 +593,20 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.InventoryStatus.showMessage('Application Error: {0}'.format(SearchQueryError))
             print('[Exception Thrown @ DataVCore_ValSearch] -> {0}'.format(SearchQueryError))
                 #for InventoryData in InventoryTargetDataFetch:
-                #    self.InventoryTable_View.setRowCount(currentRow + 1)
-                #    self.InventoryTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemCode'])))
-                #    self.InventoryTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_SupplierCode'])))
-                #    self.InventoryTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemName'])))
-                #    self.InventoryTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemType'])))
-                #    self.InventoryTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_AvailableStock'])))
-                #    self.InventoryTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ConsumerCost'])))
-                #    self.InventoryTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ExpiryDate'])))
-                #    self.InventoryTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_MenuInclusion'])))
-                #    self.InventoryTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_CreationTime'])))
-                #    self.InventoryTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_LastUpdate'])))
+                #    self.DataTable_View.setRowCount(currentRow + 1)
+                #    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemCode'])))
+                #    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_SupplierCode'])))
+                #    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemName'])))
+                #    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ItemType'])))
+                #    self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_AvailableStock'])))
+                #    self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ConsumerCost'])))
+                #    self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_ExpiryDate'])))
+                #    self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_MenuInclusion'])))
+                #    self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_CreationTime'])))
+                #    self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{0}'.format (InventoryData['IL_LastUpdate'])))
                 #    
                 #    for SetCellFixedWidth in range(10):
-                #        self.ColumnPosFixer = self.InventoryTable_View.item(currentRow, SetCellFixedWidth)
+                #        self.ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
                 #        self.ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignCenter)
                 #    currentRow += 1
     # Staff Action Functions
@@ -566,20 +621,21 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_DeleteEntry(self):
         try:
-            if self.InventoryTable_View.rowCount == 0:
+            if self.DataTable_View.rowCount() == 0:
                 self.StaffAct_Delete.setEnabled(False)
-                self.InventoryStatus.showMessage('Table Data Error -> You cannot delete any data anymore.')
-                print('Report @ DataVCore_DeleteEntry] > You cannot delete any data anymore.')
+                self.InventoryStatus.showMessage('Table Data Error > Table View is currently empty. You cannot delete any data anymore.')
+                print('Report @ DataVCore_DeleteEntry] Table View is currently empty. You cannot delete any data anymore.')
             else:
-                self.selectedRow = self.InventoryTable_View.currentRow()
+                self.StaffAct_Delete.setEnabled(True)
+                self.selectedRow = self.DataTable_View.currentRow()
                 self.selectedStatic_ItemCode = 0
-                self.selectedData = self.InventoryTable_View.item(self.selectedRow, self.selectedStatic_ItemCode).text()
+                self.selectedData = self.DataTable_View.item(self.selectedRow, self.selectedStatic_ItemCode).text()
                 # Make IL_ItemCode as Temporary here, change it into a variable next time.
                 print('[Database Query Process: Deletion Query] -> DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.DataTableTarget, self.selectedData))
                 self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {0}'.format(self.selectedRow))
 
                 self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.DataTableTarget, self.selectedData))
-                self.InventoryTable_View.removeRow(self.selectedRow)
+                self.DataTable_View.removeRow(self.selectedRow)
                 self.MySQLDataWire.commit()
                 self.InventoryStatus.showMessage('Deletion Query Process Success! -> Row {} Deleted.'.format(self.selectedRow + 1))
 
@@ -599,9 +655,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         try:
            #self.MySQLDataWireCursor.close()
            #self.MySQL_OpenCon(SQL_UCredential='RouteTemp_FirstTimer', SQL_PCredential='123456789', SQLDatabase_Target='route88_employeeinfo')
-            self.InventoryTable_View.clearContents()
+            self.DataTable_View.clearContents()
             for RowLeftOver in range(10):
-                self.InventoryTable_View.removeRow(RowLeftOver)
+                self.DataTable_View.removeRow(RowLeftOver)
 
             self.InventoryStatus.showMessage('[Data Query Process @ DataVCore_RefreshData] -> Attempting To Refresh Data from MySQL Database...')
             self.InventoryStatus.showMessage('Database Query Process: Attempting To Refresh Data from MySQL Database...')
@@ -649,7 +705,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             QDateGet = self.AddEntry_DateExpiry.date() 
             formattedDate = QDateGet.toPyDate()
             # Add More Options Here
-            #appendRowLast = self.InventoryTable_View.rowCount()
+            #appendRowLast = self.DataTable_View.rowCount()
             if len(self.AddEntry_ItemCode.text()) == 0:
                 self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
                 raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
@@ -669,10 +725,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
                 #self.MySQLDataWireCursor.execute("INSERT INTO {} VALUES ({}, {}, '{}', '{}', {}, {}, '{}', {}, '{}', '{}')".format(str(TargetTable_Param), str(self.AddEntry_ItemCode.text()), str(self.AddEntry_SupplierCode.text()), str(self.AddEntry_ItemName.text()), str(self.AddEntry_ItemType.text()), str(self.AddEntry_Quantity.value()), str(self.AddEntry_Cost.value()), str(formattedDate), 1,str(formattedDate), str(formattedDate)))
                 #self.MySQLDataWire.commit()
-                self.DataMCore_Status.showMessage('Success Execution -> Successfully Added to Inventory!')
-                #Get Some Blocking Function Here
-                self.Route88_ManagementCore().DataVCore_RefreshData()
-                print('Database Refreshed...')
+                print('[Report @DataMCore_AddEntry] > Successful Execution -> Data Successfully Added to Database~!')
+                self.DataMCore_Status.showMessage('Successful Execution -> Data Successfully Added to Database~!')
 
 
 

@@ -212,7 +212,7 @@
               <bool>false</bool>
              </property>
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -405,7 +405,7 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QTableWidget" name="InventoryTable_View">
+        <widget class="QTableWidget" name="DataTable_View">
          <property name="font">
           <font>
            <family>Roboto Mono</family>
