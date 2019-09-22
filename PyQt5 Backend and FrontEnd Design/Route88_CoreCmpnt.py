@@ -143,6 +143,9 @@ class Route88_TechnicalCore(object):
 
         except Exception as RowClearMsg:
             print('[Exception @ TechnicalCore_RowClear] > Row Clearing Returns Error. Detailed Info |> {}'.format(str(RowClearMsg)))
+    
+    def TechnicalCore_RowClearSelected(self, rowIndex):
+        return self.DataTable_View.removeRow(rowIndex)
 
     def DataVCore_ColOptClear(self):
         try:
@@ -276,6 +279,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.InCharge_DBPass = InCharge_DBPass
         self.DataTableTarget = None # Sets Current Table Tempporarily
         self.DatabaseSelection = None
+        self.Target_TableCol = None
         self.DataVCore_RenderExplicits()
 
         self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchFieldSet)
@@ -416,6 +420,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setRowCount(0)
                 self.DataTable_View.setColumnCount(0)
                 self.DataTableTarget = None
+                self.Target_TableCol = None
 
             elif self.ActiveTable == "Inventory Data":
                 self.DataVCore_ColOptClear()
@@ -427,11 +432,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("AvailableStock")
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
-
                 self.DataTable_View.setColumnCount(7)
                 self.DataTable_View.setHorizontalHeaderLabels(("ItemCode", "ItemName", "Cost", "ExpiryDate", "AvailableStock", "CreationTime", "LastUpdate"))
                 self.TechnicalCore_ColResp()
                 self.DataTableTarget = "InventoryItem"
+                self.Target_TableCol = "ItemCode"
 
 
             elif self.ActiveTable == "Item Transaction Data":
@@ -446,6 +451,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setHorizontalHeaderLabels(("ItemCode", "Transaction Code", "MenuCode", "Cost", "CreationTime"))
                 self.TechnicalCore_ColResp()
                 self.DataTableTarget = "ItemTransaction"
+                self.Target_TableCol = "TransactionCode"
 
             elif self.ActiveTable == "Supplier Data":
                 self.DataVCore_ColOptClear()
@@ -461,6 +467,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setHorizontalHeaderLabels(("SupplierCode", "Name", "Cost", "LastDeliveryDate", "NextDeliveryDate", "CreationTime", "LastUpdate"))
                 self.TechnicalCore_ColResp()
                 self.DataTableTarget = "SupplierReference"
+                self.Target_TableCol = "SupplierCode"
 
             elif self.ActiveTable == "Supplier Transaction Data":
                 self.DataVCore_ColOptClear()
@@ -478,6 +485,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechnicalCore_ColResp()
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "SupplierTransaction"
+                self.Target_TableCol = "ItemCode"
 
             elif self.ActiveTable == "Customer Receipt Data":
                 self.DataVCore_ColOptClear()
@@ -490,11 +498,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("NetVAT")
                 self.Query_ColumnOpt.addItem("VATRate")
                 self.Query_ColumnOpt.addItem("CreationTime")
-
                 self.DataTable_View.setColumnCount(8)
                 self.DataTable_View.setHorizontalHeaderLabels(("TrasanctionCode", "TotalCost", "VatableCost", "VatExempt", "ZeroRated", "NetVat", "VatRate", "CreationTime"))
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "CustReceipts"
+                self.Target_TableCol = "TransactionCode"
 
             elif self.ActiveTable == "Employee Data":
                 self.DataVCore_ColOptClear()
@@ -511,10 +519,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("TIN")
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
-
+                
                 self.DataTable_View.setColumnCount(12)
                 self.DataTable_View.setHorizontalHeaderLabels(("EmployeeCode", "FirstName", "LastName",  "PositionCode", "DOB", "Address", "SSS", "TIN", "PhilHealth", "TIN", "CreationTime", "LastUpdate"))
                 self.DataTableTarget = "Employees"
+                self.Target_TableCol = "EmployeeCode"
 
             elif self.ActiveTable == "Job Position Data":
                 self.DataVCore_ColOptClear()
@@ -526,6 +535,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setHorizontalHeaderLabels(("Position Code", "Job Name"))
                 self.TechnicalCore_ColResp()
                 self.DataTableTarget = "JobPosition"
+                self.Target_TableCol = "PositionCode"
 
             self.DataVCore_LoadTableData()
 
@@ -717,17 +727,18 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('Report @ DataVCore_DeleteEntry] Table View is currently empty. You cannot delete any data anymore.')
             else:
                 self.StaffAct_Delete.setEnabled(True)
-                self.selectedRow = self.DataTable_View.currentRow()
-                self.selectedStatic_ItemCode = 0
-                self.selectedData = self.DataTable_View.item(self.selectedRow, self.selectedStatic_ItemCode).text()
-                # Make IL_ItemCode as Temporary here, change it into a variable next time.
-                print('[Database Query Process: Deletion Query] -> DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.DataTableTarget, self.selectedData))
-                self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {0}'.format(self.selectedRow))
+                selectedData = self.DataTable_View.item(self.DataTable_View.currentRow(), 0).text()
 
-                self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE IL_ItemCode = {}'.format(self.DataTableTarget, self.selectedData))
-                self.DataTable_View.removeRow(self.selectedRow)
-                self.MySQLDataWire.commit()
-                self.InventoryStatus.showMessage('Deletion Query Process Success! > Row {} Deleted.'.format(self.selectedRow + 1))
+                print('[Database Query Process | Deletion Query] -> DELETE FROM {} WHERE {} = {}'.format(self.DataTableTarget, self.Target_TableCol, selectedData))
+                self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {}'.format(self.DataTable_View.currentRow()))
+
+                self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE {} = {}'.format(self.DataTableTarget, self.Target_TableCol, selectedData))
+
+                self.TechnicalCore_RowClearSelected(self.DataTable_View.currentRow())
+
+                self.MySQL_CommitData()
+
+                self.InventoryStatus.showMessage('Deletion Query | > Row {} has been deleted!'.format(self.DataTable_View.currentRow() + 1))
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
             self.InventoryStatus.showMessage('Deletion Query Process Error -> {}'.format(DelectionErrMsg))
