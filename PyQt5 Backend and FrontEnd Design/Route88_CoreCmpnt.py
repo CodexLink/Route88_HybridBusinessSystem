@@ -74,7 +74,7 @@ class Route88_TechnicalCore(object):
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ErrorMessage:
             self.TechnicalCore_Beep()
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
-            print('[Exception @ MySQL_OpenCon] > Cannot Open / Establish Connection with the MySQL Database. Technical Error |> {}'.format(str(MySQL_ErrorMessage)))
+            print('[Exception @ MySQL_OpenCon] > Cannot Open / Establish Connection with the MySQL Database. Detailed Info |> {}'.format(str(MySQL_ErrorMessage)))
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(MySQL_ErrorMessage)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program 
 
@@ -83,42 +83,42 @@ class Route88_TechnicalCore(object):
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as CursorErrMsg:
             self.TechnicalCore_Beep()
-            print('[Exception @ MySQL_CursorSet] > Invalid Cursor Set. Report this problem to the developers. Technical Error |> {}'.format(str(CursorErrMsg)))
+            print('[Exception @ MySQL_CursorSet] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> {}'.format(str(CursorErrMsg)))
 
     def MySQL_ExecuteState(self, MySQLStatement):
         try:
             return self.MySQLDataWireCursor.execute(MySQLStatement)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ExecError:
             self.TechnicalCore_Beep()
-            print('[Exception @ MySQL_ExecuteState] > Error in SQL Statements. Double check your statements. Technical Error |> {}'.format(str(MySQL_ExecError))) # Style This One Soon.
+            print('[Exception @ MySQL_ExecuteState] > Error in SQL Statements. Double check your statements. Detailed Info |> {}'.format(str(MySQL_ExecError))) # Style This One Soon.
     
     def MySQL_FetchOneData(self, TupleIndex):
         try:
             return self.MySQLDataWireCursor.fetchone()[TupleIndex]
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchOError:
             self.TechnicalCore_Beep()
-            print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Technical Error |> {}'.format(str(MySQL_FetchOError)))
+            print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Detailed Info |> {}'.format(str(MySQL_FetchOError)))
     
     def MySQL_FetchAllData(self):
         try:
             return self.MySQLDataWireCursor.fetchall()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchAError:
             self.TechnicalCore_Beep()
-            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your ExecuteState statements. Technical Error |> {}'.format(str(MySQL_FetchAError)))
+            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your ExecuteState statements. Detailed Info |> {}'.format(str(MySQL_FetchAError)))
     
     def MySQL_CommitData(self):
         try:
             return self.MySQLDataWire.commit()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_CommitError:
             self.TechnicalCore_Beep()
-            print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Technical Error |> {}'.format(str(MySQL_CommitError)))
+            print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Detailed Info |> {}'.format(str(MySQL_CommitError)))
 
     def MySQL_CloseCon(self):
         try:
             return self.MySQLDataWire.close()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ClosingErr:
             self.TechnicalCore_Beep()
-            print('[Exception @ MySQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Technical Error |> {}'.format(str(ClosingErr)))
+            print('[Exception @ MySQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Detailed Info |> {}'.format(str(ClosingErr)))
     
     #Non Database Callable Function
     def TechnicalCore_Beep(self):
@@ -134,8 +134,16 @@ class Route88_TechnicalCore(object):
             for SetCellFixedElem in range(1, self.DataTable_View.columnCount()):
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem,   QtWidgets.QHeaderView.ResizeToContents)
         except Exception as ResponseError:
-            print('[Exception @ TechnicalCore_ColResp] > Error Responsive Rendering in Table View. Technical Error |> {}'.format(ResponseError))
-            
+            print('[Exception @ TechnicalCore_ColResp] > Error Responsive Rendering in Table View. Detailed Info |> {}'.format(ResponseError))
+    
+    def TechnicalCore_PosCodeToName(self, PosCode):
+        try:
+            self.MySQL_CursorSet(None)
+            self.MySQL_ExecuteState("SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode,))
+            return self.MySQL_FetchOneData(0)
+
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ProcessError:
+            print('[Exception @ TechnicalCore_PosCodeToName] > Error Processing PositionCode to JobName. Detailed Info |> {}'.format(str(ProcessError)))
 
 class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     def __init__(self, Parent=None):
@@ -159,14 +167,14 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
         except Exception as ErrorHandler:
             self.TechnicalCore_Beep()
-            print('[Exception @ LoginCore_RunAfterRender] > One of the MySQL Required Components Returns Error. Technical Error |> {}'.format(str(ErrorHandler)))
-            QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database. Please restart the program and re-run the XAMPP MySQL Instance. Technical Error |> {}".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
+            print('[Exception @ LoginCore_RunAfterRender] > One of the MySQL Required Components Returns Error. Detailed Info |> {}'.format(str(ErrorHandler)))
+            QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database. Please restart the program and re-run the XAMPP MySQL Instance. Detailed Info |> {}".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
 
     #Route88_LoginForm UI Window Functions - StartPoint
     def LoginCore_CheckEnlisted(self):
         try:
-            self.MySQL_CursorSet()
+            self.MySQL_CursorSet(None)
             self.MySQL_ExecuteState("SELECT COUNT(*) FROM Employees")
             self.UserEnlistedCount = self.MySQL_FetchOneData(0)
             print('[Report @ LoginCore_CheckEnlisted] > User Account Count: {}'.format(self.UserEnlistedCount))
@@ -184,7 +192,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginQueryErrorMsg:
             self.TechnicalCore_Beep()
 
-            print('[Exception @ LoginCore_CheckEnlisted] > Error Checking User in Database. Check MySQL Database Connection. Technical Error |> {}'.format(str(LoginQueryErrorMsg)))
+            print('[Exception @ LoginCore_CheckEnlisted] > Error Checking User in Database. Check MySQL Database Connection. Detailed Info |> {}'.format(str(LoginQueryErrorMsg)))
             self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
 
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(LoginQueryErrorMsg)), QtWidgets.QMessageBox.Ok)
@@ -192,22 +200,29 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
     def LoginCore_DataSubmission(self):
         try:
-            self.MySQL_CursorSet(None)
-            self.QueryReturn = self.MySQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = '%s' AND EmployeePassword = '%s'" %(self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
+            self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+            self.QueryReturn = self.MySQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = '%s' AND EmployeePassword = '%s'" % (self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
 
+            self.UserData = self.MySQL_FetchAllData()
             if self.QueryReturn:
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
                 self.StatusLabel.setText("Login Success: Credential Input Matched!")
                 self.UserAcc_SubmitData.setDisabled(True)
                 
-                QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '{}'. ".format('NA'), QtWidgets.QMessageBox.Ok)
+                for UserRawData in self.UserData:
+                    self.UserLiteralName = "{} {}".format(UserRawData['FirstName'], UserRawData['LastName'])
+                    self.UserPosInfo = self.TechnicalCore_PosCodeToName(UserRawData['PositionCode'])
+                # = self.MySQL
+                #self.UserInfo_JobPos = self.
+                
+                QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '{} | Job Info |> {}.".format(self.UserLiteralName, self.UserPosInfo), QtWidgets.QMessageBox.Ok)
                 self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
 
                 QtTest.QTest.qWait(1300)
                 self.MySQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
-                self.Route88_MCInst = Route88_WindowController() #'RouteTemp_FirstTimer', 'route88_group7')
-                self.Route88_MCInst.show()
                 self.close()
+                self.Route88_MCInst = Route88_WindowController(Staff_Name=self.UserLiteralName, Staff_Job=self.UserPosInfo, Staff_DBUser='Route_TempUser', Staff_DBPass='123456789')
+                self.Route88_MCInst.show()
 
             else:
                 self.TechnicalCore_Beep()
@@ -221,7 +236,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginSubmissionErrorMsg:
             self.TechnicalCore_Beep()
             self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
-            print('[Exception @ LoginCore_DataSubmission] > Data Submission Failed. Technical Error |> {}'.format(str(LoginSubmissionErrorMsg)))
+            print('[Exception @ LoginCore_DataSubmission] > Data Submission Failed. Detailed Info |> {}'.format(str(LoginSubmissionErrorMsg)))
 
     # Route88_LoginForm UI Window Functions - EndPoint
 
@@ -283,7 +298,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             #self.DataTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as RenderErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(RenderErrorMsg))
-            print('[Exception Thrown @ DataVCore_RenderExplicits] > Technical Error |> {0}'.format(RenderErrorMsg))
+            print('[Exception Thrown @ DataVCore_RenderExplicits] > Detailed Info |> {0}'.format(RenderErrorMsg))
 
     def DataVCore_RunAfterRender(self):
         try:
@@ -298,8 +313,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.DataVCore_LoadTableSets()
             
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
-            self.InventoryStatus.showMessage('Application Error: RunAfterRender Returns an Error. Technical Error |> {}'.format(FunctionErrorMsg))
-            print('[Exception Thrown @ DataVCore_RunAfterRender] > RunAfterRender Returns an Error. Technical Error |>  {}'.format(FunctionErrorMsg))
+            self.InventoryStatus.showMessage('Application Error: RunAfterRender Returns an Error. Detailed Info |> {}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ DataVCore_RunAfterRender] > RunAfterRender Returns an Error. Detailed Info |>  {}'.format(FunctionErrorMsg))
 
         # Pattern Enabler, Function for Switching Methods
     def DataVCore_PatternEnabler(self):
@@ -425,7 +440,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("Creation Time")
 
                 self.DataTable_View.setColumnCount(4)
-                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Transaction Code", "Menu Code",    "Cost", "Creation Time"))
+                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Transaction Code", "Menu Code", "Cost", "Creation Time"))
                 self.TechnicalCore_ColResp()
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "ItemTransaction"
@@ -520,7 +535,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
         except Exception as RenderTableViewMsg:
             self.TechnicalCore_Beep()
-            print('[Exception @ DataVCore_LoadTableSets] > Table Sets Rendering Error. Check your arguments. Technical Error |> {}'.format(str(RenderTableViewMsg)))
+            print('[Exception @ DataVCore_LoadTableSets] > Table Sets Rendering Error. Check your arguments. Detailed Info |> {}'.format(str(RenderTableViewMsg)))
 
     def DataVCore_ColOptClear(self):
         try:
@@ -531,7 +546,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.removeItem(ColOptIndex + 1)
 
         except Exception as ColOptClearMsg:
-            print('[Exception @ DataVCore_ColOptClear] > Column Clearing Returns error. Technical Error |> {}'.format(str(ColOptClearMsg)))
+            print('[Exception @ DataVCore_ColOptClear] > Column Clearing Returns error. Detailed Info |> {}'.format(str(ColOptClearMsg)))
 
     def DataVCore_LoadTableData(self):
         try:
@@ -782,18 +797,24 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
 
 class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    def __init__(self, Parent=None):
+    def __init__(self, Parent=None, Staff_Name=None, Staff_Job=None, Staff_DBUser=None, Staff_DBPass=None):
         super(Route88_WindowController, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
 
+
+        self.StaffLiteralName = Staff_Name
+        self.StaffCurrentJob = Staff_Job
+        self.StaffDBUser = Staff_DBUser
+        self.StaffDBPass = Staff_DBPass
+        
         self.ctrl_UserLogout.clicked.connect(self.ShowLoginCore)
         self.ctrl_ExitProgram.clicked.connect(self.close)
         self.ctrl_ManageSystem.clicked.connect(self.ShowManagementCore)
         #self.ctrl_POSSystem.clicked.connect(self.)
-        
-        #self.Route88_POSInst = Route88_LoginCore()
+        #self.ctrl_AboutSystem.clicked.connect(self.)
+        self.ControllerCore_RunAfterRender()
 
     def ShowLoginCore(self):
         self.Route88_LoginInst = Route88_LoginCore()
@@ -811,6 +832,9 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
     def ShowAboutCore(self):
         pass
 
+    def ControllerCore_RunAfterRender(self):
+        self.user_StaffName.setText(self.StaffLiteralName) 
+        self.user_JobPosition.setText(self.StaffCurrentJob)
 # Literal Procedural Programming Part
 if __name__ == "__main__":
     sysCmdArgumentHandler('CLS')
