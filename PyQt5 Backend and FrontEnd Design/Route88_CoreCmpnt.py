@@ -221,6 +221,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 QtTest.QTest.qWait(1300)
                 self.MySQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
                 self.close()
+
                 self.Route88_MCInst = Route88_WindowController(Staff_Name=self.UserLiteralName, Staff_Job=self.UserPosInfo, Staff_DBUser='Route_TempUser', Staff_DBPass='123456789')
                 self.Route88_MCInst.show()
 
@@ -241,7 +242,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     # Route88_LoginForm UI Window Functions - EndPoint
 
 class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow, Route88_TechnicalCore):
-    def __init__(self, Parent=None):
+    def __init__(self, Parent=None, InCharge_Name=None, InCharge_Job=None, InCharge_DBUser=None, InCharge_DBPass=None):
         super(Route88_ManagementCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
         self.setupUi(self)
@@ -250,6 +251,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         # Button Binds for Window 'Route88_InventoryDesign'
         # > Search Query Binds
+
+        self.InCharge_LiteralName = InCharge_Name
+        self.InCharge_JobPos = InCharge_Job
+        self.InCharge_DBUser = InCharge_DBUser
+        self.InCharge_DBPass = InCharge_DBPass
+
         self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchFieldSet)
         self.Query_Operator.currentIndexChanged.connect(self.DataVCore_OperatorSet)
 
@@ -657,7 +664,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     # Exit Function
     def DataVCore_ReturnWindow(self):
         self.close()
-        self.ReturnWinInst = Route88_WindowController()
+        self.ReturnWinInst = Route88_WindowController(Staff_Name=self.InCharge_LiteralName, Staff_Job=self.InCharge_JobPos, Staff_DBUser=self.InCharge_DBUser, Staff_DBPass=self.InCharge_DBPass)
         self.ReturnWinInst.show()
 
 
@@ -822,7 +829,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.close()
 
     def ShowManagementCore(self):
-        self.Route88_ManageInst = Route88_ManagementCore()
+        self.Route88_ManageInst = Route88_ManagementCore(InCharge_Name=self.StaffLiteralName, InCharge_Job=self.StaffCurrentJob, InCharge_DBUser=self.StaffDBUser, InCharge_DBPass=self.StaffDBPass)
         self.Route88_ManageInst.show()
         self.close()
 
