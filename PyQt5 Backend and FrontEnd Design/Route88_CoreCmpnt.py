@@ -298,6 +298,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.SearchPattern_ContainOpt.clicked.connect(self.DataVCore_ValSearch)
         
         self.SearchPattern_ComboBox.currentIndexChanged.connect(self.DataVCore_PatternSetter)
+        self.SearchPattern_ComboBox.currentIndexChanged.connect(self.DataVCore_ValSearch)
 
         # Table Seelection Binds
         self.TableSystem_Selection.currentIndexChanged.connect(self.DataVCore_LoadTableSets)
@@ -404,9 +405,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             if self.SearchPattern_ComboBox.currentText() == 'Between':
                 self.TargetParameter = "%{}%".format(self.Query_ValueToSearch.text())
             elif self.SearchPattern_ComboBox.currentText() == 'Starting With':
-                self.TargetParameter = "%{}".format(self.Query_ValueToSearch.text())
-            elif self.SearchPattern_ComboBox.currentText() == 'Ends With':
                 self.TargetParameter = "{}%".format(self.Query_ValueToSearch.text())
+            elif self.SearchPattern_ComboBox.currentText() == 'Ends With':
+                self.TargetParameter = "%{}".format(self.Query_ValueToSearch.text())
 
     #Render Table Columns
 
@@ -464,7 +465,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("LastUpdate")
 
                 self.DataTable_View.setColumnCount(6)
-                self.DataTable_View.setHorizontalHeaderLabels(("SupplierCode", "Name", "Cost", "LastDeliveryDate", "NextDeliveryDate", "CreationTime", "LastUpdate"))
+                self.DataTable_View.setHorizontalHeaderLabels(("SupplierCode", "Name", "LastDeliveryDate", "NextDeliveryDate", "CreationTime", "LastUpdate"))
                 self.TechnicalCore_ColResp()
                 self.DataTableTarget = "SupplierReference"
                 self.Target_TableCol = "SupplierCode"
@@ -564,14 +565,14 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     def DataVCore_ValSearch(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
         try:
             if len(self.Query_ValueToSearch.text()) < 1:
-                self.InventoryStatus.showMessage('Query Empty... Resetting View...')
+                self.InventoryStatus.showMessage('Query is Now Empty. Resetting Data Table View...')
                 self.DataVCore_RefreshData()
 
             elif self.Query_ColumnOpt.currentText() == "None":
                 print('Search Query Selected Column is None. Search Operation is Cancelled.')
                 self.InventoryStatus.showMessage('Search Query Selected Column is None. Search Operation is Cancelled.')
             else:
-                self.InventoryStatus.showMessage('Looking At This Requested Target Value {} @ {}.'.format(str(self.Query_ValueToSearch.text()), self.Query_ColumnOpt.currentText()))
+                self.InventoryStatus.showMessage('Looking At Requested Target Value {} @ {}...'.format(str(self.Query_ValueToSearch.text()), self.Query_ColumnOpt.currentText()))
                 
                 self.DataTable_View.clearContents()
 
@@ -755,10 +756,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     def DataVCore_RefreshData(self):
         try:
             self.TechnicalCore_RowClear()
-
-            self.InventoryStatus.showMessage('[Data Query Process @ DataVCore_RefreshData] > Attempting To Refresh Data from MySQL Database...')
-            self.InventoryStatus.showMessage('Database Query Process: Attempting To Refresh Data from MySQL Database...')
-            QtTest.QTest.qWait(800)
             self.DataVCore_LoadTableData()
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as RefreshError:
