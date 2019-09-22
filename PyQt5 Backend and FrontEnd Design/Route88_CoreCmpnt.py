@@ -393,17 +393,14 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.ActiveTable = self.TableSystem_Selection.currentText()
 
             if self.ActiveTable == "None":
-                self.Query_ColumnOpt.clear()
-                self.Query_ColumnOpt.addItem("None")
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(False)
                 self.DataTable_View.setColumnCount(0)
                 self.DataTableTarget = None
 
             elif self.ActiveTable == "Inventory Data":
-                self.Query_ColumnOpt.clear()
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("None")
-                self.Query_ColumnOpt.addItem("All Items")
                 self.Query_ColumnOpt.addItem("Item Code")
                 self.Query_ColumnOpt.addItem("Item Name")
                 self.Query_ColumnOpt.addItem("Cost")
@@ -420,10 +417,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
 
             elif self.ActiveTable == "Item Transaction Data":
-                self.Query_ColumnOpt.clear()
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("None")
-                self.Query_ColumnOpt.addItem("All Items")
                 self.Query_ColumnOpt.addItem("Transaction Code")
                 self.Query_ColumnOpt.addItem("Menu Code")
                 self.Query_ColumnOpt.addItem("Cost")
@@ -436,10 +431,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTableTarget = "ItemTransaction"
 
             elif self.ActiveTable == "Supplier Data":
-                self.Query_ColumnOpt.clear()
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("None")
-                self.Query_ColumnOpt.addItem("All Items")
                 self.Query_ColumnOpt.addItem("Supplier Code")
                 self.Query_ColumnOpt.addItem("Supplier Name")
                 self.Query_ColumnOpt.addItem("Last Delivery Date")
@@ -454,10 +447,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTableTarget = "SupplierReference"
 
             elif self.ActiveTable == "Supplier Transaction Data":
-                self.Query_ColumnOpt.clear()
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("None")
-                self.Query_ColumnOpt.addItem("All Items")
                 self.Query_ColumnOpt.addItem("Item Code")
                 self.Query_ColumnOpt.addItem("Order Code")
                 self.Query_ColumnOpt.addItem("Supplier Code")
@@ -473,10 +464,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTableTarget = "SupplierTransaction"
 
             elif self.ActiveTable == "Customer Receipt Data":
-                self.Query_ColumnOpt.clear()
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("None")
-                self.Query_ColumnOpt.addItem("All Items")
                 self.Query_ColumnOpt.addItem("Trasanction Code")
                 self.Query_ColumnOpt.addItem("Total Cost")
                 self.Query_ColumnOpt.addItem("VATable Cost")
@@ -493,10 +482,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTableTarget = "CustReceipts"
 
             elif self.ActiveTable == "Employee Data":
-                self.Query_ColumnOpt.clear()
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("None")
-                self.Query_ColumnOpt.addItem("All Items")
                 self.Query_ColumnOpt.addItem("Employee Code")
                 self.Query_ColumnOpt.addItem("First Name")
                 self.Query_ColumnOpt.addItem("Last Name")
@@ -519,10 +506,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTableTarget = "Employees"
 
             elif self.ActiveTable == "Job Position Data":
-                self.Query_ColumnOpt.clear()
+                self.DataVCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("None")
-                self.Query_ColumnOpt.addItem("All Items")
                 self.Query_ColumnOpt.addItem("Position Code")
                 self.Query_ColumnOpt.addItem("Job Name")
 
@@ -536,6 +521,15 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         except Exception as RenderTableViewMsg:
             self.TechnicalCore_Beep()
             print('[Exception @ DataVCore_LoadTableSets] > Table Sets Rendering Error. Check your arguments. Technical Error |> {}'.format(str(RenderTableViewMsg)))
+
+    def DataVCore_ColOptClear(self):
+        try:
+            ColOptIndex = 1
+            while self.Query_ColumnOpt.count() != 2:
+                self.Query_ColumnOpt.removeItem(ColOptIndex + 1)
+
+        except Exception as ColOptClearMsg:
+            print('[Exception @ DataVCore_ColOptClear] > Column Clearing Returns error. Technical Error |> {}'.format(str(ColOptClearMsg)))
 
     def DataVCore_LoadTableData(self):
         try:
