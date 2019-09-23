@@ -765,8 +765,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     def DataVCore_Encap_RowData(self):
         if self.DataTable_View.currentRow() != -1:
             self.StaffAct_Delete.setEnabled(True)
+            self.StaffAct_Edit.setEnabled(True)
         else:
             self.StaffAct_Delete.setEnabled(False)
+            self.StaffAct_Edit.setEnabled(False)
 
     
     # Staff Action Functions
@@ -856,10 +858,10 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         try:
             if (self.ActiveTargetTable == "Employees" or self.ActiveTargetTable == "JobPosition"):
                 self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='route88_management')
+                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
             else:
                 self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='route88_employees')
-
-            self.MySQL_CursorSet(None)
+                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
 
             if self.ActiveTargetTable == "InventoryItem":
                 self.resize(820, 420)
@@ -889,6 +891,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.resize(820, 380)
                 self.Tab_SelectionSelectives.setCurrentIndex(6)
                 self.TechCore_DisableExcept(6)
+
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as DataMCore_ARErr:
             self.TechCore_Beep()
             print('[Exception @ DataMCore_RunAfterRender] > Error Rendering Modifier Core: RunAfterRender. Detailed Error: {}'.format(DataMCore_ARErr))
@@ -1023,7 +1026,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.user_JobPosition.setText(self.StaffCurrentJob)
 # Literal Procedural Programming Part
 if __name__ == "__main__":
-    sysHandler.call('CLS', shell=True)
+    sysHandler.Popen('CLS', shell=True)
     print('[Application App Startup] Route88 Hybrid Application, Debugger Output')
     app = QtWidgets.QApplication(sys.argv)
     Route88_InitialInst = Route88_LoginCore()
