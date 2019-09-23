@@ -1,11 +1,11 @@
 <h1 align="center">Route 88 Bike Cafe’s Hybrid Management System</h1>
-<h5 align="center">Route 88's Inventory & POS System with Management All-In-One Integration, Specialized in Python PyQt5</h5>
+<h5 align="center">Route 88's Data Managemnet & POS System All-In-One Integration, Specialized in Python PyQt5 Design</h5>
 
 <div align="center" markdown="10">
   <a href="https://travis-ci.com/CodexLink/Route88_HybridSystem">
     <img src="https://badgen.net/travis/CodexLink/Route88_HybridSystem" alt="Build Status">
   </a>
-<a href="https://www.codefactor.io/repository/github/codexlink/dmbs_route88_possystem">
+<a href="https://www.codefactor.io/repository/github/codexlink/Route88_HybridSystem">
     <img src="https://www.codefactor.io/repository/github/codexlink/route88_hybridsystem/badge" alt="CodeFactor" />
 </a>
 <a href="https://www.codacy.com/app/CodexLink/Route88_HybridSystem?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CodexLink/Route88_HybridSystem&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/78fb2db215e1473e9bc4f4c0dfaa896f"/></a>

@@ -47,7 +47,7 @@
             <ClassShortName>_RenderExplicits -> Load Extra Elements from 'That' UI
                 > This was implemented to ensure that changes from the UI file will not     affect any additional elements that we just manually added which cannot be initiated with Qt Designer, this would result to extra elements  remains whatver UI file changes after generating using 'pyuic5' module.
             <ClassShortName>_RunAfterRender -> Condition, Must Be After setupUi()
-                > This was implemented right after setupUi(). Because, we have to   initialize every value from the database which would then be shown after  UI has been render. So that when the engine initiates .show(). All   values is already there. So in sort, setup Values and Elements.
+                > This was implemented right after setupUi(). Because, we have to   initialize every value from the database which would then be shown after  UI has been render. So that when the engine initiates .show(). All values is already there. So in sort, setup Values and Elements.
 '''
 from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
 from PyQt5.QtMultimedia import QSound
