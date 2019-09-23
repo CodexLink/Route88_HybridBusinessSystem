@@ -72,7 +72,7 @@ class Route88_TechnicalCore(object):
             print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is now logged as {}.".format("...", SQL_UCredential, '...'))
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ErrorMessage:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
             print('[Exception @ MySQL_OpenCon] > Cannot Open / Establish Connection with the MySQL Database. Detailed Info |> {}'.format(str(MySQL_ErrorMessage)))
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(MySQL_ErrorMessage)), QtWidgets.QMessageBox.Ok)
@@ -82,72 +82,72 @@ class Route88_TechnicalCore(object):
         try:
             self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as CursorErrMsg:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ MySQL_CursorSet] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> {}'.format(str(CursorErrMsg)))
 
     def MySQL_ExecuteState(self, MySQLStatement):
         try:
             return self.MySQLDataWireCursor.execute(MySQLStatement)
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ExecError:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ MySQL_ExecuteState] > Error in SQL Statements. Double check your statements. Detailed Info |> {}'.format(str(MySQL_ExecError))) # Style This One Soon.
     
     def MySQL_FetchOneData(self, TupleIndex):
         try:
             return self.MySQLDataWireCursor.fetchone()[TupleIndex]
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchOError:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Detailed Info |> {}'.format(str(MySQL_FetchOError)))
     
     def MySQL_FetchAllData(self):
         try:
             return self.MySQLDataWireCursor.fetchall()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchAError:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your ExecuteState statements. Detailed Info |> {}'.format(str(MySQL_FetchAError)))
     
     def MySQL_CommitData(self):
         try:
             return self.MySQLDataWire.commit()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_CommitError:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Detailed Info |> {}'.format(str(MySQL_CommitError)))
 
     def MySQL_CloseCon(self):
         try:
             return self.MySQLDataWire.close()
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ClosingErr:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ MySQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Detailed Info |> {}'.format(str(ClosingErr)))
     
     #Non Database Callable Function
-    def TechnicalCore_Beep(self):
+    def TechCore_Beep(self):
         return QtWidgets.QApplication.beep()
 
     #Not sure for this one...
-    def TechnicalCore_MessageBox(self, MsgType, MsgString, MsgDetailInfo, MsgButtons):
+    def TechCore_MessageBox(self, MsgType, MsgString, MsgDetailInfo, MsgButtons):
         pass
 
-    def TechnicalCore_ColResp(self):
+    def TechCore_ColResp(self):
         try:
             self.DataTable_View.resizeColumnsToContents()
             for SetCellFixedElem in range(self.DataTable_View.columnCount()):
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem,   QtWidgets.QHeaderView.Stretch)
         except Exception as ResponseError:
-            print('[Exception @ TechnicalCore_ColResp] > Error Responsive Rendering in Table View. Detailed Info |> {}'.format(ResponseError))
+            print('[Exception @ TechCore_ColResp] > Error Responsive Rendering in Table View. Detailed Info |> {}'.format(ResponseError))
     
-    def TechnicalCore_RowClear(self):
+    def TechCore_RowClear(self):
         try:
             self.DataTable_View.clearContents()
             self.DataTable_View.setRowCount(0)
 
         except Exception as RowClearMsg:
-            print('[Exception @ TechnicalCore_RowClear] > Row Clearing Returns Error. Detailed Info |> {}'.format(str(RowClearMsg)))
+            print('[Exception @ TechCore_RowClear] > Row Clearing Returns Error. Detailed Info |> {}'.format(str(RowClearMsg)))
     
-    def TechnicalCore_RowClearSelected(self, rowIndex):
+    def TechCore_RowClearSelected(self, rowIndex):
         return self.DataTable_View.removeRow(rowIndex)
 
-    def DataVCore_ColOptClear(self):
+    def TechCore_ColOptClear(self):
         try:
             ColOptIndex = 1
             self.Query_ColumnOpt.setCurrentIndex(0)
@@ -155,16 +155,23 @@ class Route88_TechnicalCore(object):
                 self.Query_ColumnOpt.removeItem(ColOptIndex + 1)
 
         except Exception as ColOptClearMsg:
-            print('[Exception @ DataVCore_ColOptClear] > Column Clearing Returns Error. Detailed Info |> {}'.format(str(ColOptClearMsg)))
+            print('[Exception @ TechCore_ColOptClear] > Column Clearing Returns Error. Detailed Info |> {}'.format(str(ColOptClearMsg)))
+
+    def TechCore_DisableExcept(self, ExceptGivenNum):
+        for TabIndex in range(self.Tab_SelectionSelectives.count()):
+            if TabIndex == ExceptGivenNum:
+                continue
+            else:
+                self.Tab_SelectionSelectives.setTabEnabled(TabIndex, False)
         
-    def TechnicalCore_PosCodeToName(self, PosCode):
+    def TechCore_PosCodeToName(self, PosCode):
         try:
             self.MySQL_CursorSet(None)
             self.MySQL_ExecuteState("SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode,))
             return self.MySQL_FetchOneData(0)
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ProcessError:
-            print('[Exception @ TechnicalCore_PosCodeToName] > Error Processing PositionCode to JobName. Detailed Info |> {}'.format(str(ProcessError)))
+            print('[Exception @ TechCore_PosCodeToName] > Error Processing PositionCode to JobName. Detailed Info |> {}'.format(str(ProcessError)))
 
 
 
@@ -189,7 +196,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
             self.LoginCore_CheckEnlisted()
 
         except Exception as ErrorHandler:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ LoginCore_RunAfterRender] > One of the MySQL Required Components Returns Error. Detailed Info |> {}'.format(str(ErrorHandler)))
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database. Please restart the program and re-run the XAMPP MySQL Instance. Detailed Info |> {}".format(str(ErrorHandler)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program at all cost.
@@ -213,7 +220,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.UserAcc_SubmitData.setDisabled(False)
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginQueryErrorMsg:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
 
             print('[Exception @ LoginCore_CheckEnlisted] > Error Checking User in Database. Check MySQL Database Connection. Detailed Info |> {}'.format(str(LoginQueryErrorMsg)))
             self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
@@ -234,7 +241,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 
                 for UserRawData in self.UserData:
                     self.UserLiteralName = "{} {}".format(UserRawData['FirstName'], UserRawData['LastName'])
-                    self.UserPosInfo = self.TechnicalCore_PosCodeToName(UserRawData['PositionCode'])
+                    self.UserPosInfo = self.TechCore_PosCodeToName(UserRawData['PositionCode'])
                 # = self.MySQL
                 #self.UserInfo_JobPos = self.
                 
@@ -249,7 +256,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.Route88_MCInst.show()
 
             else:
-                self.TechnicalCore_Beep()
+                self.TechCore_Beep()
                 self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
                 self.UserAcc_SubmitData.setDisabled(False)
 
@@ -258,7 +265,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginSubmissionErrorMsg:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
             print('[Exception @ LoginCore_DataSubmission] > Data Submission Failed. Detailed Info |> {}'.format(str(LoginSubmissionErrorMsg)))
 
@@ -416,7 +423,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.ActiveTable = self.TableSystem_Selection.currentText()
 
             if self.ActiveTable == "None":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(False)
                 self.DataTable_View.setRowCount(0)
                 self.DataTable_View.setColumnCount(0)
@@ -424,7 +431,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Target_TableCol = None
 
             elif self.ActiveTable == "Inventory Data":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("ItemCode")
                 self.Query_ColumnOpt.addItem("ItemName")
@@ -435,13 +442,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("LastUpdate")
                 self.DataTable_View.setColumnCount(7)
                 self.DataTable_View.setHorizontalHeaderLabels(("ItemCode", "ItemName", "Cost", "ExpiryDate", "AvailableStock", "CreationTime", "LastUpdate"))
-                self.TechnicalCore_ColResp()
+                self.TechCore_ColResp()
                 self.DataTableTarget = "InventoryItem"
                 self.Target_TableCol = "ItemCode"
 
 
             elif self.ActiveTable == "Item Transaction Data":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("TransactionCode")
                 self.Query_ColumnOpt.addItem("MenuCode")
@@ -450,12 +457,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
                 self.DataTable_View.setColumnCount(4)
                 self.DataTable_View.setHorizontalHeaderLabels(("ItemCode", "Transaction Code", "MenuCode", "Cost", "CreationTime"))
-                self.TechnicalCore_ColResp()
+                self.TechCore_ColResp()
                 self.DataTableTarget = "ItemTransaction"
                 self.Target_TableCol = "TransactionCode"
 
             elif self.ActiveTable == "Supplier Data":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("SupplierCode")
                 self.Query_ColumnOpt.addItem("Name")
@@ -466,12 +473,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
                 self.DataTable_View.setColumnCount(6)
                 self.DataTable_View.setHorizontalHeaderLabels(("SupplierCode", "Name", "LastDeliveryDate", "NextDeliveryDate", "CreationTime", "LastUpdate"))
-                self.TechnicalCore_ColResp()
+                self.TechCore_ColResp()
                 self.DataTableTarget = "SupplierReference"
                 self.Target_TableCol = "SupplierCode"
 
             elif self.ActiveTable == "Supplier Transaction Data":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("ItemCode")
                 self.Query_ColumnOpt.addItem("OrderCode")
@@ -483,13 +490,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
                 self.DataTable_View.setColumnCount(7)
                 self.DataTable_View.setHorizontalHeaderLabels(("ItemCode", "ItemName", "Cost", "ExpiryDate", "AvailableStock", "CreationTime", "LastUpdate"))
-                self.TechnicalCore_ColResp()
+                self.TechCore_ColResp()
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "SupplierTransaction"
                 self.Target_TableCol = "ItemCode"
 
             elif self.ActiveTable == "Customer Receipt Data":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("TransactionCode")
                 self.Query_ColumnOpt.addItem("TotalCost")
@@ -506,7 +513,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Target_TableCol = "TransactionCode"
 
             elif self.ActiveTable == "Employee Data":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("EmployeeCode")
                 self.Query_ColumnOpt.addItem("FirstName")
@@ -527,27 +534,27 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Target_TableCol = "EmployeeCode"
 
             elif self.ActiveTable == "Job Position Data":
-                self.DataVCore_ColOptClear()
+                self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("PositionCode")
                 self.Query_ColumnOpt.addItem("JobName")
 
                 self.DataTable_View.setColumnCount(2)
                 self.DataTable_View.setHorizontalHeaderLabels(("Position Code", "Job Name"))
-                self.TechnicalCore_ColResp()
+                self.TechCore_ColResp()
                 self.DataTableTarget = "JobPosition"
                 self.Target_TableCol = "PositionCode"
 
             self.DataVCore_LoadTableData()
 
         except Exception as RenderTableViewMsg:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             print('[Exception @ DataVCore_LoadTableSets] > Table Sets Rendering Error. Check your arguments. Detailed Info |> {}'.format(str(RenderTableViewMsg)))
 
     def DataVCore_LoadTableData(self):
         try:
             if self.ActiveTable == "None":
-                self.TechnicalCore_RowClear()
+                self.TechCore_RowClear()
                 self.StaffAct_Add.setEnabled(False)
                 self.StaffAct_Edit.setEnabled(False)
                 self.StaffAct_Delete.setEnabled(False)
@@ -555,7 +562,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
                 self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
             else:
-                self.TechnicalCore_RowClear()
+                self.TechCore_RowClear()
                 self.MySQL_ExecuteState("SELECT * FROM %s" % (self.DataTableTarget,))
                 self.DataVCore_RenderTable(self.MySQL_FetchAllData())
                 
@@ -590,7 +597,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             else:
                 self.InventoryStatus.showMessage('Looking At Requested Target Value {} @ {}...'.format(str(self.Query_ValueToSearch.text()), self.Query_ColumnOpt.currentText()))
                 
-                self.TechnicalCore_RowClear()
+                self.TechCore_RowClear()
 
                 print('[Search Operation] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
@@ -605,7 +612,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     def DataVCore_RenderTable(self, FunctionCall_DataFetch):
         currentRow = 0
         if self.ActiveTable == "None":
-            self.TechnicalCore_RowClear()
+            self.TechCore_RowClear()
             print('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
             self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
 
@@ -729,7 +736,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     # Staff Action Functions
 
     def DataVCore_AddEntry(self):
-        self.ModifierDialog = Route88_ModifierCore(self.DataTableTarget) #SelectedRowData)
+        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget) #SelectedRowData)
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
@@ -753,7 +760,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
                 self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE {} = {}'.format(self.DataTableTarget, self.Target_TableCol, selectedData))
 
-                self.TechnicalCore_RowClearSelected(self.DataTable_View.currentRow())
+                self.TechCore_RowClearSelected(self.DataTable_View.currentRow())
 
                 self.MySQL_CommitData()
 
@@ -773,7 +780,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_RefreshData(self):
         try:
-            self.TechnicalCore_RowClear()
+            self.TechCore_RowClear()
             self.DataVCore_LoadTableData()
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as RefreshError:
@@ -794,21 +801,59 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         #for SetDisability in range(1, 5):
         #    self.Tab_SelectionSelectives.setTabEnabled(SetDisability, False)
         
-        self.Modifier_CloseWindow.clicked.connect(self.close)
-        self.Modifier_AddEntry.clicked.connect(self.DataMCore_AddEntry)
-        self.Modifier_ClearEntry.clicked.connect(self.DataMCore_ClearEntry)
+        self.DataManip_CloseWindow.clicked.connect(self.close)
+        self.DataManip_PushData.clicked.connect(self.DataMCore_AddEntry)
+        self.DataManip_ResetActiveData.clicked.connect(self.DataMCore_ClearEntry)
 
         self.ActiveTargetTable = RecentTableActive
+        print(self.ActiveTargetTable)
         self.DataMCore_RunAfterRender()
 
         # Technical Functions
     def DataMCore_RenderExplicits(self):
-        self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
+        pass
+        #self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def DataMCore_RunAfterRender(self):
-        self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',SQLDatabase_Target='route88_management')
-        self.MySQL_CursorSet(None)
+        try:
+            if (self.ActiveTargetTable == "Employees" or self.ActiveTargetTable == "JobPosition"):
+                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='route88_management')
+            else:
+                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='route88_employees')
 
+            self.MySQL_CursorSet(None)
+
+            if self.ActiveTargetTable == "InventoryItem":
+                self.resize(820, 420)
+                self.Tab_SelectionSelectives.setCurrentIndex(0)
+                self.TechCore_DisableExcept(0)
+            elif self.ActiveTargetTable == "ItemTransaction":
+                self.resize(820, 510)
+                self.Tab_SelectionSelectives.setCurrentIndex(2)
+                self.TechCore_DisableExcept(2)
+            elif self.ActiveTargetTable == "SupplierReference":
+                self.resize(820, 620)
+                self.Tab_SelectionSelectives.setCurrentIndex(3)
+                self.TechCore_DisableExcept(3)
+            elif self.ActiveTargetTable == "SupplierTransaction":
+                self.resize(820, 540)
+                self.Tab_SelectionSelectives.setCurrentIndex(4)
+                self.TechCore_DisableExcept(4)
+            elif self.ActiveTargetTable == "CustReceipts":
+                self.resize(820, 600)
+                self.Tab_SelectionSelectives.setCurrentIndex(1)
+                self.TechCore_DisableExcept(1)
+            elif self.ActiveTargetTable == "Employees":
+                self.resize(820, 740)
+                self.Tab_SelectionSelectives.setCurrentIndex(5)
+                self.TechCore_DisableExcept(5)
+            elif self.ActiveTargetTable == "JobPosition":
+                self.resize(820, 380)
+                self.Tab_SelectionSelectives.setCurrentIndex(6)
+                self.TechCore_DisableExcept(6)
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as DataMCore_ARErr:
+            self.TechCore_Beep()
+            print('[Exception @ DataMCore_RunAfterRender] > Error Rendering Modifier Core: RunAfterRender. Detailed Error: {}'.format(DataMCore_ARErr))
 
     # Staff Action Function Declarations
     def DataMCore_AddEntry(self):
@@ -845,7 +890,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
         
         except (Exception, MySQL.Error, MySQL.OperationalError) as PushEntryErrMsg:
-            self.TechnicalCore_Beep()
+            self.TechCore_Beep()
             self.DataMCore_Status.showMessage('Add Entry Execution Error: Please check your SQL connection or your fields!')
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. But in any case, here is the error output: {}".format(str(PushEntryErrMsg)), QtWidgets.QMessageBox.Ok)
             print('[Technical Information @ DataMCore_AddEntry] -> {}'.format(PushEntryErrMsg))
