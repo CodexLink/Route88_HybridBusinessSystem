@@ -319,7 +319,10 @@
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QPushButton" name="ctrl_ManageSystem">
+       <widget class="QPushButton" name="ctrl_ManagementSystem">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -339,7 +342,7 @@
       <item row="2" column="0">
        <widget class="QPushButton" name="ctrl_AboutSystem">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
@@ -601,7 +604,7 @@
  </widget>
  <tabstops>
   <tabstop>ctrl_UserLogout</tabstop>
-  <tabstop>ctrl_ManageSystem</tabstop>
+  <tabstop>ctrl_ManagementSystem</tabstop>
   <tabstop>ctrl_POSSystem</tabstop>
  </tabstops>
  <resources/>

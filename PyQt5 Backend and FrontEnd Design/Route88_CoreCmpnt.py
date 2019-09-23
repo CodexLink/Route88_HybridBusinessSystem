@@ -999,7 +999,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         
         self.ctrl_UserLogout.clicked.connect(self.ShowLoginCore)
         self.ctrl_ExitProgram.clicked.connect(self.close)
-        self.ctrl_ManageSystem.clicked.connect(self.ShowManagementCore)
+        self.ctrl_ManagementSystem.clicked.connect(self.ShowManagementCore)
         #self.ctrl_POSSystem.clicked.connect(self.)
         #self.ctrl_AboutSystem.clicked.connect(self.)
         self.ControllerCore_RunAfterRender()
@@ -1021,9 +1021,28 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         pass
 
     def ControllerCore_RunAfterRender(self):
-        self.StatusLabel.setText('Staff Restrictions has been activated for Staff {}.'.format(self.StaffLiteralName))
-        self.user_StaffName.setText(self.StaffLiteralName) 
+        self.user_StaffName.setText(self.StaffLiteralName)
         self.user_JobPosition.setText(self.StaffCurrentJob)
+
+        if self.StaffCurrentJob == "Manager" or self.StaffCurrentJob == "General Manager" or self.StaffCurrentJob == "Assistant Manager":
+            self.ctrl_ManagementSystem.setEnabled(True)
+            self.ctrl_POSSystem.setEnabled(True)
+            self.StatusLabel.setText('Staff {} is logged on. Welcome~!'.format(self.StaffLiteralName))
+
+        elif self.StaffCurrentJob == "Cashier":
+            self.ctrl_ManagementSystem.setEnabled(False)
+            self.ctrl_POSSystem.setEnabled(True)
+            self.StatusLabel.setText('Staff Restrictions has been activated for Staff {}.'.format(self.StaffLiteralName))
+
+        else:
+            self.ctrl_ManagementSystem.setEnabled(False)
+            self.ctrl_POSSystem.setEnabled(False)
+
+            self.TechCore_Beep()
+
+            QtWidgets.QMessageBox.critical(self, 'Route88 Window Controller | User Error', "Staff Logged On But No Allowed System Can Be Used. Sorry!", QtWidgets.QMessageBox.Ok)
+            self.StatusLabel.setText('Staff Logged On But No Allowed System Can Be Used. Sorry!'.format(self.StaffLiteralName))
+
 # Literal Procedural Programming Part
 if __name__ == "__main__":
     sysHandler.Popen('CLS', shell=True)
