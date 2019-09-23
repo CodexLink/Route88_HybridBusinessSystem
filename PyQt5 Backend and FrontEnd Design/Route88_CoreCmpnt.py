@@ -52,8 +52,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
 from PyQt5.QtMultimedia import QSound
 import MySQLdb as MySQL
-import sys
-from os import system as sysCmdArgumentHandler
+from os import sys
+import subprocess as sysHandler
 
 from Route88_LoginCmpnt import Ui_Route88_Login_Window
 from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
@@ -589,7 +589,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.StaffAct_Delete.setEnabled(False)
                 self.StaffAct_RefreshData.setEnabled(False)
                 print('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
-                self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
+                self.InventoryStatus.showMessage('Application Report: Active Data Table is None. Nothing to show at the moment.')
             else:
                 self.TechCore_RowClear()
                 self.MySQL_ExecuteState("SELECT * FROM %s" % (self.DataTableTarget,))
@@ -1023,7 +1023,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.user_JobPosition.setText(self.StaffCurrentJob)
 # Literal Procedural Programming Part
 if __name__ == "__main__":
-    sysCmdArgumentHandler('CLS')
+    sysHandler.call('CLS', shell=True)
     print('[Application App Startup] Route88 Hybrid Application, Debugger Output')
     app = QtWidgets.QApplication(sys.argv)
     Route88_InitialInst = Route88_LoginCore()
