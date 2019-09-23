@@ -69,7 +69,7 @@ class Route88_TechnicalCore(object):
     def MySQL_OpenCon(self, HostServerIP='localhost', SQL_UCredential=None, SQL_PCredential=None, SQLDatabase_Target=None):
         try:
             self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
-            print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is now logged as {}.".format("...", SQL_UCredential, '...'))
+            print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is connected @ Database {}.".format("...", SQL_UCredential, SQLDatabase_Target))
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ErrorMessage:
             self.TechCore_Beep()
@@ -172,6 +172,22 @@ class Route88_TechnicalCore(object):
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ProcessError:
             print('[Exception @ TechCore_PosCodeToName] > Error Processing PositionCode to JobName. Detailed Info |> {}'.format(str(ProcessError)))
+
+    def TechCore_RespectSchema(self, SchemaBaseName):
+        # Close Any Existing...
+        try:
+            if SchemaBaseName == "Management":
+                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='Route88_Management')
+                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+                self.MySQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
+
+            elif SchemaBaseName == "EmployeeInfo":
+                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='Route88_Employees')
+                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+                self.MySQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
+
+        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as DynamicSchemaErr:
+            print('[Exception @ TechCore_RespectSchema] > Error Changing Database Schema. Detailed Error > {}.'.format(str(DynamicSchemaErr)))
 
 
 
@@ -287,6 +303,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.DataTableTarget = None # Sets Current Table Tempporarily
         self.DatabaseSelection = None
         self.Target_TableCol = None
+
         self.DataVCore_RenderExplicits()
 
         self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchFieldSet)
@@ -309,6 +326,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
         # Table Seelection Binds
         self.TableSystem_Selection.currentIndexChanged.connect(self.DataVCore_LoadTableSets)
+        self.DataTable_View.itemSelectionChanged.connect(self.DataVCore_Encap_RowData)
 
         # Staff Action Binds 
         self.StaffAct_Add.clicked.connect(self.DataVCore_AddEntry)
@@ -342,9 +360,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_RunAfterRender(self):
         try:
-            self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='Route88_Management')
-            self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-            self.MySQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
+
             #Set All Parameters Without User Touching it for straight searching...
             self.DataVCore_PatternEnabler()
             self.DataVCore_SearchFieldSet()
@@ -421,7 +437,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     def DataVCore_LoadTableSets(self):
         try:
             self.ActiveTable = self.TableSystem_Selection.currentText()
-
+            SchemaCandidate = None
             if self.ActiveTable == "None":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(False)
@@ -445,6 +461,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "InventoryItem"
                 self.Target_TableCol = "ItemCode"
+                SchemaCandidate = "Management"
 
 
             elif self.ActiveTable == "Item Transaction Data":
@@ -460,6 +477,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "ItemTransaction"
                 self.Target_TableCol = "TransactionCode"
+                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Supplier Data":
                 self.TechCore_ColOptClear()
@@ -476,6 +494,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "SupplierReference"
                 self.Target_TableCol = "SupplierCode"
+                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Supplier Transaction Data":
                 self.TechCore_ColOptClear()
@@ -494,6 +513,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "SupplierTransaction"
                 self.Target_TableCol = "ItemCode"
+                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Customer Receipt Data":
                 self.TechCore_ColOptClear()
@@ -508,9 +528,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.DataTable_View.setColumnCount(8)
                 self.DataTable_View.setHorizontalHeaderLabels(("TrasanctionCode", "TotalCost", "VatableCost", "VatExempt", "ZeroRated", "NetVat", "VatRate", "CreationTime"))
+                self.TechCore_ColResp()
+
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "CustReceipts"
                 self.Target_TableCol = "TransactionCode"
+                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Employee Data":
                 self.TechCore_ColOptClear()
@@ -530,8 +553,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 
                 self.DataTable_View.setColumnCount(12)
                 self.DataTable_View.setHorizontalHeaderLabels(("EmployeeCode", "FirstName", "LastName",  "PositionCode", "DOB", "Address", "SSS", "TIN", "PhilHealth", "TIN", "CreationTime", "LastUpdate"))
+                self.TechCore_ColResp()
+
                 self.DataTableTarget = "Employees"
                 self.Target_TableCol = "EmployeeCode"
+                SchemaCandidate = "EmployeeInfo"
 
             elif self.ActiveTable == "Job Position Data":
                 self.TechCore_ColOptClear()
@@ -544,7 +570,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "JobPosition"
                 self.Target_TableCol = "PositionCode"
+                SchemaCandidate = "EmployeeInfo"
 
+            self.TechCore_RespectSchema(SchemaCandidate)
+            self.DataVCore_Encap_RowData()
             self.DataVCore_LoadTableData()
 
         except Exception as RenderTableViewMsg:
@@ -571,18 +600,19 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     self.StaffAct_Edit.setEnabled(False)
                     self.StaffAct_Delete.setEnabled(False)
                     self.StaffAct_RefreshData.setEnabled(True)
+                    self.Query_ColumnOpt.setEnabled(False)
                 else:
                     self.StaffAct_Add.setEnabled(True)
                     #self.StaffAct_Edit.setEnabled(False)
-                    self.StaffAct_Delete.setEnabled(True)
                     self.StaffAct_RefreshData.setEnabled(True)
+                    self.Query_ColumnOpt.setEnabled(True)
 
                 self.InventoryStatus.showMessage('Query Process > Data Table View for {} has been refreshed from MySQL Database. Ready~!'.format(self.DataTableTarget))
                 print('[Report @ DataVCore_LoadTableData] > Data Table View for {} has been refreshed from MySQL Database. Ready~!'.format(self.DataTableTarget))
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
-            self.InventoryStatus.showMessage('Application Error: {}'.format(FunctionErrorMsg))
-            print('[Exception Thrown @ DataVCore_LoadTableData] > {}'.format(FunctionErrorMsg))
+            self.InventoryStatus.showMessage('Application Error: Error Loading Table Data to Application. Detailed Error > {}'.format(FunctionErrorMsg))
+            print('[Exception Thrown @ DataVCore_LoadTableData] > Error Loading Table Data to Application. Detailed Error > {}'.format(FunctionErrorMsg))
     
         # Actual Search Function
     def DataVCore_ValSearch(self): # This function is fired every time there will be changes on the QLineEdit -> Query_ValueToSearch
@@ -724,14 +754,20 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in FunctionCall_DataFetch:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TotalCost'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['VATableCost'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['PositionCode'])))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['JobName'])))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
                     ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
                 currentRow += 1
+
+    def DataVCore_Encap_RowData(self):
+        if self.DataTable_View.currentRow() != -1:
+            self.StaffAct_Delete.setEnabled(True)
+        else:
+            self.StaffAct_Delete.setEnabled(False)
+
     
     # Staff Action Functions
 
@@ -742,9 +778,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_EditEntry(self):
         #self.ModifierDialog = Route88_ModifierCore()
-        #self.ModifierDialog.exec_()
-        #self.DataVCore_RefreshData()
-        pass
+        self.ModifierDialog.exec_()
+        self.DataVCore_RefreshData()
 
     def DataVCore_DeleteEntry(self):
         try:
@@ -765,6 +800,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.MySQL_CommitData()
 
                 self.InventoryStatus.showMessage('Deletion Query | > Row {} has been deleted!'.format(self.DataTable_View.currentRow() + 1))
+                if self.DataTable_View.rowCount() == 0:
+                    self.StaffAct_Delete.setEnabled(False)
+                else:
+                    self.StaffAct_Delete.setEnabled(True)
+
 
         except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
             self.InventoryStatus.showMessage('[Database Query Process | Deletion Query] -> No Selected Row To Delete...')
@@ -775,8 +815,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.close()
         self.ReturnWinInst = Route88_WindowController(Staff_Name=self.InCharge_LiteralName, Staff_Job=self.InCharge_JobPos, Staff_DBUser=self.InCharge_DBUser, Staff_DBPass=self.InCharge_DBPass)
         self.ReturnWinInst.show()
-
-
 
     def DataVCore_RefreshData(self):
         try:
@@ -789,7 +827,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
 
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    def __init__(self, Parent=None, RecentTableActive=None):
+    def __init__(self, Parent=None, RecentTableActive=None, DataPayload_AtRow=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.DataMCore_RenderExplicits()

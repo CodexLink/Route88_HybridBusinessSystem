@@ -1494,12 +1494,12 @@ class Ui_Route88_DataManipulation_Window(object):
         self.verticalLayout_5.addWidget(self.Modifier_StatusLabel)
 
         self.retranslateUi(Route88_DataManipulation_Window)
-        self.Tab_SelectionSelectives.setCurrentIndex(0)
+        self.Tab_SelectionSelectives.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(Route88_DataManipulation_Window)
 
     def retranslateUi(self, Route88_DataManipulation_Window):
         _translate = QtCore.QCoreApplication.translate
-        Route88_DataManipulation_Window.setWindowTitle(_translate("Route88_DataManipulation_Window", "Route88 System | Data Manipulation |"))
+        Route88_DataManipulation_Window.setWindowTitle(_translate("Route88_DataManipulation_Window", "Route88 System | Data Manipulation"))
         self.groupBox.setTitle(_translate("Route88_DataManipulation_Window", "Entries To Fill"))
         self.label.setText(_translate("Route88_DataManipulation_Window", "Item Code"))
         self.InvEntry_IC.setPlaceholderText(_translate("Route88_DataManipulation_Window", "Required Value To Fill..."))

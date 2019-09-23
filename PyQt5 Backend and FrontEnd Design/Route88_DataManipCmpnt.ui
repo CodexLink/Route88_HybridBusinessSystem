@@ -35,7 +35,7 @@
    <enum>Qt::NoFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Route88 System | Data Manipulation |</string>
+   <string>Route88 System | Data Manipulation</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -77,7 +77,7 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
