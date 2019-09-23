@@ -729,7 +729,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     # Staff Action Functions
 
     def DataVCore_AddEntry(self):
-        self.ModifierDialog = Route88_ModifierCore()
+        self.ModifierDialog = Route88_ModifierCore(self.DataTableTarget) #SelectedRowData)
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
@@ -782,7 +782,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
 
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    def __init__(self, Parent=None):
+    def __init__(self, Parent=None, RecentTableActive=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.DataMCore_RenderExplicits()
@@ -798,6 +798,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         self.Modifier_AddEntry.clicked.connect(self.DataMCore_AddEntry)
         self.Modifier_ClearEntry.clicked.connect(self.DataMCore_ClearEntry)
 
+        self.ActiveTargetTable = RecentTableActive
         self.DataMCore_RunAfterRender()
 
         # Technical Functions

@@ -65,9 +65,9 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
-       <widget class="QWidget" name="InventoryEntryWindow">
+       <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
          <string>Inventory</string>
         </attribute>
@@ -125,7 +125,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode">
+              <widget class="QLineEdit" name="InvEntry_IC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -166,7 +166,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_SupplierCode">
+              <widget class="QLineEdit" name="InvEntry_SC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -225,7 +225,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemName">
+              <widget class="QLineEdit" name="InvEntry_IN">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -266,7 +266,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemType">
+              <widget class="QLineEdit" name="InvEntry_IT">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -319,7 +319,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="AddEntry_Quantity">
+              <widget class="QSpinBox" name="InvEntry_Q">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -369,7 +369,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="AddEntry_Cost">
+              <widget class="QDoubleSpinBox" name="InvEntry_C">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -410,7 +410,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="AddEntry_DateExpiry">
+              <widget class="QDateTimeEdit" name="InvEntry_DE">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -460,7 +460,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="TransactionEntryWindow">
+       <widget class="QWidget" name="CustomerTransact_Window">
         <attribute name="title">
          <string>Customer Receipt</string>
         </attribute>
@@ -608,7 +608,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_6">
+              <widget class="QComboBox" name="CustREntry_TrC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -637,7 +637,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_19">
+              <widget class="QLineEdit" name="CustREntry_TC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -693,7 +693,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_14">
+              <widget class="QLineEdit" name="CustREntry_VC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -734,7 +734,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_SupplierCode_6">
+              <widget class="QLineEdit" name="CustREntry_VE">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -790,7 +790,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_15">
+              <widget class="QLineEdit" name="CustREntry_ZR">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -831,7 +831,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_SupplierCode_7">
+              <widget class="QLineEdit" name="CustREntry_NV">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -887,7 +887,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_16">
+              <widget class="QLineEdit" name="CustREntry_VR">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -914,7 +914,7 @@ Filling Confirm Password to Apply Changes</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="TransactionEntries">
+       <widget class="QWidget" name="ItemTransact_Window">
         <attribute name="title">
          <string>Item Transaction</string>
         </attribute>
@@ -972,7 +972,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_3">
+              <widget class="QLineEdit" name="ItemTrEntry_TC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1013,7 +1013,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_2">
+              <widget class="QComboBox" name="ItemTrEntry_MC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1054,7 +1054,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="AddEntry_Cost_2">
+              <widget class="QDoubleSpinBox" name="ItemTrEntry_C">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1095,7 +1095,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="AddEntry_DateExpiry_2">
+              <widget class="QDateTimeEdit" name="ItemTrEntry_TT">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1215,7 +1215,7 @@ current date.</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="SupplierEntryWindow">
+       <widget class="QWidget" name="SupplierData_Window">
         <attribute name="title">
          <string>Supplier</string>
         </attribute>
@@ -1273,7 +1273,7 @@ current date.</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_5">
+              <widget class="QLineEdit" name="SuppEntry_SC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1314,7 +1314,7 @@ current date.</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_7">
+              <widget class="QLineEdit" name="SuppEntry_SN">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1367,7 +1367,7 @@ current date.</string>
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="AddEntry_DateExpiry_4">
+              <widget class="QDateTimeEdit" name="SuppEntry_LDD">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1405,7 +1405,7 @@ current date.</string>
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="AddEntry_DateExpiry_3">
+              <widget class="QDateTimeEdit" name="SuppEntry_NDD">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1542,7 +1542,7 @@ caution.</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tab">
+       <widget class="QWidget" name="SupplierTransact_Window">
         <attribute name="title">
          <string>Supplier Transaction</string>
         </attribute>
@@ -1600,7 +1600,7 @@ caution.</string>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_3">
+              <widget class="QComboBox" name="SuppTrEntry_IC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1629,7 +1629,7 @@ caution.</string>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_4">
+              <widget class="QComboBox" name="SuppTrEntry_OC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1670,7 +1670,7 @@ caution.</string>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="AddEntry_Quantity_2">
+              <widget class="QSpinBox" name="SuppTrEntry_QOR">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1827,7 +1827,7 @@ current date.</string>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_5">
+              <widget class="QComboBox" name="SuppTrEntry_SC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1856,7 +1856,7 @@ current date.</string>
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="AddEntry_DateExpiry_7">
+              <widget class="QDateTimeEdit" name="SuppTrEntry_OD">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1880,7 +1880,7 @@ current date.</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="EmployeeEntryWindow">
+       <widget class="QWidget" name="EmployeeData_Window">
         <attribute name="title">
          <string>Employee</string>
         </attribute>
@@ -1995,7 +1995,7 @@ Filling Confirm Password to Apply Changes</string>
              </widget>
             </widget>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -2028,7 +2028,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_2">
+              <widget class="QLineEdit" name="EmpEntry_FN">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2069,7 +2069,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_SupplierCode_2">
+              <widget class="QLineEdit" name="EmpEntry_LN">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2092,7 +2092,7 @@ Filling Confirm Password to Apply Changes</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -2125,7 +2125,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox">
+              <widget class="QComboBox" name="EmpEntry_PC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2154,7 +2154,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QDateEdit" name="dateEdit">
+              <widget class="QDateEdit" name="EmpEntry_DOB">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2168,7 +2168,7 @@ Filling Confirm Password to Apply Changes</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -2201,7 +2201,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_4">
+              <widget class="QLineEdit" name="EmpEntry_Adrs">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2224,7 +2224,7 @@ Filling Confirm Password to Apply Changes</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -2257,7 +2257,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_6">
+              <widget class="QLineEdit" name="EmpEntry_SSS">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2298,7 +2298,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_SupplierCode_5">
+              <widget class="QLineEdit" name="EmpEntry_TIN">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2321,7 +2321,7 @@ Filling Confirm Password to Apply Changes</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -2354,7 +2354,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_8">
+              <widget class="QLineEdit" name="EmpEntry_PH">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2377,7 +2377,7 @@ Filling Confirm Password to Apply Changes</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -2410,7 +2410,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_9">
+              <widget class="QLineEdit" name="EmpEntry_UN">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2433,7 +2433,7 @@ Filling Confirm Password to Apply Changes</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="">
+           <widget class="QWidget" name="layoutWidget">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -2466,7 +2466,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_ItemCode_10">
+              <widget class="QLineEdit" name="EmpEntry_PW">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2515,7 +2515,7 @@ Filling Confirm Password to Apply Changes</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="AddEntry_ItemCode_11">
+                <widget class="QLineEdit" name="EmpEntry_CPW">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                    <horstretch>0</horstretch>
@@ -2547,7 +2547,7 @@ Filling Confirm Password to Apply Changes</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="PositionEntryTable">
+       <widget class="QWidget" name="JobData_Window">
         <attribute name="title">
          <string>Job Position</string>
         </attribute>
@@ -2671,7 +2671,7 @@ Be Left Blank</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_PositionCode">
+              <widget class="QLineEdit" name="JobPEntry_PC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2712,7 +2712,7 @@ Be Left Blank</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="AddEntry_PositionName">
+              <widget class="QLineEdit" name="JobPEntry_PN">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2762,7 +2762,7 @@ Be Left Blank</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="Modifier_AddEntry">
+       <widget class="QPushButton" name="DataManip_PushEntry">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
           <horstretch>0</horstretch>
@@ -2787,7 +2787,7 @@ Be Left Blank</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="Modifier_ClearEntry">
+       <widget class="QPushButton" name="DataManip_ResetActiveEntry">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
           <horstretch>0</horstretch>
@@ -2812,7 +2812,7 @@ Be Left Blank</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="Modifier_CloseWindow">
+       <widget class="QPushButton" name="DataManip_CloseWindow">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
           <horstretch>0</horstretch>
