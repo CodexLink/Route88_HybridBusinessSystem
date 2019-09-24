@@ -1040,8 +1040,8 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
 
             self.TechCore_Beep()
 
-            QtWidgets.QMessageBox.critical(self, 'Route88 Window Controller | User Error', "Staff Logged On But No Allowed System Can Be Used. Sorry!", QtWidgets.QMessageBox.Ok)
-            self.StatusLabel.setText('Staff Logged On But No Allowed System Can Be Used. Sorry!'.format(self.StaffLiteralName))
+            QtWidgets.QMessageBox.critical(self, 'Route88 Window Controller | User Error', "Staff Logged On But Staff Cannot Used Any Of The Systems. Sorry!", QtWidgets.QMessageBox.Ok)
+            self.StatusLabel.setText('Staff Logged On But Staff Cannot Used Any Of The Systems. Sorry!'.format(self.StaffLiteralName))
 
 # Literal Procedural Programming Part
 if __name__ == "__main__":
