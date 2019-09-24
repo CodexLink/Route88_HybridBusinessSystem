@@ -77,7 +77,7 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>5</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
@@ -1649,7 +1649,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="ItemTrEntry_TC">
+              <widget class="QLineEdit" name="CustTr_TC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1685,12 +1685,12 @@ Filling Confirm Password to Apply Changes</string>
                 </font>
                </property>
                <property name="text">
-                <string>Menu Code</string>
+                <string>Item Code</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="ItemTrEntry_MC">
+              <widget class="QComboBox" name="CustTr_IC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1712,47 +1712,6 @@ Filling Confirm Password to Apply Changes</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_14">
              <item>
-              <widget class="QLabel" name="label_31">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Cost</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDoubleSpinBox" name="ItemTrEntry_C">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="prefix">
-                <string>₱ </string>
-               </property>
-               <property name="maximum">
-                <double>10000.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QLabel" name="label_32">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -1767,12 +1726,12 @@ Filling Confirm Password to Apply Changes</string>
                 </font>
                </property>
                <property name="text">
-                <string>Transaction Time</string>
+                <string>Creation Time</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="ItemTrEntry_TT">
+              <widget class="QDateTimeEdit" name="CustTr_CT">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>

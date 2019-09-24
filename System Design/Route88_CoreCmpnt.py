@@ -719,9 +719,9 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setRowCount(currentRow + 1)
 
                 self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['MenuCode'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['Cost'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCode'])))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastUpdate'])))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -910,12 +910,6 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
         # Technical Functions
     def DataMCore_RenderExplicits(self):
-        self.InvEntry_DE.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.SuppEntry_LDD.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.SuppEntry_NDD.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.ItemTrEntry_TT.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.EmpEntry_DOB.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def DataMCore_RunAfterRender(self):
         try:
@@ -930,30 +924,42 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.resize(820, 420)
                 self.Tab_SelectionSelectives.setCurrentIndex(0)
                 self.TechCore_DisableExcept(0)
-            elif self.ActiveTargetTable == "z":
-                self.resize(820, 510)
-                self.Tab_SelectionSelectives.setCurrentIndex(2)
-                self.TechCore_DisableExcept(2)
+                self.InvEntry_DE.setDateTime(QtCore.QDateTime.currentDateTime())
+
             elif self.ActiveTargetTable == "SupplierReference":
                 self.resize(820, 620)
                 self.Tab_SelectionSelectives.setCurrentIndex(3)
                 self.TechCore_DisableExcept(3)
+                self.SuppEntry_LDD.setDateTime(QtCore.QDateTime.currentDateTime())
+                self.SuppEntry_NDD.setDateTime(QtCore.QDateTime.currentDateTime())
+
             elif self.ActiveTargetTable == "SupplierTransaction":
                 self.resize(820, 540)
                 self.Tab_SelectionSelectives.setCurrentIndex(4)
                 self.TechCore_DisableExcept(4)
+                self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
+
             elif self.ActiveTargetTable == "CustReceipt":
                 self.resize(820, 600)
                 self.Tab_SelectionSelectives.setCurrentIndex(1)
                 self.TechCore_DisableExcept(1)
+
+            elif self.ActiveTargetTable == "CustTransaction":
+                self.resize(820, 510)
+                self.Tab_SelectionSelectives.setCurrentIndex(2)
+                self.TechCore_DisableExcept(2)
+
             elif self.ActiveTargetTable == "Employees":
                 self.resize(820, 740)
                 self.Tab_SelectionSelectives.setCurrentIndex(5)
                 self.TechCore_DisableExcept(5)
+                self.EmpEntry_DOB.setDateTime(QtCore.QDateTime.currentDateTime())
+
             elif self.ActiveTargetTable == "JobPosition":
                 self.resize(820, 380)
                 self.Tab_SelectionSelectives.setCurrentIndex(6)
                 self.TechCore_DisableExcept(6)
+
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as DataMCore_ARErr:
             self.TechCore_Beep()
