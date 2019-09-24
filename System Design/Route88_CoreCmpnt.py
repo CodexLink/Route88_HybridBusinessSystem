@@ -227,12 +227,25 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
             self.StatusLabel.setText("Database Loaded. Ready~!")
 
             if self.UserEnlistedCount == 0:
-                self.MySQL_ExecuteState("INSERT INTO Employees (EmployeeCode, FirstName, LastName, PositionCode, EmployeePassword) VALUES (%s, %s, %s, %s, %s)" % (1, 'Janrey', 'Licas', 1, '123',))
-                #  Create if and else here.
+                self.TechCore_Beep()
                 self.MySQL_ExecuteState("INSERT INTO JobPosition VALUES (%s, %s)" % (1, 'Manager',))
                 self.MySQL_CommitData()
+                
+                QtWidgets.QMessageBox.information(self, 'Route88 System', "Welcome to Route88 Hybrid System! The system detected that there is no user account recorded according to it's database. Since you launch the system with no other accounts, you will have register first as a  'Manager' in this particular time.", QtWidgets.QMessageBox.Ok)
+
+                self.Route88_FirstTimerInst = Route88_ModifierCore(ModifierMode="PushEntry", isFirstTime=True)
+                self.Route88_FirstTimerInst.exec_()
+
                 self.UserAcc_SubmitData.setDisabled(False)
+                # If it is still zero then...
+                if self.UserEnlistedCount == 0:
+                    self.TechCore_Beep()
+                    QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | General Error', "Error, have you registered? We still detected that there is no user registered in database. Login is Disabled. Please try again on startup. ", QtWidgets.QMessageBox.Ok)
+                    sys.exit()
+                else:
+                    self.UserAcc_SubmitData.setDisabled(False)
             else:
+                #Check if there is no manager as well. and launch Modifier Core
                 self.UserAcc_SubmitData.setDisabled(False)
 
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginQueryErrorMsg:
@@ -288,7 +301,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     # Route88_LoginForm UI Window Functions - EndPoint
 
 class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow, Route88_TechnicalCore):
-    def __init__(self, Parent=None, InCharge_Name=None, InCharge_Job=None, InCharge_DBUser=None, InCharge_DBPass=None):
+    def __init__(self, Parent=None, InCharge_Name=None, InCharge_Job=None, InCharge_DBUser=None, InCharge_DBPass=None, FirstTimer=False):
         super(Route88_ManagementCore, self).__init__(Parent=Parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint)
         self.setupUi(self)
@@ -335,7 +348,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.StaffAct_RefreshData.clicked.connect(self.DataVCore_RefreshData)
 
         self.Window_Quit.triggered.connect(self.DataVCore_ReturnWindow)
-
+        self.DataVCore_PatternEnabler(FirstTimer)
         self.DataVCore_RunAfterRender() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
@@ -371,7 +384,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: RunAfterRender Returns an Error. Detailed Info |> {}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ DataVCore_RunAfterRender] > RunAfterRender Returns an Error. Detailed Info |>  {}'.format(FunctionErrorMsg))
-
+            
         # Pattern Enabler, Function for Switching Methods
     def DataVCore_PatternEnabler(self):
         if self.SearchPattern_ExactOpt.isChecked():
@@ -832,9 +845,48 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.InventoryStatus.showMessage('Application Error: {0}'.format(str(RefreshError)))
             raise Exception('[Exception Thrown @ DataVCore_RefreshData] -> {0}'.format(str(RefreshError)))
 
+class Route88_POSCore(QtWidgets.QMainWindow, Route88_TechnicalCore):
+    def __init__(self, Parent=None, StaffInCharge_Name=None, StaffInCharge_Job=None, StaffInCharge_DBUser=None, StaffInCharge_DBPass=None):
+        super(Route88_POSCore, self).__init__(Parent=Parent)
+        self.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
+
+    def POSCore_QtyIncrement(self):
+        self.qty += 1
+        return self.label_5.setText("Quantity Increased.")
+
+    def POSCore_QtyDecrement(self):
+        self.qty -= 1
+        return self.label_5.setText("Quantity Decreased.")
+
+    def POSCore_FetchData_Scanner():
+            #with connection:
+            #    cur = connection.cursor()
+            #    cur.execute("SELECT ItemCode,ItemName,Cost from inventorylist where ItemCode=%s",#self.lineEdit.text())
+            #    fetch_row = cur.fetchone()
+            #    
+            #    numRows = self.Order_ItemPickTable.rowCount()
+            #    self.qty=1
+            #    if fetch_row != None:
+            #        self.total=fetch_row[2]+self.total
+            #        
+            #        self.Order_ItemPickTable.insertRow(numRows)
+            #        self.Order_ItemPickTable.setItem(numRows, 0, QtWidgets.QTableWidgetItem(str#(fetch_row[0])))
+            #        self.Order_ItemPickTable.setItem(numRows, 1, QtWidgets.QTableWidgetItem(fetch_row#[1]))
+            #        self.Order_ItemPickTable.setItem(numRows, 2, QtWidgets.QTableWidgetItem(str#(self.qty)))
+            #        self.Order_ItemPickTable.setItem(numRows, 3, QtWidgets.QTableWidgetItem(str#(fetch_row[2])))
+            #        self.lineEdit.clear()
+            #        self.label_5.setText("Item#: "+str(fetch_row[0])+"\n"+str(fetch_row[1])+" @ "+str#(fetch_row[2]))
+            #        self.label_3.setText("₱"+str(self.total))
+            #        print(fetch_row)
+            #    else:
+            #        self.label_5.setText(" Item not found.\n Please try again. ")
+            #        self.lineEdit.clear()
+        pass
 
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    def __init__(self, Parent=None, RecentTableActive=None, DataPayload_AtRow=None):
+    def __init__(self, Parent=None, RecentTableActive=None, ModifierMode=None, DataPayload_AtRow=None, isFirstTime=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.DataMCore_RenderExplicits()
@@ -852,12 +904,18 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
         self.ActiveTargetTable = RecentTableActive
         print(self.ActiveTargetTable)
+
+        self.DataMCore_isReallyFT(isFirstTime)
         self.DataMCore_RunAfterRender()
 
         # Technical Functions
     def DataMCore_RenderExplicits(self):
-        pass
-        #self.AddEntry_DateExpiry.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.InvEntry_DE.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.SuppEntry_LDD.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.SuppEntry_NDD.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.ItemTrEntry_TT.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.EmpEntry_DOB.setDateTime(QtCore.QDateTime.currentDateTime())
 
     def DataMCore_RunAfterRender(self):
         try:
@@ -872,7 +930,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.resize(820, 420)
                 self.Tab_SelectionSelectives.setCurrentIndex(0)
                 self.TechCore_DisableExcept(0)
-            elif self.ActiveTargetTable == "ItemTransaction":
+            elif self.ActiveTargetTable == "z":
                 self.resize(820, 510)
                 self.Tab_SelectionSelectives.setCurrentIndex(2)
                 self.TechCore_DisableExcept(2)
@@ -900,6 +958,12 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as DataMCore_ARErr:
             self.TechCore_Beep()
             print('[Exception @ DataMCore_RunAfterRender] > Error Rendering Modifier Core: RunAfterRender. Detailed Error: {}'.format(DataMCore_ARErr))
+        
+    def DataMCore_isReallyFT(self, isReallyLFT):
+        if isReallyLFT:
+            self.ActiveTargetTable = "Employees"
+        else:
+            pass
 
     # Staff Action Function Declarations
     def DataMCore_AddEntry(self):
@@ -1020,7 +1084,9 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.close()
 
     def ShowPOSCore(self):
-        pass
+        self.Route88_POSInst = Route88_POSCore(StaffInCharge_Name=self.StaffLiteralName, StaffInCharge_Job=self.StaffCurrentJob, StaffInCharge_DBUser=self.StaffDBUser, StaffInCharge_DBPass=self.StaffDBPass)
+        self.Route88_POSInst.show()
+        self.close()
 
     def ShowAboutCore(self):
         pass
@@ -1051,7 +1117,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
 # Literal Procedural Programming Part
 if __name__ == "__main__":
     sysHandler.Popen('CLS', shell=True)
-    print('[Application App Startup] Route88 Hybrid Application, Debugger Output')
+    print('[Startup @ Procedural] Route88 Hybrid System Application, Debugger Output')
     app = QtWidgets.QApplication(sys.argv)
     Route88_InitialInst = Route88_LoginCore()
     Route88_InitialInst.show()
