@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>532</height>
+    <height>708</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -77,11 +77,11 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>6</number>
+        <number>5</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
-         <string>Inventory Ref</string>
+         <string>Inventory Ref.</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
@@ -474,7 +474,7 @@
        </widget>
        <widget class="QWidget" name="SupplierData_Window">
         <attribute name="title">
-         <string>Supplier Ref</string>
+         <string>Supplier Ref.</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_6">
          <item>
@@ -961,7 +961,7 @@ caution.</string>
              <rect>
               <x>0</x>
               <y>180</y>
-              <width>751</width>
+              <width>761</width>
               <height>181</height>
              </rect>
             </property>
@@ -1894,7 +1894,7 @@ current date.</string>
        </widget>
        <widget class="QWidget" name="EmployeeData_Window">
         <attribute name="title">
-         <string>Employee Ref</string>
+         <string>Employee Ref.</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
@@ -2480,7 +2480,7 @@ Filling Confirm Password to Apply Changes</string>
              <item>
               <widget class="QLineEdit" name="EmpEntry_PW">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
+                <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2503,55 +2503,48 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_17">
-               <property name="spacing">
-                <number>15</number>
+              <widget class="QLabel" name="label_24">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-               <item>
-                <widget class="QLabel" name="label_24">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Roboto Mono</family>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Confirm Password</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="EmpEntry_CPW">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Roboto Mono</family>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="echoMode">
-                  <enum>QLineEdit::Password</enum>
-                 </property>
-                 <property name="placeholderText">
-                  <string>Required To Fill...</string>
-                 </property>
-                 <property name="clearButtonEnabled">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Confirm Password</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="EmpEntry_CPW">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="echoMode">
+                <enum>QLineEdit::Password</enum>
+               </property>
+               <property name="placeholderText">
+                <string>Required To Fill...</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -2561,7 +2554,7 @@ Filling Confirm Password to Apply Changes</string>
        </widget>
        <widget class="QWidget" name="JobData_Window">
         <attribute name="title">
-         <string>Job Ref</string>
+         <string>Job Ref.</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>
@@ -2655,7 +2648,7 @@ Be Left Blank</string>
              <rect>
               <x>10</x>
               <y>30</y>
-              <width>761</width>
+              <width>751</width>
               <height>31</height>
              </rect>
             </property>
