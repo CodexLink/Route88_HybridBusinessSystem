@@ -77,11 +77,11 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>6</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
-         <string>Inventory</string>
+         <string>Inventory Ref</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
@@ -467,6 +467,671 @@
               <string>- All Fields is Required To Have a Value.</string>
              </property>
             </widget>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="SupplierData_Window">
+        <attribute name="title">
+         <string>Supplier Ref</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QGroupBox" name="groupBox_12">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>Roboto Mono</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="title">
+            <string>Entries To Fill</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="layoutWidget_3">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>28</y>
+              <width>751</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <property name="spacing">
+              <number>15</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_29">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Supplier Code</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="SuppEntry_SC">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="placeholderText">
+                <string>Required Value To Fill...</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_35">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Supplier Name</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="SuppEntry_SN">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="placeholderText">
+                <string>Required Value To Fill...</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="layoutWidget_5">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>80</y>
+              <width>751</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_18">
+             <item>
+              <widget class="QLabel" name="label_36">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Last Delivery Date</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDateTimeEdit" name="SuppEntry_LDD">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_37">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Next Delivery Date</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDateTimeEdit" name="SuppEntry_NDD">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QGroupBox" name="groupBox_13">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>140</y>
+              <width>751</width>
+              <height>301</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Pre-requisites For Modifying / Adding Data</string>
+            </property>
+            <widget class="QGroupBox" name="groupBox_14">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>361</width>
+               <height>261</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>For Adding / Inserting Data</string>
+             </property>
+             <widget class="QLabel" name="label_38">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>30</y>
+                <width>251</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- All Fields Are Required.</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_39">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>50</y>
+                <width>331</width>
+                <height>81</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>-Last and Next Delivery Time can be 
+lesser but cannot be greater than the 
+current date.</string>
+              </property>
+             </widget>
+            </widget>
+            <widget class="QGroupBox" name="groupBox_15">
+             <property name="geometry">
+              <rect>
+               <x>380</x>
+               <y>30</y>
+               <width>361</width>
+               <height>261</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>For Editing / Modifying Data</string>
+             </property>
+             <widget class="QLabel" name="label_40">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>30</y>
+                <width>331</width>
+                <height>31</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- Fields That Don't Require Changes Must 
+Be Left Blank</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_41">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>70</y>
+                <width>331</width>
+                <height>81</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- Last and Next Delivery Time can be 
+lesser but cannot be greater than the 
+current date.</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_42">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>150</y>
+                <width>331</width>
+                <height>101</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- Last and Next Delivery Time Fields
+must be the same as before to 
+retain changes. Clearing Entry will set
+those to current time. Proceed with 
+caution.</string>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="SupplierTransact_Window">
+        <attribute name="title">
+         <string>Supplier Transact</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QGroupBox" name="groupBox_16">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>Roboto Mono</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="title">
+            <string>Entries To Fill</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="layoutWidget_6">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>28</y>
+              <width>751</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_19">
+             <property name="spacing">
+              <number>15</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_43">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Item Code</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="SuppTrEntry_IC">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_44">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Order Code</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="SuppTrEntry_OC">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="layoutWidget_7">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>130</y>
+              <width>751</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_20">
+             <item>
+              <widget class="QLabel" name="label_45">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Quantity Order Received</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="SuppTrEntry_QOR">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="wrapping">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::PlusMinus</enum>
+               </property>
+               <property name="showGroupSeparator" stdset="0">
+                <bool>false</bool>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QGroupBox" name="groupBox_17">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>180</y>
+              <width>751</width>
+              <height>181</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Pre-requisites For Modifying / Adding Data</string>
+            </property>
+            <widget class="QGroupBox" name="groupBox_18">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>361</width>
+               <height>141</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>For Adding / Inserting Data</string>
+             </property>
+             <widget class="QLabel" name="label_47">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>30</y>
+                <width>251</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- All Fields Are Required.</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_48">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>40</y>
+                <width>331</width>
+                <height>81</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- Order Date Time can be lesser but 
+cannot be greater than the current date.</string>
+              </property>
+             </widget>
+            </widget>
+            <widget class="QGroupBox" name="groupBox_19">
+             <property name="geometry">
+              <rect>
+               <x>380</x>
+               <y>30</y>
+               <width>361</width>
+               <height>141</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>For Editing / Modifying Data</string>
+             </property>
+             <widget class="QLabel" name="label_49">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>30</y>
+                <width>331</width>
+                <height>31</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- Fields That Don't Require Changes Must 
+Be Left Blank</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_50">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>60</y>
+                <width>331</width>
+                <height>81</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>- Order Date Time can be 
+lesser but cannot be greater than the 
+current date.</string>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+           <widget class="QWidget" name="layoutWidget_8">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>80</y>
+              <width>751</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_21">
+             <property name="spacing">
+              <number>15</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_52">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Supplier Code</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="SuppTrEntry_SC">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_53">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Order Date</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDateTimeEdit" name="SuppTrEntry_OD">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto Mono</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </widget>
          </item>
@@ -928,7 +1593,7 @@ Filling Confirm Password to Apply Changes</string>
        </widget>
        <widget class="QWidget" name="ItemTransact_Window">
         <attribute name="title">
-         <string>Item Transaction</string>
+         <string>Customer Transact</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
@@ -1227,674 +1892,9 @@ current date.</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="SupplierData_Window">
-        <attribute name="title">
-         <string>Supplier</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <item>
-          <widget class="QGroupBox" name="groupBox_12">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <family>Roboto Mono</family>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="title">
-            <string>Entries To Fill</string>
-           </property>
-           <property name="checkable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="layoutWidget_3">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>28</y>
-              <width>751</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_12">
-             <property name="spacing">
-              <number>15</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_29">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Supplier Code</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="SuppEntry_SC">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="placeholderText">
-                <string>Required Value To Fill...</string>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_35">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Supplier Name</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="SuppEntry_SN">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="placeholderText">
-                <string>Required Value To Fill...</string>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="layoutWidget_5">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>80</y>
-              <width>751</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_18">
-             <item>
-              <widget class="QLabel" name="label_36">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Last Delivery Date</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDateTimeEdit" name="SuppEntry_LDD">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="calendarPopup">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_37">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Next Delivery Date</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDateTimeEdit" name="SuppEntry_NDD">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="calendarPopup">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QGroupBox" name="groupBox_13">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>140</y>
-              <width>751</width>
-              <height>301</height>
-             </rect>
-            </property>
-            <property name="title">
-             <string>Pre-requisites For Modifying / Adding Data</string>
-            </property>
-            <widget class="QGroupBox" name="groupBox_14">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>30</y>
-               <width>361</width>
-               <height>261</height>
-              </rect>
-             </property>
-             <property name="title">
-              <string>For Adding / Inserting Data</string>
-             </property>
-             <widget class="QLabel" name="label_38">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>30</y>
-                <width>251</width>
-                <height>16</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- All Fields Are Required.</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_39">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>50</y>
-                <width>331</width>
-                <height>81</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>-Last and Next Delivery Time can be 
-lesser but cannot be greater than the 
-current date.</string>
-              </property>
-             </widget>
-            </widget>
-            <widget class="QGroupBox" name="groupBox_15">
-             <property name="geometry">
-              <rect>
-               <x>380</x>
-               <y>30</y>
-               <width>361</width>
-               <height>261</height>
-              </rect>
-             </property>
-             <property name="title">
-              <string>For Editing / Modifying Data</string>
-             </property>
-             <widget class="QLabel" name="label_40">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>30</y>
-                <width>331</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_41">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>70</y>
-                <width>331</width>
-                <height>81</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- Last and Next Delivery Time can be 
-lesser but cannot be greater than the 
-current date.</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_42">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>150</y>
-                <width>331</width>
-                <height>101</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- Last and Next Delivery Time Fields
-must be the same as before to 
-retain changes. Clearing Entry will set
-those to current time. Proceed with 
-caution.</string>
-              </property>
-             </widget>
-            </widget>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="SupplierTransact_Window">
-        <attribute name="title">
-         <string>Supplier Transaction</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_7">
-         <item>
-          <widget class="QGroupBox" name="groupBox_16">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <family>Roboto Mono</family>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="title">
-            <string>Entries To Fill</string>
-           </property>
-           <property name="checkable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="layoutWidget_6">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>28</y>
-              <width>751</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_19">
-             <property name="spacing">
-              <number>15</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_43">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Item Code</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="SuppTrEntry_IC">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_44">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Order Code</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="SuppTrEntry_OC">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="layoutWidget_7">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>130</y>
-              <width>751</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_20">
-             <item>
-              <widget class="QLabel" name="label_45">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Quantity Order Received</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="SuppTrEntry_QOR">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="wrapping">
-                <bool>true</bool>
-               </property>
-               <property name="buttonSymbols">
-                <enum>QAbstractSpinBox::PlusMinus</enum>
-               </property>
-               <property name="showGroupSeparator" stdset="0">
-                <bool>false</bool>
-               </property>
-               <property name="maximum">
-                <number>1000</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QGroupBox" name="groupBox_17">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>180</y>
-              <width>751</width>
-              <height>181</height>
-             </rect>
-            </property>
-            <property name="title">
-             <string>Pre-requisites For Modifying / Adding Data</string>
-            </property>
-            <widget class="QGroupBox" name="groupBox_18">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>30</y>
-               <width>361</width>
-               <height>141</height>
-              </rect>
-             </property>
-             <property name="title">
-              <string>For Adding / Inserting Data</string>
-             </property>
-             <widget class="QLabel" name="label_47">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>30</y>
-                <width>251</width>
-                <height>16</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- All Fields Are Required.</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_48">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>40</y>
-                <width>331</width>
-                <height>81</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- Order Date Time can be lesser but 
-cannot be greater than the current date.</string>
-              </property>
-             </widget>
-            </widget>
-            <widget class="QGroupBox" name="groupBox_19">
-             <property name="geometry">
-              <rect>
-               <x>380</x>
-               <y>30</y>
-               <width>361</width>
-               <height>141</height>
-              </rect>
-             </property>
-             <property name="title">
-              <string>For Editing / Modifying Data</string>
-             </property>
-             <widget class="QLabel" name="label_49">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>30</y>
-                <width>331</width>
-                <height>31</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
-              </property>
-             </widget>
-             <widget class="QLabel" name="label_50">
-              <property name="geometry">
-               <rect>
-                <x>20</x>
-                <y>60</y>
-                <width>331</width>
-                <height>81</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>- Order Date Time can be 
-lesser but cannot be greater than the 
-current date.</string>
-              </property>
-             </widget>
-            </widget>
-           </widget>
-           <widget class="QWidget" name="layoutWidget_8">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>80</y>
-              <width>751</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_21">
-             <property name="spacing">
-              <number>15</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_52">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Supplier Code</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="SuppTrEntry_SC">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_53">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Order Date</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDateTimeEdit" name="SuppTrEntry_OD">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="calendarPopup">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
        <widget class="QWidget" name="EmployeeData_Window">
         <attribute name="title">
-         <string>Employee</string>
+         <string>Employee Ref</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
@@ -2561,7 +2561,7 @@ Filling Confirm Password to Apply Changes</string>
        </widget>
        <widget class="QWidget" name="JobData_Window">
         <attribute name="title">
-         <string>Job Position</string>
+         <string>Job Ref</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>

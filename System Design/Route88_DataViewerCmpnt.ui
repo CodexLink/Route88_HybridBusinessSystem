@@ -69,7 +69,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Inventory Data</string>
+             <string>Inventory Reference Data</string>
             </property>
            </item>
            <item>
@@ -79,7 +79,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Supplier Data</string>
+             <string>Supplier Reference Data</string>
             </property>
            </item>
            <item>
@@ -89,17 +89,22 @@
            </item>
            <item>
             <property name="text">
+             <string>Customer Transaction Data</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>Customer Receipt Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Employee Data</string>
+             <string>Employee Reference Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Job Position Data</string>
+             <string>Job Refenrece Data</string>
             </property>
            </item>
           </widget>

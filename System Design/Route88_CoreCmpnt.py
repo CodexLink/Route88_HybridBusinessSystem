@@ -446,12 +446,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTableTarget = None
                 self.Target_TableCol = None
 
-            elif self.ActiveTable == "Inventory Data":
+            elif self.ActiveTable == "Inventory Reference Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("ItemCode")
                 self.Query_ColumnOpt.addItem("ItemName")
-                self.Query_ColumnOpt.addItem("Cost")
+                self.Query_ColumnOpt.addItem("ItemCost")
                 self.Query_ColumnOpt.addItem("ExpiryDate")
                 self.Query_ColumnOpt.addItem("AvailableStock")
                 self.Query_ColumnOpt.addItem("CreationTime")
@@ -464,26 +464,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 SchemaCandidate = "Management"
 
 
-            elif self.ActiveTable == "Item Transaction Data":
-                self.TechCore_ColOptClear()
-                self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("TransactionCode")
-                self.Query_ColumnOpt.addItem("MenuCode")
-                self.Query_ColumnOpt.addItem("Cost")
-                self.Query_ColumnOpt.addItem("CreationTime")
-
-                self.DataTable_View.setColumnCount(4)
-                self.DataTable_View.setHorizontalHeaderLabels(("ItemCode", "Transaction Code", "MenuCode", "Cost", "CreationTime"))
-                self.TechCore_ColResp()
-                self.DataTableTarget = "ItemTransaction"
-                self.Target_TableCol = "TransactionCode"
-                SchemaCandidate = "Management"
-
-            elif self.ActiveTable == "Supplier Data":
+            elif self.ActiveTable == "Supplier Reference Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("SupplierCode")
-                self.Query_ColumnOpt.addItem("Name")
+                self.Query_ColumnOpt.addItem("SupplierName")
                 self.Query_ColumnOpt.addItem("LastDeliveryDate")
                 self.Query_ColumnOpt.addItem("NextDeliveryDate")
                 self.Query_ColumnOpt.addItem("CreationTime")
@@ -515,10 +500,26 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Target_TableCol = "ItemCode"
                 SchemaCandidate = "Management"
 
+            elif self.ActiveTable == "Customer Transaction Data":
+                self.TechCore_ColOptClear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("TransactCode")
+                self.Query_ColumnOpt.addItem("ItemCode")
+                self.Query_ColumnOpt.addItem("CreationTime")
+                self.Query_ColumnOpt.addItem("LastUpdate")
+
+                self.DataTable_View.setColumnCount(4)
+                self.DataTable_View.setHorizontalHeaderLabels(("TransactCode", "ItemCode Code", "CreationTime", "LastUpdate"))
+                self.TechCore_ColResp()
+                self.DataTableTarget = "CustTransaction"
+                self.Target_TableCol = "TransactCode"
+                SchemaCandidate = "Management"
+
             elif self.ActiveTable == "Customer Receipt Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("TransactionCode")
+                self.Query_ColumnOpt.addItem("TransactCode_Pri")
+                self.Query_ColumnOpt.addItem("TransactCode_Sec")
                 self.Query_ColumnOpt.addItem("TotalCost")
                 self.Query_ColumnOpt.addItem("VATableCost")
                 self.Query_ColumnOpt.addItem("VATExempt")
@@ -526,19 +527,22 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("NetVAT")
                 self.Query_ColumnOpt.addItem("VATRate")
                 self.Query_ColumnOpt.addItem("CreationTime")
-                self.DataTable_View.setColumnCount(8)
-                self.DataTable_View.setHorizontalHeaderLabels(("TrasanctionCode", "TotalCost", "VatableCost", "VatExempt", "ZeroRated", "NetVat", "VatRate", "CreationTime"))
+                self.Query_ColumnOpt.addItem("LastUpdate")
+                self.DataTable_View.setColumnCount(10)
+                self.DataTable_View.setHorizontalHeaderLabels(("TransactCode_Pri", "TransactCode_Sec", "TotalCost", "VatableCost", "VatExempt", "ZeroRated", "NetVat", "VatRate", "CreationTime"))
                 self.TechCore_ColResp()
 
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-                self.DataTableTarget = "CustReceipts"
+                self.DataTableTarget = "CustReceipt"
                 self.Target_TableCol = "TransactionCode"
                 SchemaCandidate = "Management"
 
-            elif self.ActiveTable == "Employee Data":
+            elif self.ActiveTable == "Employee Reference Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("EmployeeCode")
+                self.Query_ColumnOpt.addItem("EmployeeUN")
+                self.Query_ColumnOpt.addItem("EmployeePW")
                 self.Query_ColumnOpt.addItem("FirstName")
                 self.Query_ColumnOpt.addItem("LastName")
                 self.Query_ColumnOpt.addItem("PositionCode")
@@ -551,15 +555,15 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
                 
-                self.DataTable_View.setColumnCount(12)
-                self.DataTable_View.setHorizontalHeaderLabels(("EmployeeCode", "FirstName", "LastName",  "PositionCode", "DOB", "Address", "SSS", "TIN", "PhilHealth", "TIN", "CreationTime", "LastUpdate"))
+                self.DataTable_View.setColumnCount(14)
+                self.DataTable_View.setHorizontalHeaderLabels(("EmployeeCode", "EmployeeUN", "EmployeePW", "FirstName", "LastName",  "PositionCode", "DOB", "Address", "SSS", "TIN", "PhilHealth", "TIN", "CreationTime", "LastUpdate"))
                 self.TechCore_ColResp()
 
                 self.DataTableTarget = "Employees"
                 self.Target_TableCol = "EmployeeCode"
                 SchemaCandidate = "EmployeeInfo"
 
-            elif self.ActiveTable == "Job Position Data":
+            elif self.ActiveTable == "Job Reference Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("PositionCode")
@@ -646,13 +650,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             print('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
             self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
 
-        elif self.ActiveTable == "Inventory Data":
+        elif self.ActiveTable == "Inventory Reference Data":
             for InventoryData in FunctionCall_DataFetch:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
                 self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCode'])))
                 self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemName'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['Cost'])))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCost'])))
                 self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ExpiryDate'])))
                 self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['AvailableStock'])))
                 self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
@@ -663,26 +667,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
                 currentRow += 1
 
-        elif self.ActiveTable == "Item Transaction Data":
-            for InventoryData in FunctionCall_DataFetch:
-                self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['MenuCode'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['Cost'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
-
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
-
-        elif self.ActiveTable == "Supplier Data":
+        elif self.ActiveTable == "Supplier Reference Data":
             for InventoryData in FunctionCall_DataFetch:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
                 self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['SupplierCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['Name'])))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['SupplierName'])))
                 self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastDeliveryDate'])))
                 self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['NextDeliveryDate'])))
                 self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
@@ -710,6 +701,20 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
                 currentRow += 1
 
+        elif self.ActiveTable == "Customer Transaction Data":
+            for InventoryData in FunctionCall_DataFetch:
+                self.DataTable_View.setRowCount(currentRow + 1)
+
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['MenuCode'])))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['Cost'])))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
+
+                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                currentRow += 1
+
         elif self.ActiveTable == "Customer Receipt Data":
             for InventoryData in FunctionCall_DataFetch:
                 self.DataTable_View.setRowCount(currentRow + 1)
@@ -728,7 +733,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
                 currentRow += 1
 
-        elif self.ActiveTable == "Employee Data":
+        elif self.ActiveTable == "Employee Reference Data":
             for InventoryData in FunctionCall_DataFetch:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
@@ -750,7 +755,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
                 currentRow += 1
                 
-        elif self.ActiveTable == "Job Position Data":
+        elif self.ActiveTable == "Job Reference Data":
             for InventoryData in FunctionCall_DataFetch:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
@@ -879,7 +884,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.resize(820, 540)
                 self.Tab_SelectionSelectives.setCurrentIndex(4)
                 self.TechCore_DisableExcept(4)
-            elif self.ActiveTargetTable == "CustReceipts":
+            elif self.ActiveTargetTable == "CustReceipt":
                 self.resize(820, 600)
                 self.Tab_SelectionSelectives.setCurrentIndex(1)
                 self.TechCore_DisableExcept(1)
