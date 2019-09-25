@@ -51,9 +51,10 @@
 '''
 from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
 from PyQt5.QtMultimedia import QSound
-import MySQLdb as MySQL
+import qdarkstyle
 from os import sys
 import subprocess as sysHandler
+import pyodbc as MSSQL
 
 from Route88_LoginCmpnt import Ui_Route88_Login_Window
 from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
@@ -66,59 +67,60 @@ class Route88_TechnicalCore(object):
     def __init__(self, Parent=None):
         super().__init__()
 
-    def MySQL_OpenCon(self, HostServerIP='localhost', SQL_UCredential=None, SQL_PCredential=None, SQLDatabase_Target=None):
+    def MSSQL_OpenCon(self, OBDCDriver='{ODBC Driver 17 for SQL Server}', ServerHost='localhost\SQLEXPRESS', UCredential=None, PCredential=None, DB_Target='Route88_Database'):
         try:
-            self.MySQLDataWire = MySQL.connect(host=HostServerIP, user=SQL_UCredential, passwd=SQL_PCredential, db=SQLDatabase_Target)
-            print("[MySQL Database] Connection Attempt: Staff '{}' with Username '{}' is connected @ Database {}.".format("...", SQL_UCredential, SQLDatabase_Target))
+            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; UID=%s; PWD=%s" % (ServerHost, UCredential, PCredential, DB_Target))
+            print("[MSSQL Database] Connection Attempt: Staff '%s' with Username '%s' is connected @ Database %s." % ("...", UCredential, DB_Target))
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ErrorMessage:
+        except (Exception, MSSQL.DatabaseError) as MSSQL_OpenConErrorMsg:
+            self.StatusLabel.setText("Database Error: Cannot Connect to the MSSQL Database. Please restart.")
+            print('[Exception @ MSSQL_OpenCon] > Cannot Open / Establish Connection with the MSSQL Database. Detailed Info |> %s' % (MSSQL_OpenConErrorMsg))
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '%s'. Please restart the program and re-run the XAMPP MySQL Instance." % (MSSQL_OpenConErrorMsg), QtWidgets.QMessageBox.Ok)
             self.TechCore_Beep()
-            self.StatusLabel.setText("Database Error: Cannot Connect to the SQL Database. Please restart.")
-            print('[Exception @ MySQL_OpenCon] > Cannot Open / Establish Connection with the MySQL Database. Detailed Info |> {}'.format(str(MySQL_ErrorMessage)))
-            QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(MySQL_ErrorMessage)), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program 
 
-    def MySQL_CursorSet(self, CursorType=None):
+    def MSSQL_InitCursor(self):
         try:
-            self.MySQLDataWireCursor = self.MySQLDataWire.cursor(CursorType)
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as CursorErrMsg:
+            self.MSSQLDataWireCursor = self.MSSQLDataWire.cursor
+        except (Exception, MSSQL.DatabaseError) as CursorErrMsg:
+            print('[Exception @ MSSQL_InitCursor] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> %s' % (CursorErrMsg))
             self.TechCore_Beep()
-            print('[Exception @ MySQL_CursorSet] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> {}'.format(str(CursorErrMsg)))
 
-    def MySQL_ExecuteState(self, MySQLStatement):
+    def MSSQL_ExecuteState(self, MySQLStatement):
         try:
-            return self.MySQLDataWireCursor.execute(MySQLStatement)
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_ExecError:
+            return self.MSSQLDataWireCursor.execute(MySQLStatement)
+        except (Exception, MSSQL.DatabaseError) as MSSQL_ExecError:
+            print('[Exception @ MSSQL_ExecuteState] > Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (MSSQL_ExecError))
             self.TechCore_Beep()
-            print('[Exception @ MySQL_ExecuteState] > Error in SQL Statements. Double check your statements. Detailed Info |> {}'.format(str(MySQL_ExecError))) # Style This One Soon.
     
-    def MySQL_FetchOneData(self, TupleIndex):
+    def MSSQL_FetchOneData(self):
         try:
-            return self.MySQLDataWireCursor.fetchone()[TupleIndex]
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchOError:
+            return self.MSSQLDataWireCursor.fetchone()[0]
+        except (Exception, MSSQL.DatabaseError) as MSSQL_FetchOError:
+            print('[Exception @ MSSQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Detailed Info |> %s' % (MSSQL_FetchOError))
             self.TechCore_Beep()
-            print('[Exception @ MySQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Detailed Info |> {}'.format(str(MySQL_FetchOError)))
     
-    def MySQL_FetchAllData(self):
+    def MSSQL_FetchAllData(self):
         try:
-            return self.MySQLDataWireCursor.fetchall()
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_FetchAError:
+            return self.MSSQLDataWireCursor.fetchall()
+        except (Exception, MSSQL.DatabaseError) as MSSQL_FetchAError:
             self.TechCore_Beep()
-            print('[Exception @ MySQL_FetchAllData] > Unable to Fetch Data, Check your ExecuteState statements. Detailed Info |> {}'.format(str(MySQL_FetchAError)))
+            print('[Exception @ MSSQL_FetchAllData] > Unable to Fetch Data, Check your ExecuteState statements. Detailed Info |> %s' % (MSSQL_FetchAError))
     
-    def MySQL_CommitData(self):
+    def MSSQL_CommitData(self):
         try:
-            return self.MySQLDataWire.commit()
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as MySQL_CommitError:
+            return self.MSSQLDataWire.commit()
+        except (Exception, MSSQL.DatabaseError) as MSSQL_CommitError:
             self.TechCore_Beep()
-            print('[Exception @ MySQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Detailed Info |> {}'.format(str(MySQL_CommitError)))
+            print('[Exception @ MSSQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Detailed Info |> %s' % (MSSQL_CommitError))
 
-    def MySQL_CloseCon(self):
+    # Optional Function, but according to the documentation, we don't need to call this one explicitly. It tends to happen automatically.
+    def MSSQL_CloseCon(self):
         try:
-            return self.MySQLDataWire.close()
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ClosingErr:
+            return self.MSSQLDataWire.close()
+        except (Exception, MSSQL.DatabaseError) as ClosingErr:
             self.TechCore_Beep()
-            print('[Exception @ MySQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Detailed Info |> {}'.format(str(ClosingErr)))
+            print('[Exception @ MSSQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Detailed Info |> %s' (ClosingErr))
     
     #Non Database Callable Function
     def TechCore_Beep(self):
@@ -134,7 +136,7 @@ class Route88_TechnicalCore(object):
             for SetCellFixedElem in range(self.DataTable_View.columnCount()):
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem,   QtWidgets.QHeaderView.Stretch)
         except Exception as ResponseError:
-            print('[Exception @ TechCore_ColResp] > Error Responsive Rendering in Table View. Detailed Info |> {}'.format(ResponseError))
+            print('[Exception @ TechCore_ColResp] > Error Responsive Rendering in Table View. Detailed Info |> %s' % (ResponseError))
     
     def TechCore_RowClear(self):
         try:
@@ -142,7 +144,7 @@ class Route88_TechnicalCore(object):
             self.DataTable_View.setRowCount(0)
 
         except Exception as RowClearMsg:
-            print('[Exception @ TechCore_RowClear] > Row Clearing Returns Error. Detailed Info |> {}'.format(str(RowClearMsg)))
+            print('[Exception @ TechCore_RowClear] > Row Clearing Returns Error. Detailed Info |> %s' % (RowClearMsg))
     
     def TechCore_RowClearSelected(self, rowIndex):
         return self.DataTable_View.removeRow(rowIndex)
@@ -155,7 +157,7 @@ class Route88_TechnicalCore(object):
                 self.Query_ColumnOpt.removeItem(ColOptIndex + 1)
 
         except Exception as ColOptClearMsg:
-            print('[Exception @ TechCore_ColOptClear] > Column Clearing Returns Error. Detailed Info |> {}'.format(str(ColOptClearMsg)))
+            print('[Exception @ TechCore_ColOptClear] > Column Clearing Returns Error. Detailed Info |> %s' % (ColOptClearMsg))
 
     def TechCore_DisableExcept(self, ExceptGivenNum):
         for TabIndex in range(self.Tab_SelectionSelectives.count()):
@@ -166,28 +168,28 @@ class Route88_TechnicalCore(object):
         
     def TechCore_PosCodeToName(self, PosCode):
         try:
-            self.MySQL_CursorSet(None)
-            self.MySQL_ExecuteState("SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode,))
-            return self.MySQL_FetchOneData(0)
+            self.MSSQL_InitCursor(None)
+            self.MSSQL_ExecuteState("SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode,))
+            return self.MSSQL_FetchOneData()
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as ProcessError:
-            print('[Exception @ TechCore_PosCodeToName] > Error Processing PositionCode to JobName. Detailed Info |> {}'.format(str(ProcessError)))
+        except (Exception, MSSQL.DatabaseError) as ProcessError:
+            print('[Exception @ TechCore_PosCodeToName] > Error Processing PositionCode to JobName. Detailed Info |> %s' % (ProcessError))
 
     def TechCore_RespectSchema(self, SchemaBaseName):
         # Close Any Existing...
         try:
             if SchemaBaseName == "Management":
-                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='Route88_Management')
-                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-                self.MySQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
+                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='Route88_Management')
+                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+                self.MSSQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
             elif SchemaBaseName == "EmployeeInfo":
-                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='Route88_Employees')
-                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-                self.MySQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
+                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='Route88_Employees')
+                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+                self.MSSQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as DynamicSchemaErr:
-            print('[Exception @ TechCore_RespectSchema] > Error Changing Database Schema. Detailed Error > {}.'.format(str(DynamicSchemaErr)))
+        except (Exception, MSSQL.DatabaseError) as DynamicSchemaErr:
+            print('[Exception @ TechCore_RespectSchema] > Error Changing Database Schema. Detailed Error > %s.' % (DynamicSchemaErr))
 
 
 
@@ -207,8 +209,8 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
     def LoginCore_RunAfterRender(self):
         try:
-            self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789', SQLDatabase_Target='route88_employees')
-            self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+            self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789', DB_Target='route88_employees')
+            self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
             self.LoginCore_CheckEnlisted()
 
         except Exception as ErrorHandler:
@@ -220,16 +222,16 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     #Route88_LoginForm UI Window Functions - StartPoint
     def LoginCore_CheckEnlisted(self):
         try:
-            self.MySQL_CursorSet(None)
-            self.MySQL_ExecuteState("SELECT COUNT(*) FROM Employees")
-            self.UserEnlistedCount = self.MySQL_FetchOneData(0)
+            self.MSSQL_InitCursor(None)
+            self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees")
+            self.UserEnlistedCount = self.MSSQL_FetchOneData()
             print('[Report @ LoginCore_CheckEnlisted] > User Account Count: {}'.format(self.UserEnlistedCount))
             self.StatusLabel.setText("Database Loaded. Ready~!")
 
             if self.UserEnlistedCount == 0:
                 self.TechCore_Beep()
-                self.MySQL_ExecuteState("INSERT INTO JobPosition VALUES (%s, %s)" % (1, 'Manager',))
-                self.MySQL_CommitData()
+                self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES (%s, %s)" % (1, 'Manager',))
+                self.MSSQL_CommitData()
                 
                 QtWidgets.QMessageBox.information(self, 'Route88 System', "Welcome to Route88 Hybrid System! The system detected that there is no user account recorded according to it's database. Since you launch the system with no other accounts, you will have register first as a  'Manager' in this particular time.", QtWidgets.QMessageBox.Ok)
 
@@ -248,10 +250,10 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 #Check if there is no manager as well. and launch Modifier Core
                 self.UserAcc_SubmitData.setDisabled(False)
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginQueryErrorMsg:
+        except (Exception, MSSQL.DatabaseError) as LoginQueryErrorMsg:
             self.TechCore_Beep()
 
-            print('[Exception @ LoginCore_CheckEnlisted] > Error Checking User in Database. Check MySQL Database Connection. Detailed Info |> {}'.format(str(LoginQueryErrorMsg)))
+            print('[Exception @ LoginCore_CheckEnlisted] > Error Checking User in Database. Check MSSQL Database Connection. Detailed Info |> {}'.format(str(LoginQueryErrorMsg)))
             self.StatusLabel.setText("Database Error: Cannot Connect. Please restart.")
 
             QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '{}'. Please restart the program and re-run the XAMPP MySQL Instance.".format(str(LoginQueryErrorMsg)), QtWidgets.QMessageBox.Ok)
@@ -259,10 +261,10 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
     def LoginCore_DataSubmission(self):
         try:
-            self.MySQL_CursorSet(MySQL.cursors.DictCursor)
-            self.QueryReturn = self.MySQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = '%s' AND EmployeePassword = '%s'" % (self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
+            self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+            self.QueryReturn = self.MSSQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = '%s' AND EmployeePassword = '%s'" % (self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
 
-            self.UserData = self.MySQL_FetchAllData()
+            self.UserData = self.MSSQL_FetchAllData()
             if self.QueryReturn:
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
                 self.StatusLabel.setText("Login Success: Credential Input Matched!")
@@ -278,7 +280,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
 
                 QtTest.QTest.qWait(1300)
-                self.MySQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
+                self.MSSQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
                 self.close()
 
                 self.Route88_MCInst = Route88_WindowController(Staff_Name=self.UserLiteralName, Staff_Job=self.UserPosInfo, Staff_DBUser='Route_TempUser', Staff_DBPass='123456789')
@@ -293,7 +295,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
                 
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as LoginSubmissionErrorMsg:
+        except (Exception, MSSQL.DatabaseError) as LoginSubmissionErrorMsg:
             self.TechCore_Beep()
             self.StatusLabel.setText(str(LoginSubmissionErrorMsg))
             print('[Exception @ LoginCore_DataSubmission] > Data Submission Failed. Detailed Info |> {}'.format(str(LoginSubmissionErrorMsg)))
@@ -367,7 +369,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 #
             #self.DataTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
             #self.DataTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as RenderErrorMsg:
+        except (Exception, MSSQL.DatabaseError) as RenderErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(RenderErrorMsg))
             print('[Exception Thrown @ DataVCore_RenderExplicits] > Detailed Info |> {0}'.format(RenderErrorMsg))
 
@@ -381,7 +383,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.DataVCore_PatternSetter()
             self.DataVCore_LoadTableSets()
             
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
+        except (Exception, MSSQL.DatabaseError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: RunAfterRender Returns an Error. Detailed Info |> {}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ DataVCore_RunAfterRender] > RunAfterRender Returns an Error. Detailed Info |>  {}'.format(FunctionErrorMsg))
             
@@ -609,8 +611,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.InventoryStatus.showMessage('Application Report: Active Data Table is None. Nothing to show at the moment.')
             else:
                 self.TechCore_RowClear()
-                self.MySQL_ExecuteState("SELECT * FROM %s" % (self.DataTableTarget,))
-                self.DataVCore_RenderTable(self.MySQL_FetchAllData())
+                self.MSSQL_ExecuteState("SELECT * FROM %s" % (self.DataTableTarget,))
+                self.DataVCore_RenderTable(self.MSSQL_FetchAllData())
                 
                 if self.DataTable_View.rowCount() == 0:
                     self.StaffAct_Add.setEnabled(True)
@@ -624,10 +626,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     self.StaffAct_RefreshData.setEnabled(True)
                     self.Query_ColumnOpt.setEnabled(True)
 
-                self.InventoryStatus.showMessage('Query Process > Data Table View for {} has been refreshed from MySQL Database. Ready~!'.format(self.DataTableTarget))
-                print('[Report @ DataVCore_LoadTableData] > Data Table View for {} has been refreshed from MySQL Database. Ready~!'.format(self.DataTableTarget))
+                self.InventoryStatus.showMessage('Query Process > Data Table View for {} has been refreshed from MSSQL Database. Ready~!'.format(self.DataTableTarget))
+                print('[Report @ DataVCore_LoadTableData] > Data Table View for {} has been refreshed from MSSQL Database. Ready~!'.format(self.DataTableTarget))
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as FunctionErrorMsg:
+        except (Exception, MSSQL.DatabaseError) as FunctionErrorMsg:
             self.InventoryStatus.showMessage('Application Error: Error Loading Table Data to Application. Detailed Error > {}'.format(FunctionErrorMsg))
             print('[Exception Thrown @ DataVCore_LoadTableData] > Error Loading Table Data to Application. Detailed Error > {}'.format(FunctionErrorMsg))
     
@@ -649,10 +651,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('[Search Operation] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
 
-                self.MySQL_ExecuteState("SELECT * FROM %s WHERE %s %s '%s'" % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter,))
-                self.DataVCore_RenderTable(self.MySQL_FetchAllData())
+                self.MSSQL_ExecuteState("SELECT * FROM %s WHERE %s %s '%s'" % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter,))
+                self.DataVCore_RenderTable(self.MSSQL_FetchAllData())
 
-        except (Exception, MySQL.Error, MySQL.OperationalError) as SearchQueryError:
+        except (Exception, MSSQL.Error, MSSQL.OperationalError) as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: Value Searching Returns Error. Detailed Info > {}'.format(SearchQueryError))
             print('[Exception Thrown @ DataVCore_ValSearch] > Value Searching Returns Error. Detailed Info > {}'.format(SearchQueryError))
 
@@ -792,12 +794,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     # Staff Action Functions
 
     def DataVCore_AddEntry(self):
-        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget) #SelectedRowData)
+        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="PushEntry") #SelectedRowData)
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
     def DataVCore_EditEntry(self):
-        #self.ModifierDialog = Route88_ModifierCore()
+        # Add Data To Pass or To Fetch...
+        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists")
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
@@ -813,11 +816,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('[Database Query Process | Deletion Query] -> DELETE FROM {} WHERE {} = {}'.format(self.DataTableTarget, self.Target_TableCol, selectedData))
                 self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row {}'.format(self.DataTable_View.currentRow()))
 
-                self.MySQLDataWireCursor.execute('DELETE FROM {} WHERE {} = {}'.format(self.DataTableTarget, self.Target_TableCol, selectedData))
+                self.MSSQLDataWireCursor.execute('DELETE FROM {} WHERE {} = {}'.format(self.DataTableTarget, self.Target_TableCol, selectedData))
 
                 self.TechCore_RowClearSelected(self.DataTable_View.currentRow())
 
-                self.MySQL_CommitData()
+                self.MSSQL_CommitData()
 
                 self.InventoryStatus.showMessage('Deletion Query | > Row {} has been deleted!'.format(self.DataTable_View.currentRow() + 1))
                 if self.DataTable_View.rowCount() == 0:
@@ -826,7 +829,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     self.StaffAct_Delete.setEnabled(True)
 
 
-        except (Exception, MySQL.Error, MySQL.OperationalError) as DelectionErrMsg:
+        except (Exception, MSSQL.Error, MSSQL.OperationalError) as DelectionErrMsg:
             self.InventoryStatus.showMessage('[Database Query Process | Deletion Query] -> No Selected Row To Delete...')
             print('[Exception Thrown @ DataVCore_DeleteEntry] -> There Might Be No Selected Row To Delete... Detailed Error |> {}'.format(str(DelectionErrMsg)))
     
@@ -841,7 +844,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.TechCore_RowClear()
             self.DataVCore_LoadTableData()
 
-        except (Exception, MySQL.Error, MySQL.OperationalError) as RefreshError:
+        except (Exception, MSSQL.Error, MSSQL.OperationalError) as RefreshError:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(str(RefreshError)))
             raise Exception('[Exception Thrown @ DataVCore_RefreshData] -> {0}'.format(str(RefreshError)))
 
@@ -886,7 +889,7 @@ class Route88_POSCore(QtWidgets.QMainWindow, Route88_TechnicalCore):
         pass
 
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    def __init__(self, Parent=None, RecentTableActive=None, ModifierMode=None, DataPayload_AtRow=None, isFirstTime=None):
+    def __init__(self, Parent=None, ModifierMode=None, RecentTableActive=None, DataPayload_AtRow=None, isFirstTime=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.DataMCore_RenderExplicits()
@@ -902,23 +905,26 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         self.DataManip_PushData.clicked.connect(self.DataMCore_AddEntry)
         self.DataManip_ResetActiveData.clicked.connect(self.DataMCore_ClearEntry)
 
+        self.DataPayload = DataPayload_AtRow
+        self.ModifierMode = ModifierMode
         self.ActiveTargetTable = RecentTableActive
-        print(self.ActiveTargetTable)
 
         self.DataMCore_isReallyFT(isFirstTime)
         self.DataMCore_RunAfterRender()
 
         # Technical Functions
     def DataMCore_RenderExplicits(self):
+        pass
+
 
     def DataMCore_RunAfterRender(self):
         try:
             if (self.ActiveTargetTable == "Employees" or self.ActiveTargetTable == "JobPosition"):
-                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='route88_management')
-                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='route88_management')
+                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
             else:
-                self.MySQL_OpenCon(SQL_UCredential='Route_TempUser', SQL_PCredential='123456789',   SQLDatabase_Target='route88_employees')
-                self.MySQL_CursorSet(MySQL.cursors.DictCursor)
+                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='route88_employees')
+                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
 
             if self.ActiveTargetTable == "InventoryItem":
                 self.resize(820, 420)
@@ -960,8 +966,11 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.Tab_SelectionSelectives.setCurrentIndex(6)
                 self.TechCore_DisableExcept(6)
 
+            #Preloads Data Received, Ternary Operator
+            self.DataMCore_EditEntry() if self.ModifierMode == "ModifyDataExists" else None
+                
 
-        except (Exception, MySQL.OperationalError, MySQL.Error, MySQL.Warning, MySQL.DatabaseError) as DataMCore_ARErr:
+        except (Exception, MSSQL.DatabaseError) as DataMCore_ARErr:
             self.TechCore_Beep()
             print('[Exception @ DataMCore_RunAfterRender] > Error Rendering Modifier Core: RunAfterRender. Detailed Error: {}'.format(DataMCore_ARErr))
         
@@ -975,11 +984,24 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
     def DataMCore_AddEntry(self):
         try:
             # Add Check of Active Table Here
-            self.MySQL_CursorSet(None)
+            self.MSSQL_InitCursor(None)
             QDateGet = self.AddEntry_DateExpiry.date() 
             formattedDate = QDateGet.toPyDate()
             # Add More Options Here
             #appendRowLast = self.DataTable_View.rowCount()
+
+            #if self.ActiveTargetTable == "InventoryItem":
+            #elif self.ActiveTargetTable == "SupplierReference":
+            #elif self.ActiveTargetTable == "SupplierTransaction":
+            #elif self.ActiveTargetTable == "CustReceipt":
+            #elif self.ActiveTargetTable == "CustTransaction":
+            #elif self.ActiveTargetTable == "Employees":
+            #elif self.ActiveTargetTable == "JobPosition":
+    
+
+
+
+
             if len(self.AddEntry_ItemCode.text()) == 0:
                 self.DataMCore_Status.showMessage('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
                 raise Exception('Adding Entry Error: Constraint (> 0 Characters) Not Met @ Item Code Entry.')
@@ -997,20 +1019,25 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 TargetTable_Param = self.DataMCore_GetTargetTable()
                 print('[Pushing Value to Table @ InventoryList] -> INSERT INTO {} VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {})'.format(TargetTable_Param, self.AddEntry_ItemCode.text(), self.AddEntry_SupplierCode.text(), self.AddEntry_ItemName.text(), self.AddEntry_ItemType.text(), self.AddEntry_Quantity.value(), self.AddEntry_Cost.value(), formattedDate, 1,formattedDate, formattedDate))
 
-                #self.MySQLDataWireCursor.execute("INSERT INTO {} VALUES ({}, {}, '{}', '{}', {}, {}, '{}', {}, '{}', '{}')".format(str(TargetTable_Param), str(self.AddEntry_ItemCode.text()), str(self.AddEntry_SupplierCode.text()), str(self.AddEntry_ItemName.text()), str(self.AddEntry_ItemType.text()), str(self.AddEntry_Quantity.value()), str(self.AddEntry_Cost.value()), str(formattedDate), 1,str(formattedDate), str(formattedDate)))
-                #self.MySQLDataWire.commit()
+                #self.MSSQLDataWireCursor.execute("INSERT INTO {} VALUES ({}, {}, '{}', '{}', {}, {}, '{}', {}, '{}', '{}')".format(str(TargetTable_Param), str(self.AddEntry_ItemCode.text()), str(self.AddEntry_SupplierCode.text()), str(self.AddEntry_ItemName.text()), str(self.AddEntry_ItemType.text()), str(self.AddEntry_Quantity.value()), str(self.AddEntry_Cost.value()), str(formattedDate), 1,str(formattedDate), str(formattedDate)))
+                #self.MSSQLDataWire.commit()
                 print('[Report @DataMCore_AddEntry] > Successful Execution -> Data Successfully Added to Database~!')
                 self.DataMCore_Status.showMessage('Successful Execution -> Data Successfully Added to Database~!')
 
 
 
         
-        except (Exception, MySQL.Error, MySQL.OperationalError) as PushEntryErrMsg:
+        except (Exception, MSSQL.Error, MSSQL.OperationalError) as PushEntryErrMsg:
             self.TechCore_Beep()
             self.DataMCore_Status.showMessage('Add Entry Execution Error: Please check your SQL connection or your fields!')
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. But in any case, here is the error output: {}".format(str(PushEntryErrMsg)), QtWidgets.QMessageBox.Ok)
             print('[Technical Information @ DataMCore_AddEntry] -> {}'.format(PushEntryErrMsg))
-    
+
+    def DataMCore_EditEntry(self):
+        for i in self.DataPayload:
+            print(i)
+
+
     def DataMCore_ClearEntry(self, ActiveEntryWindow):
         if self.Tab_SelectionSelectives.currentIndex() == 0:
             self.AddEntry_ItemCode.clear()
