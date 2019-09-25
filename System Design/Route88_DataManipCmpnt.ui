@@ -77,7 +77,7 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
@@ -159,65 +159,6 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Supplier Code</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="InvEntry_SC">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="placeholderText">
-                <string>Required Value To Fill...</string>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="layoutWidget">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>80</y>
-              <width>751</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <property name="spacing">
-              <number>15</number>
-             </property>
-             <property name="sizeConstraint">
-              <enum>QLayout::SetMaximumSize</enum>
-             </property>
-             <item>
               <widget class="QLabel" name="label_3">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -258,6 +199,24 @@
                </property>
               </widget>
              </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="layoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>80</y>
+              <width>751</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="spacing">
+              <number>15</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMaximumSize</enum>
+             </property>
              <item>
               <widget class="QLabel" name="label_6">
                <property name="sizePolicy">
@@ -273,30 +232,70 @@
                 </font>
                </property>
                <property name="text">
-                <string>Type</string>
+                <string>Item Type</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="InvEntry_IT">
+              <widget class="QComboBox" name="InvEntry_IT">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="font">
-                <font>
-                 <family>Roboto Mono</family>
-                 <pointsize>10</pointsize>
-                </font>
+               <item>
+                <property name="text">
+                 <string>Ingredient Item</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Menu Item</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Material Type</string>
                </property>
-               <property name="placeholderText">
-                <string>Required Value To Fill...</string>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="InvEntry_MT">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
+               <item>
+                <property name="text">
+                 <string>Uncategorized</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Item</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Furniture</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Container</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Etc.</string>
+                </property>
+               </item>
               </widget>
              </item>
             </layout>
@@ -326,7 +325,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Quantity</string>
+                <string>Available Stock</string>
                </property>
               </widget>
              </item>
@@ -376,7 +375,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Cost</string>
+                <string>Item Cost</string>
                </property>
               </widget>
              </item>
@@ -422,7 +421,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="InvEntry_DE">
+              <widget class="QDateTimeEdit" name="InvEntry_ED">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2001,7 +2000,7 @@ Filling Confirm Password to Apply Changes</string>
              <item>
               <widget class="QLineEdit" name="EmpEntry_FN">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2012,8 +2011,11 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>45</number>
+               </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Max of 45 Letters</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2042,7 +2044,7 @@ Filling Confirm Password to Apply Changes</string>
              <item>
               <widget class="QLineEdit" name="EmpEntry_LN">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2053,8 +2055,11 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>45</number>
+               </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Max of 45 Letters</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2185,8 +2190,11 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>300</number>
+               </property>
                <property name="placeholderText">
-                <string>Required Value To Fill...</string>
+                <string>Required, Max: 300 Characters</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2230,7 +2238,7 @@ Filling Confirm Password to Apply Changes</string>
              <item>
               <widget class="QLineEdit" name="EmpEntry_SSS">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2241,8 +2249,11 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>10</number>
+               </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Must Be 10 Numbers</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2271,7 +2282,7 @@ Filling Confirm Password to Apply Changes</string>
              <item>
               <widget class="QLineEdit" name="EmpEntry_TIN">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2282,8 +2293,11 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>10</number>
+               </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Must Be 10 Numbers</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2338,8 +2352,11 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>10</number>
+               </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Max: 10 Numbers</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2394,8 +2411,11 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>20</number>
+               </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Max: 20 Characters</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2439,7 +2459,7 @@ Filling Confirm Password to Apply Changes</string>
              <item>
               <widget class="QLineEdit" name="EmpEntry_PW">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2450,11 +2470,14 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>60</number>
+               </property>
                <property name="echoMode">
                 <enum>QLineEdit::Password</enum>
                </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Max of 60 Letters</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2483,7 +2506,7 @@ Filling Confirm Password to Apply Changes</string>
              <item>
               <widget class="QLineEdit" name="EmpEntry_CPW">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2494,11 +2517,14 @@ Filling Confirm Password to Apply Changes</string>
                  <pointsize>10</pointsize>
                 </font>
                </property>
+               <property name="maxLength">
+                <number>60</number>
+               </property>
                <property name="echoMode">
                 <enum>QLineEdit::Password</enum>
                </property>
                <property name="placeholderText">
-                <string>Required To Fill...</string>
+                <string>Required, Max of 60 Letters</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -2805,6 +2831,12 @@ Be Left Blank</string>
    </item>
    <item>
     <widget class="QLabel" name="Modifier_StatusLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <family>Roboto Mono</family>
