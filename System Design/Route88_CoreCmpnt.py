@@ -67,35 +67,41 @@ class Route88_TechnicalCore(object):
     def __init__(self, Parent=None):
         super().__init__()
 
-    def MSSQL_OpenCon(self, OBDCDriver='{ODBC Driver 17 for SQL Server}', ServerHost='localhost\SQLEXPRESS', UCredential=None, PCredential=None, DB_Target='Route88_Database'):
+    def MSSQL_OpenCon(self, OBDCDriver='{ODBC Driver 17 for SQL Server}', ServerHost='localhost', UCredential=None, PCredential=None, DB_Target='Route88_Database'):
         try:
-            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; UID=%s; PWD=%s" % (ServerHost, UCredential, PCredential, DB_Target))
+            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; DATABASE=%s;UID=%s; PWD=%s" % (OBDCDriver, ServerHost, DB_Target, UCredential, PCredential))
             print("[MSSQL Database] Connection Attempt: Staff '%s' with Username '%s' is connected @ Database %s." % ("...", UCredential, DB_Target))
 
         except (Exception, MSSQL.DatabaseError) as MSSQL_OpenConErrorMsg:
+            self.TechCore_Beep()
             self.StatusLabel.setText("Database Error: Cannot Connect to the MSSQL Database. Please restart.")
             print('[Exception @ MSSQL_OpenCon] > Cannot Open / Establish Connection with the MSSQL Database. Detailed Info |> %s' % (MSSQL_OpenConErrorMsg))
-            QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Error', "Error, cannot connect to the database, here is the following error prompt that the program encountered. '%s'. Please restart the program and re-run the XAMPP MySQL Instance." % (MSSQL_OpenConErrorMsg), QtWidgets.QMessageBox.Ok)
-            self.TechCore_Beep()
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Connection Error', "An error occured while connecting to the database.\n\nDetailed Error: '%s'.\n\n Try restarting or re-connecting to MSSQL Server and try again." % (MSSQL_OpenConErrorMsg), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program 
 
     def MSSQL_InitCursor(self):
         try:
-            self.MSSQLDataWireCursor = self.MSSQLDataWire.cursor
+            self.MSSQLDataWireCursor = self.MSSQLDataWire.cursor()
         except (Exception, MSSQL.DatabaseError) as CursorErrMsg:
+            self.TechCore_Beep()
             print('[Exception @ MSSQL_InitCursor] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> %s' % (CursorErrMsg))
-            self.TechCore_Beep()
 
-    def MSSQL_ExecuteState(self, MySQLStatement):
+    def MSSQL_ExecuteState(self, MySQLStatement, FetchType=None):
         try:
-            return self.MSSQLDataWireCursor.execute(MySQLStatement)
+            if FetchType == 'One':
+                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchone()[0]
+            elif FetchType == 'All':
+                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchall()
+            else:
+                return self.MSSQLDataWireCursor.execute(MySQLStatement)
+
         except (Exception, MSSQL.DatabaseError) as MSSQL_ExecError:
-            print('[Exception @ MSSQL_ExecuteState] > Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (MSSQL_ExecError))
             self.TechCore_Beep()
+            print('[Exception @ MSSQL_ExecuteState] > Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (MSSQL_ExecError))
     
     def MSSQL_FetchOneData(self):
         try:
-            return self.MSSQLDataWireCursor.fetchone()[0]
+            return self.MSSQLDataWireCursor.fetchone()
         except (Exception, MSSQL.DatabaseError) as MSSQL_FetchOError:
             print('[Exception @ MSSQL_FetchOneData] > Cannot Fetch Data from a Specified Index. Detailed Info |> %s' % (MSSQL_FetchOError))
             self.TechCore_Beep()
@@ -179,13 +185,13 @@ class Route88_TechnicalCore(object):
         # Close Any Existing...
         try:
             if SchemaBaseName == "Management":
-                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='Route88_Management')
-                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
+                self.MSSQL_InitCursor()
                 self.MSSQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
             elif SchemaBaseName == "EmployeeInfo":
-                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='Route88_Employees')
-                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
+                self.MSSQL_InitCursor()
                 self.MSSQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
 
         except (Exception, MSSQL.DatabaseError) as DynamicSchemaErr:
@@ -209,8 +215,8 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
     def LoginCore_RunAfterRender(self):
         try:
-            self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789', DB_Target='route88_employees')
-            self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
+            self.MSSQL_InitCursor()
             self.LoginCore_CheckEnlisted()
 
         except Exception as ErrorHandler:
@@ -222,15 +228,13 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     #Route88_LoginForm UI Window Functions - StartPoint
     def LoginCore_CheckEnlisted(self):
         try:
-            self.MSSQL_InitCursor(None)
-            self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees")
-            self.UserEnlistedCount = self.MSSQL_FetchOneData()
-            print('[Report @ LoginCore_CheckEnlisted] > User Account Count: {}'.format(self.UserEnlistedCount))
-            self.StatusLabel.setText("Database Loaded. Ready~!")
+            self.MSSQL_InitCursor()
+            self.UserEnlistedCount = self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees", 'One')
+            print('[Report @ LoginCore_CheckEnlisted] > User Account Count: %s' % (self.UserEnlistedCount))
 
             if self.UserEnlistedCount == 0:
                 self.TechCore_Beep()
-                self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES (%s, %s)" % (1, 'Manager',))
+                self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES (%s, '%s')" % (1, 'Manager'), 'All')
                 self.MSSQL_CommitData()
                 
                 QtWidgets.QMessageBox.information(self, 'Route88 System', "Welcome to Route88 Hybrid System! The system detected that there is no user account recorded according to it's database. Since you launch the system with no other accounts, you will have register first as a  'Manager' in this particular time.", QtWidgets.QMessageBox.Ok)
@@ -246,9 +250,11 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                     sys.exit()
                 else:
                     self.UserAcc_SubmitData.setDisabled(False)
+                    self.StatusLabel.setText("Database Loaded. Ready~!")
             else:
                 #Check if there is no manager as well. and launch Modifier Core
                 self.UserAcc_SubmitData.setDisabled(False)
+                self.StatusLabel.setText("Database Loaded. Ready~!")
 
         except (Exception, MSSQL.DatabaseError) as LoginQueryErrorMsg:
             self.TechCore_Beep()
@@ -261,7 +267,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
     def LoginCore_DataSubmission(self):
         try:
-            self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+            self.MSSQL_InitCursor()
             self.QueryReturn = self.MSSQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeCode = '%s' AND EmployeePassword = '%s'" % (self.UserAcc_UserCode.text(), self.UserAcc_Password.text()))
 
             self.UserData = self.MSSQL_FetchAllData()
@@ -920,11 +926,11 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
     def DataMCore_RunAfterRender(self):
         try:
             if (self.ActiveTargetTable == "Employees" or self.ActiveTargetTable == "JobPosition"):
-                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='route88_management')
-                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
+                self.MSSQL_InitCursor()
             else:
-                self.MSSQL_OpenCon(UCredential='Route_TempUser', PCredential='123456789',   DB_Target='route88_employees')
-                self.MSSQL_InitCursor(MSSQL.cursors.DictCursor)
+                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
+                self.MSSQL_InitCursor()
 
             if self.ActiveTargetTable == "InventoryItem":
                 self.resize(820, 420)
