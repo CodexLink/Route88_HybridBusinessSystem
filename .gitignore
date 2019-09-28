@@ -131,3 +131,4 @@ build/
 .vscode/
 *.json
 *.mwb.*
+MSSQL Scripts/
