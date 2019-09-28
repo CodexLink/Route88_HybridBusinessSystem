@@ -49,18 +49,20 @@
             <ClassShortName>_RunAfterRender -> Condition, Must Be After setupUi()
                 > This was implemented right after setupUi(). Because, we have to   initialize every value from the database which would then be shown after  UI has been render. So that when the engine initiates .show(). All values is already there. So in sort, setup Values and Elements.
 '''
-from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
-from PyQt5.QtMultimedia import QSound
-import qdarkstyle
-from os import sys
 import subprocess as sysHandler
-import pyodbc as MSSQL
+from os import sys
 
-from Route88_LoginCmpnt import Ui_Route88_Login_Window
-from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
-from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
-from Route88_POSCmpnt import Ui_Route88_POS_SystemWindow
+import qdarkstyle
+from PyQt5 import QtCore, QtGui, QtTest, QtWidgets
+from PyQt5.QtMultimedia import QSound
+
+import pyodbc as MSSQL
 from Route88_ControllerCmpnt import Ui_Route88_Controller_Window
+from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
+from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
+from Route88_LoginCmpnt import Ui_Route88_Login_Window
+from Route88_POSCmpnt import Ui_Route88_POS_SystemWindow
+
 
 # This class is a database controller by wrapping all confusing parts into a callable function... and any other such that requires global function calling.
 class Route88_TechnicalCore(object):
@@ -183,22 +185,6 @@ class Route88_TechnicalCore(object):
 
         except (Exception, MSSQL.DatabaseError) as ProcessError:
             print('[Exception @ TechCore_NameToPosCode] > Error Processing PositionCode to JobName. Detailed Info |> %s' % (ProcessError))
-
-    def TechCore_RespectSchema(self, SchemaBaseName):
-        # Close Any Existing...
-        try:
-            if SchemaBaseName == "Management":
-                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
-                self.MSSQL_InitCursor()
-                self.MSSQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
-
-            elif SchemaBaseName == "EmployeeInfo":
-                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
-                self.MSSQL_InitCursor()
-                self.MSSQL_ExecuteState('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED')
-
-        except (Exception, MSSQL.DatabaseError) as DynamicSchemaErr:
-            print('[Exception @ TechCore_RespectSchema] > Error Changing Database Schema. Detailed Error > %s.' % (DynamicSchemaErr))
 
 
 
@@ -383,7 +369,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_RunAfterRender(self):
         try:
-
+            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
+            self.MSSQL_InitCursor()
             #Set All Parameters Without User Touching it for straight searching...
             self.DataVCore_PatternEnabler()
             self.DataVCore_SearchFieldSet()
@@ -483,7 +470,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "InventoryItem"
                 self.Target_TableCol = "ItemCode"
-                SchemaCandidate = "Management"
 
 
             elif self.ActiveTable == "Supplier Reference Data":
@@ -501,7 +487,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "SupplierReference"
                 self.Target_TableCol = "SupplierCode"
-                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Supplier Transaction Data":
                 self.TechCore_ColOptClear()
@@ -520,7 +505,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "SupplierTransaction"
                 self.Target_TableCol = "ItemCode"
-                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Customer Transaction Data":
                 self.TechCore_ColOptClear()
@@ -535,7 +519,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "CustTransaction"
                 self.Target_TableCol = "TransactCode"
-                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Customer Receipt Data":
                 self.TechCore_ColOptClear()
@@ -557,7 +540,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "CustReceipt"
                 self.Target_TableCol = "TransactionCode"
-                SchemaCandidate = "Management"
 
             elif self.ActiveTable == "Employee Reference Data":
                 self.TechCore_ColOptClear()
@@ -576,13 +558,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
                 
-                self.DataTable_View.setColumnCount(13)
-                self.DataTable_View.setHorizontalHeaderLabels(("EmployeeCode", "EmployeeUN", "EmployeePW", "FirstName", "LastName",  "PositionCode", "DOB", "Address", "SSS", "TIN", "PhilHealth", "TIN", "CreationTime", "LastUpdate"))
+                self.DataTable_View.setColumnCount(12)
+                self.DataTable_View.setHorizontalHeaderLabels(("EmployeeCode", "EmployeeUN", "EmployeePW", "FirstName", "LastName",  "PositionCode", "DOB", "Address", "SSS", "TIN", "PhilHealth", "CreationTime", "LastUpdate"))
                 self.TechCore_ColResp()
 
                 self.DataTableTarget = "Employees"
                 self.Target_TableCol = "EmployeeCode"
-                SchemaCandidate = "EmployeeInfo"
 
             elif self.ActiveTable == "Job Reference Data":
                 self.TechCore_ColOptClear()
@@ -595,9 +576,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TechCore_ColResp()
                 self.DataTableTarget = "JobPosition"
                 self.Target_TableCol = "PositionCode"
-                SchemaCandidate = "EmployeeInfo"
 
-            self.TechCore_RespectSchema(SchemaCandidate)
+            #self.TechCore_RespectSchema(SchemaCandidate)
             self.DataVCore_Encap_RowData()
             self.DataVCore_LoadTableData()
 
@@ -617,8 +597,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.InventoryStatus.showMessage('Application Report: Active Data Table is None. Nothing to show at the moment.')
             else:
                 self.TechCore_RowClear()
-                self.MSSQL_ExecuteState("SELECT * FROM %s" % (self.DataTableTarget,))
-                self.DataVCore_RenderTable(self.MSSQL_FetchAllData())
+                self.DataVCore_RenderTable("SELECT * FROM %s" % (self.DataTableTarget))
                 
                 if self.DataTable_View.rowCount() == 0:
                     self.StaffAct_Add.setEnabled(True)
@@ -657,14 +636,15 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('[Search Operation] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
                 print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
 
-                self.MSSQL_ExecuteState("SELECT * FROM %s WHERE %s %s '%s'" % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter,))
-                self.DataVCore_RenderTable(self.MSSQL_FetchAllData())
+                self.DataVCore_RenderTable(self.MSSQL_ExecuteState("SELECT * FROM %s WHERE %s %s '%s'" % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter)))
 
         except (Exception, MSSQL.Error, MSSQL.OperationalError) as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: Value Searching Returns Error. Detailed Info > {}'.format(SearchQueryError))
             print('[Exception Thrown @ DataVCore_ValSearch] > Value Searching Returns Error. Detailed Info > {}'.format(SearchQueryError))
 
     def DataVCore_RenderTable(self, FunctionCall_DataFetch):
+
+        self.DataFetchExec = self.MSSQL_ExecuteState(FunctionCall_DataFetch, 'All')
         currentRow = 0
         if self.ActiveTable == "None":
             self.TechCore_RowClear()
@@ -672,16 +652,16 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
 
         elif self.ActiveTable == "Inventory Reference Data":
-            for InventoryData in FunctionCall_DataFetch:
+            for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemName'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCost'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ExpiryDate'])))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['AvailableStock'])))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastUpdate'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ItemCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ItemName)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ItemCost)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ExpiryDate)))
+                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.AvailableStock)))
+                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.CreationTime)))
+                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.LastUpdate)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -690,7 +670,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
 
         elif self.ActiveTable == "Supplier Reference Data":
-            for InventoryData in FunctionCall_DataFetch:
+            for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
                 self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['SupplierCode'])))
@@ -706,7 +686,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 currentRow += 1
 
         elif self.ActiveTable == "Supplier Transaction Data":
-            for InventoryData in FunctionCall_DataFetch:
+            for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
                 self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCode'])))
@@ -723,7 +703,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 currentRow += 1
 
         elif self.ActiveTable == "Customer Transaction Data":
-            for InventoryData in FunctionCall_DataFetch:
+            for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
                 self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
@@ -737,7 +717,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 currentRow += 1
 
         elif self.ActiveTable == "Customer Receipt Data":
-            for InventoryData in FunctionCall_DataFetch:
+            for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
                 self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
@@ -755,21 +735,21 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 currentRow += 1
 
         elif self.ActiveTable == "Employee Reference Data":
-            for InventoryData in FunctionCall_DataFetch:
+            for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['EmployeeCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['FirstName'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastName'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['PositionCode'])))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['DOB'])))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['Address'])))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['SSS'])))
-                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TIN'])))
-                self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['PhilHealth'])))
-                self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TIN'])))
-                self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
-                self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastUpdate'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.EmployeeCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.FirstName)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.LastName)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.PositionCode)))
+                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.DOB)))
+                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.Address)))
+                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.SSS)))
+                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.TIN)))
+                self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.PhilHealth)))
+                self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.TIN)))
+                self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.CreationTime)))
+                self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.LastUpdate)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -777,11 +757,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 currentRow += 1
                 
         elif self.ActiveTable == "Job Reference Data":
-            for InventoryData in FunctionCall_DataFetch:
+            for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['PositionCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['JobName'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.PositionCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.JobName)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -1228,7 +1208,6 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
-
 
         self.StaffLiteralName = Staff_Name
         self.StaffCurrentJob = Staff_Job
