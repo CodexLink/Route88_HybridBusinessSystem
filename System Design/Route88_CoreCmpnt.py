@@ -59,8 +59,8 @@ import pyodbc as MSSQL
 from Route88_LoginCmpnt import Ui_Route88_Login_Window
 from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
 from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
+from Route88_POSCmpnt import Ui_Route88_POS_SystemWindow
 from Route88_ControllerCmpnt import Ui_Route88_Controller_Window
-#from Route88_POSSystem import %s%s%s
 
 # This class is a database controller by wrapping all confusing parts into a callable function... and any other such that requires global function calling.
 class Route88_TechnicalCore(object):
@@ -89,9 +89,11 @@ class Route88_TechnicalCore(object):
     def MSSQL_ExecuteState(self, MySQLStatement, FetchType=None):
         try:
             if FetchType == 'One':
-                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchone()[0]
+                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchone()
             elif FetchType == 'All':
                 return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchall()
+            elif FetchType == 'FetchVal':
+                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchval()
             else:
                 return self.MSSQLDataWireCursor.execute(MySQLStatement)
 
@@ -167,7 +169,7 @@ class Route88_TechnicalCore(object):
     def TechCore_PosCodeToName(self, PosCode):
         try:
             self.MSSQL_InitCursor()
-            ConvertedToName = self.MSSQL_ExecuteState("SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode,), "One")
+            ConvertedToName = self.MSSQL_ExecuteState("SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode), "FetchVal")
             return ConvertedToName
 
         except (Exception, MSSQL.DatabaseError) as ProcessError:
@@ -230,7 +232,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     def LoginCore_CheckEnlisted(self):
         try:
             self.MSSQL_InitCursor()
-            self.UserEnlistedCount = self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees", 'One')
+            self.UserEnlistedCount = self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees", 'FetchVal')
             print('[Report @ LoginCore_CheckEnlisted] > User Account Count: %s' % (self.UserEnlistedCount))
 
             if self.UserEnlistedCount == 0:
@@ -242,7 +244,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
                 self.Route88_FirstTimerInst = Route88_ModifierCore(ModifierMode="PushEntry", isFirstTime=True)
                 self.Route88_FirstTimerInst.exec_()
-                self.UserEnlistedCount = self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees", 'One')
+                self.UserEnlistedCount = self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees", 'FetchVal')
                 self.UserAcc_SubmitData.setDisabled(False)
                 # If it is still zero then...
                 if self.UserEnlistedCount == 0:
@@ -269,22 +271,21 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     def LoginCore_DataSubmission(self):
         try:
             self.MSSQL_InitCursor()
-            self.QueryReturn = self.MSSQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeUN = '%s' AND EmployeePW = '%s'" % (self.UserAcc_UserCode.text(),self.UserAcc_Password.text()), 'One')
-
+            self.QueryReturn = self.MSSQL_ExecuteState("SELECT TOP 1 * FROM Employees WHERE EmployeeUN = '%s' AND EmployeePW = '%s'" % (self.UserAcc_UserCode.text(),self.UserAcc_Password.text()), 'One')
             #self.UserData = self.MSSQL_FetchAllData()
             if self.QueryReturn:
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
                 self.StatusLabel.setText("Login Success: Credential Input Matched!")
                 self.UserAcc_SubmitData.setDisabled(True)
                 
-                for UserRawData in self.QueryReturn:
-                    self.UserLiteralName = "%s %s" % (UserRawData.FirstName, UserRawData.LastName)
-                    self.UserPosInfo = self.TechCore_PosCodeToName(UserRawData.PositionCode)
+                #for UserRawData in self.MSSQL_ExecuteState("SELECT * FROM Employees WHERE EmployeeUN = '%s' AND EmployeePW = '%s'" % (self.UserAcc_UserCode.text(),self.UserAcc_Password.text()), 'FetchVal'):
+                self.UserLiteralName = "%s %s" % (self.QueryReturn.FirstName, self.QueryReturn.LastName)
+                self.UserPosInfo = self.TechCore_PosCodeToName(self.QueryReturn.PositionCode)
                 # = self.MySQL
                 #self.UserInfo_JobPos = self.
                 
-                QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '{} | Job Info |> {}.".format(self.UserLiteralName, self.UserPosInfo), QtWidgets.QMessageBox.Ok)
-                self.StatusLabel.setText("Successfully Logged in ... {}".format(''))
+                QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '%s | Job Info |> %s." % (self.UserLiteralName, self.UserPosInfo), QtWidgets.QMessageBox.Ok)
+                self.StatusLabel.setText("Successfully Logged in as %s %s" % (self.QueryReturn.FirstName, self.QueryReturn.LastName))
 
                 QtTest.QTest.qWait(1300)
                 self.MSSQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
@@ -357,7 +358,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.StaffAct_RefreshData.clicked.connect(self.DataVCore_RefreshData)
 
         self.Window_Quit.triggered.connect(self.DataVCore_ReturnWindow)
-        self.DataVCore_PatternEnabler(FirstTimer)
+        self.DataVCore_PatternEnabler()
         self.DataVCore_RunAfterRender() #Run This Function After UI Initialization
 
     #Function Definitions for Route88_InventoryDesign
@@ -853,12 +854,20 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.InventoryStatus.showMessage('Application Error: {0}'.format(str(RefreshError)))
             raise Exception('[Exception Thrown @ DataVCore_RefreshData] -> {0}'.format(str(RefreshError)))
 
-class Route88_POSCore(QtWidgets.QMainWindow, Route88_TechnicalCore):
+class Route88_POSCore(Ui_Route88_POS_SystemWindow, QtWidgets.QMainWindow, Route88_TechnicalCore):
     def __init__(self, Parent=None, StaffInCharge_Name=None, StaffInCharge_Job=None, StaffInCharge_DBUser=None, StaffInCharge_DBPass=None):
         super(Route88_POSCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint)
+        
+        self.POS_StaffName = StaffInCharge_Name
+        self.POS_StaffJob = StaffInCharge_Job
+        self.POS_Staff_DBU = StaffInCharge_DBUser
+        self.POS_Staff_DBP = StaffInCharge_DBPass
+
+        self.actionSwitch_System_User.triggered.connect(self.POSCore_ReturnWindow)
+
 
     def POSCore_QtyIncrement(self):
         self.qty += 1
@@ -892,6 +901,11 @@ class Route88_POSCore(QtWidgets.QMainWindow, Route88_TechnicalCore):
             #        self.label_5.setText(" Item not found.\n Please try again. ")
             #        self.lineEdit.clear()
         pass
+
+    def POSCore_ReturnWindow(self):
+        self.close()
+        self.ReturnWinParent = Route88_WindowController(Staff_Name=self.POS_StaffName, Staff_Job=self.POS_StaffJob, Staff_DBUser=self.POS_Staff_DBU, Staff_DBPass=self.POS_Staff_DBP)
+        self.ReturnWinParent.show()
 
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
     def __init__(self, Parent=None, ModifierMode=None, RecentTableActive=None, DataPayload_AtRow=None, isFirstTime=None):
@@ -1224,7 +1238,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.ctrl_UserLogout.clicked.connect(self.ShowLoginCore)
         self.ctrl_ExitProgram.clicked.connect(self.close)
         self.ctrl_ManagementSystem.clicked.connect(self.ShowManagementCore)
-        #self.ctrl_POSSystem.clicked.connect(self.)
+        self.ctrl_POSSystem.clicked.connect(self.ShowPOSCore)
         #self.ctrl_AboutSystem.clicked.connect(self.)
         self.ControllerCore_RunAfterRender()
 
