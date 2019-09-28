@@ -406,6 +406,7 @@ class Ui_Route88_POS_SystemWindow(object):
         sizePolicy.setHeightForWidth(self.lineEdit.sizePolicy().hasHeightForWidth())
         self.lineEdit.setSizePolicy(sizePolicy)
         self.lineEdit.setText("")
+        self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setObjectName("lineEdit")
         self.verticalLayout.addWidget(self.lineEdit)
         self.verticalLayout_10.addWidget(self.groupBox_2)
@@ -452,6 +453,17 @@ class Ui_Route88_POS_SystemWindow(object):
 
         self.retranslateUi(Route88_POS_SystemWindow)
         QtCore.QMetaObject.connectSlotsByName(Route88_POS_SystemWindow)
+        Route88_POS_SystemWindow.setTabOrder(self.lineEdit, self.pushButton_8)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_8, self.pushButton_11)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_11, self.pushButton_5)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_5, self.pushButton_9)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_9, self.pushButton_10)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_10, self.pushButton_6)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_6, self.pushButton_7)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_7, self.pushButton_12)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_12, self.pushButton_13)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_13, self.pushButton_14)
+        Route88_POS_SystemWindow.setTabOrder(self.pushButton_14, self.groupBox)
 
     def retranslateUi(self, Route88_POS_SystemWindow):
         _translate = QtCore.QCoreApplication.translate
