@@ -985,7 +985,7 @@ class Ui_Route88_DataManipulation_Window(object):
         self.label_26.setGeometry(QtCore.QRect(20, 30, 331, 31))
         self.label_26.setObjectName("label_26")
         self.label_25 = QtWidgets.QLabel(self.groupBox_7)
-        self.label_25.setGeometry(QtCore.QRect(20, 80, 331, 41))
+        self.label_25.setGeometry(QtCore.QRect(20, 80, 341, 41))
         self.label_25.setObjectName("label_25")
         self.layoutWidget3 = QtWidgets.QWidget(self.groupBox_4)
         self.layoutWidget3.setGeometry(QtCore.QRect(10, 28, 751, 31))
@@ -1476,7 +1476,7 @@ class Ui_Route88_DataManipulation_Window(object):
         self.verticalLayout_5.addWidget(self.Modifier_StatusLabel)
 
         self.retranslateUi(Route88_DataManipulation_Window)
-        self.Tab_SelectionSelectives.setCurrentIndex(0)
+        self.Tab_SelectionSelectives.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Route88_DataManipulation_Window)
 
     def retranslateUi(self, Route88_DataManipulation_Window):
@@ -1525,7 +1525,7 @@ class Ui_Route88_DataManipulation_Window(object):
 "current date."))
         self.groupBox_15.setTitle(_translate("Route88_DataManipulation_Window", "For Editing / Modifying Data"))
         self.label_40.setText(_translate("Route88_DataManipulation_Window", "- Fields That Don\'t Require Changes Must \n"
-"Be Left Blank"))
+"Kept The Data Intact."))
         self.label_41.setText(_translate("Route88_DataManipulation_Window", "- Last and Next Delivery Time can be \n"
 "lesser but cannot be greater than the \n"
 "current date."))
@@ -1546,7 +1546,7 @@ class Ui_Route88_DataManipulation_Window(object):
 "cannot be greater than the current date."))
         self.groupBox_19.setTitle(_translate("Route88_DataManipulation_Window", "For Editing / Modifying Data"))
         self.label_49.setText(_translate("Route88_DataManipulation_Window", "- Fields That Don\'t Require Changes Must \n"
-"Be Left Blank"))
+"Kept The Data Intact."))
         self.label_50.setText(_translate("Route88_DataManipulation_Window", "- Order Date Time can be \n"
 "lesser but cannot be greater than the \n"
 "current date."))
@@ -1560,7 +1560,7 @@ class Ui_Route88_DataManipulation_Window(object):
         self.label_55.setText(_translate("Route88_DataManipulation_Window", "- Passwords Must Match."))
         self.groupBox_26.setTitle(_translate("Route88_DataManipulation_Window", "For Editing / Modifying Data"))
         self.label_56.setText(_translate("Route88_DataManipulation_Window", "- Fields That Don\'t Require Changes Must \n"
-"Be Left Blank"))
+"Kept The Data Intact."))
         self.label_57.setText(_translate("Route88_DataManipulation_Window", "- Password Must Be Entered without \n"
 "Filling Confirm Password to Apply Changes"))
         self.label_60.setText(_translate("Route88_DataManipulation_Window", "Transaction Code"))
@@ -1590,7 +1590,7 @@ class Ui_Route88_DataManipulation_Window(object):
 "current date."))
         self.groupBox_11.setTitle(_translate("Route88_DataManipulation_Window", "For Editing / Modifying Data"))
         self.label_30.setText(_translate("Route88_DataManipulation_Window", "- Fields That Don\'t Require Changes Must \n"
-"Be Left Blank"))
+"Kept The Data Intact."))
         self.label_34.setText(_translate("Route88_DataManipulation_Window", "- Transaction Time can be lesser\n"
 "but cannot be greater than the \n"
 "current date."))
@@ -1602,9 +1602,9 @@ class Ui_Route88_DataManipulation_Window(object):
         self.label_20.setText(_translate("Route88_DataManipulation_Window", "- Passwords Must Match."))
         self.groupBox_7.setTitle(_translate("Route88_DataManipulation_Window", "For Editing / Modifying Data"))
         self.label_26.setText(_translate("Route88_DataManipulation_Window", "- Fields That Don\'t Require Changes Must \n"
-"Be Left Blank"))
+"Kept The Data Intact."))
         self.label_25.setText(_translate("Route88_DataManipulation_Window", "- Password Must Be Entered without \n"
-"Filling Confirm Password to Apply Changes"))
+"Filling Confirm Password to Apply Changes."))
         self.label_8.setText(_translate("Route88_DataManipulation_Window", "First Name"))
         self.EmpEntry_FN.setPlaceholderText(_translate("Route88_DataManipulation_Window", "Required, Max of 45 Letters"))
         self.label_9.setText(_translate("Route88_DataManipulation_Window", "Last Name"))
@@ -1632,7 +1632,7 @@ class Ui_Route88_DataManipulation_Window(object):
         self.label_46.setText(_translate("Route88_DataManipulation_Window", "- All Fields Are Required."))
         self.groupBox_22.setTitle(_translate("Route88_DataManipulation_Window", "For Editing / Modifying Data"))
         self.label_54.setText(_translate("Route88_DataManipulation_Window", "- Fields That Don\'t Require Changes Must \n"
-"Be Left Blank"))
+"Kept The Data Intact."))
         self.label_14.setText(_translate("Route88_DataManipulation_Window", "Position Code"))
         self.JobPEntry_PC.setPlaceholderText(_translate("Route88_DataManipulation_Window", "Required Value To Fill."))
         self.label_15.setText(_translate("Route88_DataManipulation_Window", "Position Name"))

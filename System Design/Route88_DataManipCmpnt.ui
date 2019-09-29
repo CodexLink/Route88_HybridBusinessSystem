@@ -77,7 +77,7 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
@@ -792,7 +792,7 @@ current date.</string>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
+Kept The Data Intact.</string>
               </property>
              </widget>
              <widget class="QLabel" name="label_41">
@@ -1065,7 +1065,7 @@ cannot be greater than the current date.</string>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
+Kept The Data Intact.</string>
               </property>
              </widget>
              <widget class="QLabel" name="label_50">
@@ -1267,7 +1267,7 @@ current date.</string>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
+Kept The Data Intact.</string>
               </property>
              </widget>
              <widget class="QLabel" name="label_57">
@@ -1861,7 +1861,7 @@ current date.</string>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
+Kept The Data Intact.</string>
               </property>
              </widget>
              <widget class="QLabel" name="label_34">
@@ -1981,7 +1981,7 @@ current date.</string>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
+Kept The Data Intact.</string>
               </property>
              </widget>
              <widget class="QLabel" name="label_25">
@@ -1989,13 +1989,13 @@ Be Left Blank</string>
                <rect>
                 <x>20</x>
                 <y>80</y>
-                <width>331</width>
+                <width>341</width>
                 <height>41</height>
                </rect>
               </property>
               <property name="text">
                <string>- Password Must Be Entered without 
-Filling Confirm Password to Apply Changes</string>
+Filling Confirm Password to Apply Changes.</string>
               </property>
              </widget>
             </widget>
@@ -2658,7 +2658,7 @@ Filling Confirm Password to Apply Changes</string>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
-Be Left Blank</string>
+Kept The Data Intact.</string>
               </property>
              </widget>
             </widget>
