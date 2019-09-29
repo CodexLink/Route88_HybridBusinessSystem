@@ -74,11 +74,6 @@
            </item>
            <item>
             <property name="text">
-             <string>Item Transaction Data</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>Supplier Reference Data</string>
             </property>
            </item>
@@ -104,7 +99,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Job Refenrece Data</string>
+             <string>Job Reference Data</string>
             </property>
            </item>
           </widget>

@@ -254,6 +254,11 @@
                  <string>Menu Item</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>Other Item</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>
@@ -278,22 +283,52 @@
                </item>
                <item>
                 <property name="text">
-                 <string>Item</string>
+                 <string>Unspecified Item</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Furniture</string>
+                 <string>Food</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Container</string>
+                 <string>Food Part</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Etc.</string>
+                 <string>Food Menu</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Snacks</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Drinks</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Dessert</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Furnitures</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Device</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Containers</string>
                 </property>
                </item>
               </widget>
@@ -2840,8 +2875,14 @@ Be Left Blank</string>
      <property name="font">
       <font>
        <family>Roboto Mono</family>
-       <pointsize>10</pointsize>
+       <pointsize>9</pointsize>
       </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
      </property>
      <property name="text">
       <string>...</string>
