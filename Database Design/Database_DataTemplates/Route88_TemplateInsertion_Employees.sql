@@ -6,6 +6,8 @@
 -- =============================================
 USE Route88_Database
 
+DBCC CHECKIDENT(Employees, RESEED, 0)
+
 IF EXISTS (SELECT NAME FROM SYS.TABLES WHERE NAME = 'Employees')
 DELETE FROM Employees
 GO
@@ -40,7 +42,7 @@ INSERT Employees VALUES ('Yrah10', 'Yraholicia123', 'Yrah', 'Olicia', 000, '12/0
 
 GO
 
-SELECT * FROM Employees 
+SELECT * FROM Employees
 SELECT * FROM JobPosition 
 
 GO
