@@ -439,6 +439,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.TargetParameter = "%{}%".format(self.Query_ValueToSearch.text())
             elif self.SearchPattern_ComboBox.currentText() == 'Starting With':
                 self.TargetParameter = "{}%".format(self.Query_ValueToSearch.text())
+            elif self.SearchPattern_ComboBox.currentText() == 'Ends With':
                 self.TargetParameter = "%{}".format(self.Query_ValueToSearch.text())
 
     #Render Table Columns
@@ -558,7 +559,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
                 
-                self.DataTable_View.setColumnCount(12)
+                self.DataTable_View.setColumnCount(13)
                 self.DataTable_View.setHorizontalHeaderLabels(("EmployeeCode", "EmployeeUN", "EmployeePW", "FirstName", "LastName",  "PositionCode", "DOB", "Address", "SSS", "TIN", "PhilHealth", "CreationTime", "LastUpdate"))
                 self.TechCore_ColResp()
 
@@ -629,18 +630,18 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('Search Query Selected Column is None. Search Operation is Cancelled.')
                 self.InventoryStatus.showMessage('Search Query Selected Column is None. Search Operation is Cancelled.')
             else:
-                self.InventoryStatus.showMessage('Looking At Requested Target Value {} @ {}...'.format(str(self.Query_ValueToSearch.text())), self.Query_ColumnOpt.currentText())
+                self.InventoryStatus.showMessage('Looking At Requested Target Value %s @ %s...' % (self.Query_ValueToSearch.text(), self.Query_ColumnOpt.currentText()))
                 
                 self.TechCore_RowClear()
 
-                print('[Search Operation] Field -> {} | Operator -> {} | Target Value -> {}'.format(self.FieldParameter, self.OperatorParameter, self.TargetParameter))
-                print('[Search Query] SELECT * FROM {} WHERE {} {} {}'.format(self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+                print('[Search Operation] Field -> %s | Operator -> %s | Target Value -> %s' % (self.FieldParameter, self.OperatorParameter, self.TargetParameter))
+                print('[Search Query] SELECT * FROM %s WHERE %s %s %s' % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
 
-                self.DataVCore_RenderTable(self.MSSQL_ExecuteState("SELECT * FROM %s WHERE %s %s '%s'" % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter)))
+                self.DataVCore_RenderTable("SELECT * FROM %s WHERE %s %s '%s'" % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
 
         except (Exception, MSSQL.Error, MSSQL.OperationalError) as SearchQueryError:
-            self.InventoryStatus.showMessage('Application Error: Value Searching Returns Error. Detailed Info > {}'.format(SearchQueryError))
-            print('[Exception Thrown @ DataVCore_ValSearch] > Value Searching Returns Error. Detailed Info > {}'.format(SearchQueryError))
+            self.InventoryStatus.showMessage('Application Error: Value Searching Returns Error. Detailed Info > %s' (SearchQueryError))
+            print('[Exception Thrown @ DataVCore_ValSearch] > Value Searching Returns Error. Detailed Info > %s' (SearchQueryError))
 
     def DataVCore_RenderTable(self, FunctionCall_DataFetch):
 
@@ -655,13 +656,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ItemCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ItemName)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ItemCost)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.ExpiryDate)))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.AvailableStock)))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.LastUpdate)))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemName)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCost)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ExpiryDate)))
+                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.AvailableStock)))
+                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -673,12 +674,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['SupplierCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['SupplierName'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastDeliveryDate'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['NextDeliveryDate'])))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastUpdate'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierName)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastDeliveryDate)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.NextDeliveryDate)))
+                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -689,13 +690,13 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['OrderCode'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['SupplierCode'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['OrderDate'])))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['QuantityReceived'])))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastUpdate'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.OrderCode)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierCode)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.OrderDate)))
+                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.QuantityReceived)))
+                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -706,10 +707,10 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ItemCode'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['LastUpdate'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactionCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -720,14 +721,14 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TransactionCode'])))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['TotalCost'])))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['VATableCost'])))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['VATExempt'])))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['ZeroRated'])))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['NetVAT'])))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['VATRate'])))
-                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{}'.format(InventoryData['CreationTime'])))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactionCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TotalCost)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VATableCost)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VATExempt)))
+                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ZeroRated)))
+                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.NetVAT)))
+                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VATRate)))
+                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -738,18 +739,20 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.EmployeeCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.FirstName)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.LastName)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.PositionCode)))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.DOB)))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.Address)))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.SSS)))
-                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.TIN)))
-                self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.PhilHealth)))
-                self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.TIN)))
-                self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.LastUpdate)))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeeCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeeUN)))
+                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeePW)))
+                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.FirstName)))
+                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastName)))
+                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PositionCode)))
+                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.DOB)))
+                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.Address)))
+                self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SSS)))
+                self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
+                self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PhilHealth)))
+                self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
+                self.DataTable_View.setItem(currentRow, 12, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                self.DataTable_View.setItem(currentRow, 13, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -760,8 +763,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             for InventoryData in self.DataFetchExec:
                 self.DataTable_View.setRowCount(currentRow + 1)
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.PositionCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('{}'.format(InventoryData.JobName)))
+                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PositionCode)))
+                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.JobName)))
 
                 for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                     ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
