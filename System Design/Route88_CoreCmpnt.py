@@ -126,6 +126,11 @@ class Route88_TechnicalCore(object):
     #Not sure for this one...
     def TechCore_MessageBox(self, ObjType=None, WindTitle=None, MsgDetailInfo=None, MsgButtons=None):
         try:
+            # TODO > For Future Usage.
+                #ConfirmDelMsg = QtWidgets.QMessageBox()
+                #ConfirmDelMsg.setIcon(QtWidgets.QMessageBox.information)
+                #ConfirmDelMsg.setWindowTitle('Route88 System | Data Deletion')
+                #ConfirmDelMsg.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
             return ObjType(self, WindTitle, MsgDetailInfo, MsgButtons)
             
         except Exception as MsgSpawnError:
@@ -789,8 +794,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         self.DataVCore_RefreshData()
 
     def DataVCore_EditEntry(self):
-        # Add Data To Pass or To Fetch...
-        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists")
+        SelectedColData = [] 
+        for ColIndexData in range(self.DataTable_View.columnCount()):
+            SelectedColData.append(self.DataTable_View.item(self.DataTable_View.currentRow(), ColIndexData).text())
+
+        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists", DataPayload_AtRow=SelectedColData)
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
@@ -802,21 +810,54 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 print('Report @ DataVCore_DeleteEntry] Table View is currently empty. You cannot delete any data anymore.')
             else:
                 self.StaffAct_Delete.setEnabled(True)
-                selectedData = self.DataTable_View.item(self.DataTable_View.currentRow(), 0).text()
-                print('[Database Query Process | Deletion Query] -> DELETE FROM %s WHERE %s = %s' %(self.DataTableTarget, self.Target_TableCol, selectedData))
-                self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row %s' % (self.DataTable_View.currentRow()))
+                ConfirmDelMsg = QtWidgets.QMessageBox()
+                ConfirmDelMsg.setIcon(QtWidgets.QMessageBox.Information)
+                ConfirmDelMsg.setWindowTitle('Route88 System | Data Deletion')
+                ConfirmDelMsg.setStandardButtons(QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Abort)
 
-                self.MSSQLDataWireCursor.execute('DELETE FROM %s WHERE %s = %s' % (self.DataTableTarget, self.Target_TableCol, selectedData))
+                if self.ActiveTable == "Inventory Reference Data":
+                    ConfirmDelMsg.setText("Are you sure you want to delete / discard your selected data? This data associated from other data will be affected as well such as Customer Receipts and Supplier Transactions might delete this item from the history as well~! Please Proceed with Caution!")
+                
+                elif self.ActiveTable == "Supplier Reference Data":
+                    ConfirmDelMsg.setText("Are you sure you want to delete / discard your selected data? This data associated with Supplier Transaction will be deleted as well. Please Proceed with Caution!")
 
-                self.TechCore_RowClearSelected(self.DataTable_View.currentRow())
+                elif self.ActiveTable == "Supplier Transaction Data":
+                    ConfirmDelMsg.setText("Are you sure you want to delete / discard your selected data? This data has significance over histories of item orders from the suppliers~! Please Proceed with Caution!")
 
-                self.MSSQL_CommitData()
+                elif self.ActiveTable == "Customer Transaction Data":
+                    ConfirmDelMsg.setText("Are you sure you want to delete / discard your selected data? This data is associated with Customer Receipts. Deleting it will delete / discard it's associated data from Customer Receipts. Please Proceed with Caution!")
 
-                self.InventoryStatus.showMessage('Deletion Query | > Row %s has been deleted!' % (self.DataTable_View.currentRow() + 1))
-                if self.DataTable_View.rowCount() == 0:
-                    self.StaffAct_Delete.setEnabled(False)
+                elif self.ActiveTable == "Customer Receipt Data":
+                    ConfirmDelMsg.setText("Are you sure you want to delete / discard your selected data? This data associated with Customer Transaction will delete / discard any associated data from Customer Transaction~! Please Proceed with Caution!")
+
+                elif self.ActiveTable == "Employee Reference Data":
+                    ConfirmDelMsg.setText("Are you sure you want to delete / discard your selected data? Deleting this data will result to dropping the selected user login, which unables to perform executions in the program and access as well. Please Proceed with Caution!")
+
+                elif self.ActiveTable == "Job Reference Data":
+                    ConfirmDelMsg.setText("Are you sure you want to delete / discard your selected data? Any employee that is under from the selected position code will result to dropping their data as well~! Please Proceed with Caution!")
+
+                ConfirmDeletion = ConfirmDelMsg.exec_()
+
+                if ConfirmDeletion == QtWidgets.QMessageBox.Abort:
+                    print('[Report @ DataVCore_DeleteEntry] > Operation Data Deletion @ %s is Cancelled.' % (self.ActiveTable))
+                    self.InventoryStatus.showMessage('Operation Data Deletion @ %s is Cancelled.' % (self.ActiveTable))
+
                 else:
-                    self.StaffAct_Delete.setEnabled(True)
+                    selectedData = self.DataTable_View.item(self.DataTable_View.currentRow(), 0).text()
+                    print('[Database Query Process | Deletion Query] -> DELETE FROM %s WHERE %s = %s' % (self.DataTableTarget, self.Target_TableCol, selectedData))
+                    self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row %s' %    (self.DataTable_View.currentRow()))
+
+                    self.MSSQLDataWireCursor.execute('DELETE FROM %s WHERE %s = %s' % (self.DataTableTarget,    self.Target_TableCol, selectedData))
+
+                    self.TechCore_RowClearSelected(self.DataTable_View.currentRow())
+
+                    self.MSSQL_CommitData()
+
+                    self.InventoryStatus.showMessage('Deletion Query | > Row %s has been deleted!' %    (self.DataTable_View.currentRow() + 1))
+                    if self.DataTable_View.rowCount() == 0:
+                        self.StaffAct_Delete.setEnabled(False)
+                    else:
+                        self.StaffAct_Delete.setEnabled(True)
 
 
         except (Exception, MSSQL.Error, MSSQL.OperationalError) as DelectionErrMsg:
@@ -898,11 +939,6 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         self.DataMCore_RenderExplicits()
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-
-
-    # Button Binds to Functions
-        #for SetDisability in range(1, 5):
-        #    self.Tab_SelectionSelectives.setTabEnabled(SetDisability, False)
         
         self.DataManip_CloseWindow.clicked.connect(self.close)
         self.DataManip_PushData.clicked.connect(self.DataMCore_AddEntry)
@@ -919,23 +955,17 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
     def DataMCore_RenderExplicits(self):
         pass
 
-
     def DataMCore_RunAfterRender(self):
         try:
-            if (self.ActiveTargetTable == "Employees" or self.ActiveTargetTable == "JobPosition"):
-                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
-                self.MSSQL_InitCursor()
-            else:
-                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
-                self.MSSQL_InitCursor()
+            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
+            self.MSSQL_InitCursor()
 
             if self.ActiveTargetTable == "InventoryItem":
                 self.resize(820, 420)
                 self.Tab_SelectionSelectives.setCurrentIndex(0)
                 self.TechCore_DisableExcept(0)
-                self.InvEntry_DE.setDateTime(QtCore.QDateTime.currentDateTime())
+                self.InvEntry_ED.setDateTime(QtCore.QDateTime.currentDateTime())
             
-
             elif self.ActiveTargetTable == "SupplierReference":
                 self.resize(820, 620)
                 self.Tab_SelectionSelectives.setCurrentIndex(3)
@@ -979,7 +1009,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.JobPEntry_PC.setValidator(QtGui.QIntValidator())
 
             #Preloads Data Received, Ternary Operator
-            self.DataMCore_EditEntry() if self.ModifierMode == "ModifyDataExists" else None
+            self.DataMCore_LoadEntry() if self.ModifierMode == "ModifyDataExists" else None
                 
 
         except (Exception, MSSQL.DatabaseError) as DataMCore_ARErr:
@@ -1096,7 +1126,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
             print('[Exemption @ DataMCore_AddEntry] > %s' % (PushEntryErrMsg))
 
-    def DataMCore_EditEntry(self):
+    def DataMCore_LoadEntry(self):
         for i in self.DataPayload:
             print(i)
 
@@ -1255,8 +1285,8 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
 
             self.TechCore_Beep()
 
-            QtWidgets.QMessageBox.critical(self, 'Route88 Window Controller | User Error', "Staff Logged On But Staff Cannot Used Any Of The Systems. Sorry!", QtWidgets.QMessageBox.Ok)
-            self.StatusLabel.setText('Staff Logged On But Staff Cannot Used Any Of The Systems. Sorry!'.format(self.StaffLiteralName))
+            QtWidgets.QMessageBox.critical(self, 'Route88 Window Controller | User Error', "Staff is Logged Successfully but Not Permitted To Use Any Of The Systems. Sorry!", QtWidgets.QMessageBox.Ok)
+            self.StatusLabel.setText('Staff is Logged Successfully but Not Permitted To Use Any Of The Systems. Sorry!'.format(self.StaffLiteralName))
 
 # Literal Procedural Programming Part
 if __name__ == "__main__":
