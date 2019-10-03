@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1137</width>
-    <height>416</height>
+    <width>1134</width>
+    <height>596</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -46,8 +46,10 @@
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
-          <pointsize>10</pointsize>
+          <family>Open Sans SemiBold</family>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -61,6 +63,14 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>Open Sans SemiBold</family>
+             <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
            </property>
            <item>
             <property name="text">
@@ -111,8 +121,10 @@
        <widget class="QGroupBox" name="groupBox_3">
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
-          <pointsize>10</pointsize>
+          <family>Open Sans SemiBold</family>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -137,8 +149,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Roboto Mono</family>
+               <family>Open Sans SemiBold</family>
                <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
               </font>
              </property>
              <property name="text">
@@ -159,8 +173,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Roboto Mono</family>
+               <family>Open Sans SemiBold</family>
                <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
               </font>
              </property>
              <property name="statusTip">
@@ -197,8 +213,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Roboto Mono</family>
+               <family>Open Sans SemiBold</family>
                <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
               </font>
              </property>
              <property name="text">
@@ -216,6 +234,14 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="placeholderText">
               <string>Value Search...</string>
@@ -235,6 +261,13 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="statusTip">
               <string/>
@@ -286,8 +319,10 @@
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
-          <pointsize>10</pointsize>
+          <family>Open Sans SemiBold</family>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -307,8 +342,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -335,8 +372,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -363,8 +402,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="statusTip">
@@ -396,9 +437,14 @@
      <widget class="QGroupBox" name="groupBox">
       <property name="font">
        <font>
-        <family>Roboto Mono</family>
-        <pointsize>10</pointsize>
+        <family>Open Sans SemiBold</family>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="title">
        <string>Data Table View</string>
@@ -463,8 +509,10 @@
      <widget class="QGroupBox" name="groupBox_2">
       <property name="font">
        <font>
-        <family>Roboto Mono</family>
-        <pointsize>10</pointsize>
+        <family>Open Sans SemiBold</family>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="title">
@@ -487,7 +535,10 @@
          </property>
          <property name="font">
           <font>
+           <family>Open Sans SemiBold</family>
            <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
          <property name="statusTip">
@@ -517,7 +568,10 @@
          </property>
          <property name="font">
           <font>
+           <family>Open Sans SemiBold</family>
            <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
          <property name="statusTip">
@@ -544,7 +598,10 @@
          </property>
          <property name="font">
           <font>
+           <family>Open Sans SemiBold</family>
            <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
          <property name="statusTip">
@@ -571,7 +628,10 @@
          </property>
          <property name="font">
           <font>
+           <family>Open Sans SemiBold</family>
            <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
          <property name="statusTip">
@@ -579,6 +639,27 @@
          </property>
          <property name="text">
           <string>Refresh Database</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="StaffAct_Rollback">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>Open Sans SemiBold</family>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Rollback Changes</string>
          </property>
         </widget>
        </item>
@@ -592,7 +673,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1137</width>
+     <width>1134</width>
      <height>21</height>
     </rect>
    </property>

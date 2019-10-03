@@ -74,6 +74,13 @@
      <height>171</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="title">
     <string/>
    </property>
@@ -94,8 +101,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Roboto Mono</family>
+      <family>Open Sans SemiBold</family>
       <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="title">
@@ -115,7 +124,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="inputMask">
@@ -148,7 +160,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="text">
@@ -176,8 +191,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Roboto Mono</family>
+      <family>Open Sans SemiBold</family>
       <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="title">
@@ -197,7 +214,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="inputMask">
@@ -357,6 +377,13 @@
      </disabled>
     </palette>
    </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
@@ -380,8 +407,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Roboto Mono</family>
+      <family>Open Sans SemiBold</family>
       <pointsize>18</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
@@ -402,8 +431,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Roboto Mono</family>
+      <family>Open Sans SemiBold</family>
       <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
@@ -421,6 +452,13 @@
       <width>81</width>
       <height>81</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans SemiBold</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string/>
@@ -440,6 +478,13 @@
       <width>2</width>
       <height>2</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans SemiBold</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="sizeConstraint">
@@ -463,8 +508,10 @@
    </property>
    <property name="font">
     <font>
-     <family>Roboto Mono</family>
+     <family>Open Sans SemiBold</family>
      <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
    </property>
    <property name="text">

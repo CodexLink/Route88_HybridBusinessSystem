@@ -49,8 +49,10 @@
        <widget class="QGroupBox" name="groupBox_9">
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -67,8 +69,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -86,8 +90,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -105,8 +111,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -127,8 +135,10 @@
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -145,8 +155,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>11</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="focusPolicy">
@@ -244,8 +256,10 @@
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -262,8 +276,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -282,8 +298,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -308,8 +326,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -328,8 +348,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -348,8 +370,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -369,8 +393,10 @@ ITEM
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -389,8 +415,10 @@ ITEM
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="layoutDirection">
@@ -416,8 +444,10 @@ ITEM
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -436,8 +466,10 @@ ITEM
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -456,8 +488,10 @@ ITEM
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -486,8 +520,10 @@ ITEM
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="focusPolicy">
@@ -505,6 +541,13 @@ ITEM
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="font">
+            <font>
+             <family>Open Sans SemiBold</family>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="title">
             <string>Total</string>
            </property>
@@ -519,8 +562,10 @@ ITEM
               </property>
               <property name="font">
                <font>
-                <family>Roboto Mono</family>
+                <family>Open Sans SemiBold</family>
                 <pointsize>28</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
                </font>
               </property>
               <property name="text">
@@ -542,6 +587,13 @@ ITEM
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="font">
+            <font>
+             <family>Open Sans SemiBold</family>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="title">
             <string>Amount Received</string>
            </property>
@@ -556,8 +608,10 @@ ITEM
               </property>
               <property name="font">
                <font>
-                <family>Roboto Mono</family>
+                <family>Open Sans SemiBold</family>
                 <pointsize>28</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
                </font>
               </property>
               <property name="layoutDirection">
@@ -582,6 +636,13 @@ ITEM
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="font">
+            <font>
+             <family>Open Sans SemiBold</family>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="title">
             <string>Change</string>
            </property>
@@ -596,8 +657,10 @@ ITEM
               </property>
               <property name="font">
                <font>
-                <family>Roboto Mono</family>
+                <family>Open Sans SemiBold</family>
                 <pointsize>28</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
                </font>
               </property>
               <property name="layoutDirection">
@@ -627,8 +690,10 @@ ITEM
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -645,8 +710,10 @@ ITEM
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>26</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -668,8 +735,10 @@ Item Name @ </string>
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>18</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -683,6 +752,13 @@ Item Name @ </string>
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>Open Sans SemiBold</family>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
            </property>
            <property name="text">
             <string/>

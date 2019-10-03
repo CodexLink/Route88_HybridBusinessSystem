@@ -92,8 +92,10 @@
     </property>
     <property name="font">
      <font>
-      <family>Roboto Mono</family>
+      <family>Open Sans SemiBold</family>
       <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -111,12 +113,14 @@
     </property>
     <property name="font">
      <font>
-      <family>Roboto Mono</family>
+      <family>Open Sans SemiBold</family>
       <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="title">
-     <string>Welcome Back, Staff~!</string>
+     <string>Welcome Staff~!</string>
     </property>
     <widget class="QGroupBox" name="GroupContainer_PassCred_2">
      <property name="geometry">
@@ -135,7 +139,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="title">
@@ -155,7 +162,10 @@
       </property>
       <property name="font">
        <font>
+        <family>Open Sans SemiBold</family>
         <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">
@@ -180,7 +190,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="title">
@@ -200,7 +213,10 @@
       </property>
       <property name="font">
        <font>
+        <family>Open Sans SemiBold</family>
         <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">
@@ -219,7 +235,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="text">
@@ -237,7 +256,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="text">
@@ -255,7 +277,10 @@
      </property>
      <property name="font">
       <font>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="text">
@@ -274,12 +299,14 @@
     </property>
     <property name="font">
      <font>
-      <family>Roboto Mono</family>
+      <family>Open Sans SemiBold</family>
       <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="title">
-     <string>System Launcher</string>
+     <string>Systems Launcher</string>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
@@ -310,7 +337,10 @@
         </property>
         <property name="font">
          <font>
+          <family>Open Sans SemiBold</family>
           <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
@@ -331,7 +361,10 @@
         </property>
         <property name="font">
          <font>
+          <family>Open Sans SemiBold</family>
           <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
@@ -349,6 +382,14 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Open Sans SemiBold</family>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="text">
          <string>About This System</string>
@@ -556,7 +597,7 @@
       <x>160</x>
       <y>20</y>
       <width>381</width>
-      <height>58</height>
+      <height>59</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -564,8 +605,10 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <family>Roboto Mono</family>
+         <family>Open Sans SemiBold</family>
          <pointsize>18</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -583,8 +626,10 @@
       <widget class="QLabel" name="label_2">
        <property name="font">
         <font>
-         <family>Roboto Mono</family>
+         <family>Open Sans SemiBold</family>
          <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
         </font>
        </property>
        <property name="styleSheet">

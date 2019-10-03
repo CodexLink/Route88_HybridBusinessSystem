@@ -72,12 +72,14 @@
        </property>
        <property name="font">
         <font>
-         <family>Roboto Mono</family>
+         <family>Open Sans SemiBold</family>
          <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
         </font>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>5</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
@@ -94,8 +96,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="title">
@@ -113,6 +117,13 @@
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <property name="spacing">
               <number>15</number>
@@ -127,8 +138,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -146,8 +159,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -168,8 +183,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -187,8 +204,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -210,6 +229,13 @@
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <property name="spacing">
               <number>15</number>
@@ -227,8 +253,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -243,6 +271,13 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
                </property>
                <item>
                 <property name="text">
@@ -263,6 +298,13 @@
              </item>
              <item>
               <widget class="QLabel" name="label_2">
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>Material Type</string>
                </property>
@@ -275,6 +317,13 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
                </property>
                <item>
                 <property name="text">
@@ -344,6 +393,13 @@
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
               <widget class="QLabel" name="label_4">
@@ -355,8 +411,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -374,8 +432,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="wrapping">
@@ -405,8 +465,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -424,8 +486,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="prefix">
@@ -446,8 +510,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -465,8 +531,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="calendarPopup">
@@ -485,6 +553,13 @@
               <height>61</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
              <string>Pre-requisites For Modifying / Adding Data</string>
             </property>
@@ -496,6 +571,13 @@
                <width>381</width>
                <height>16</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="text">
               <string>- All Fields is Required To Have a Value.</string>
@@ -521,8 +603,10 @@
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="title">
@@ -540,6 +624,13 @@
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_12">
              <property name="spacing">
               <number>15</number>
@@ -554,8 +645,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -573,8 +666,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -595,8 +690,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -614,8 +711,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -637,6 +736,13 @@
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_18">
              <item>
               <widget class="QLabel" name="label_36">
@@ -648,8 +754,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -667,8 +775,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="calendarPopup">
@@ -686,8 +796,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -705,8 +817,10 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="calendarPopup">
@@ -725,6 +839,13 @@
               <height>301</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
              <string>Pre-requisites For Modifying / Adding Data</string>
             </property>
@@ -736,6 +857,13 @@
                <width>361</width>
                <height>261</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="title">
               <string>For Adding / Inserting Data</string>
@@ -749,6 +877,13 @@
                 <height>16</height>
                </rect>
               </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>- All Fields Are Required.</string>
               </property>
@@ -761,6 +896,13 @@
                 <width>331</width>
                 <height>81</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>-Last and Next Delivery Time can be 
@@ -778,6 +920,13 @@ current date.</string>
                <height>261</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="title">
               <string>For Editing / Modifying Data</string>
              </property>
@@ -789,6 +938,13 @@ current date.</string>
                 <width>331</width>
                 <height>31</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
@@ -804,6 +960,13 @@ Kept The Data Intact.</string>
                 <height>81</height>
                </rect>
               </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>- Last and Next Delivery Time can be 
 lesser but cannot be greater than the 
@@ -818,6 +981,13 @@ current date.</string>
                 <width>331</width>
                 <height>101</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Last and Next Delivery Time Fields
@@ -848,8 +1018,10 @@ caution.</string>
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="title">
@@ -867,6 +1039,14 @@ caution.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_19">
              <property name="spacing">
               <number>15</number>
@@ -881,8 +1061,10 @@ caution.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -898,6 +1080,14 @@ caution.</string>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
               </widget>
              </item>
              <item>
@@ -910,8 +1100,10 @@ caution.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -927,6 +1119,14 @@ caution.</string>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
               </widget>
              </item>
             </layout>
@@ -940,6 +1140,14 @@ caution.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_20">
              <item>
               <widget class="QLabel" name="label_45">
@@ -951,8 +1159,10 @@ caution.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -970,8 +1180,10 @@ caution.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="wrapping">
@@ -999,6 +1211,14 @@ caution.</string>
               <height>181</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
              <string>Pre-requisites For Modifying / Adding Data</string>
             </property>
@@ -1010,6 +1230,14 @@ caution.</string>
                <width>361</width>
                <height>141</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="title">
               <string>For Adding / Inserting Data</string>
@@ -1023,6 +1251,14 @@ caution.</string>
                 <height>16</height>
                </rect>
               </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>- All Fields Are Required.</string>
               </property>
@@ -1035,6 +1271,14 @@ caution.</string>
                 <width>331</width>
                 <height>81</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Order Date Time can be lesser but 
@@ -1051,6 +1295,14 @@ cannot be greater than the current date.</string>
                <height>141</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="title">
               <string>For Editing / Modifying Data</string>
              </property>
@@ -1062,6 +1314,14 @@ cannot be greater than the current date.</string>
                 <width>331</width>
                 <height>31</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
@@ -1076,6 +1336,14 @@ Kept The Data Intact.</string>
                 <width>331</width>
                 <height>81</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Order Date Time can be 
@@ -1094,6 +1362,14 @@ current date.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_21">
              <property name="spacing">
               <number>15</number>
@@ -1108,8 +1384,10 @@ current date.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1125,6 +1403,14 @@ current date.</string>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
               </widget>
              </item>
              <item>
@@ -1137,8 +1423,10 @@ current date.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1156,8 +1444,10 @@ current date.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="calendarPopup">
@@ -1184,6 +1474,14 @@ current date.</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="font">
+            <font>
+             <family>Open Sans SemiBold</family>
+             <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="title">
             <string>Entries To Fill</string>
            </property>
@@ -1202,6 +1500,14 @@ current date.</string>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
              <string>Pre-requisites For Modifying / Adding Data</string>
             </property>
@@ -1213,6 +1519,14 @@ current date.</string>
                <width>361</width>
                <height>151</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="title">
               <string>For Adding / Inserting Data</string>
@@ -1226,6 +1540,14 @@ current date.</string>
                 <height>16</height>
                </rect>
               </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>- All Fields Are Required.</string>
               </property>
@@ -1238,6 +1560,14 @@ current date.</string>
                 <width>251</width>
                 <height>16</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Passwords Must Match.</string>
@@ -1253,6 +1583,14 @@ current date.</string>
                <height>151</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="title">
               <string>For Editing / Modifying Data</string>
              </property>
@@ -1264,6 +1602,14 @@ current date.</string>
                 <width>331</width>
                 <height>31</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
@@ -1278,6 +1624,14 @@ Kept The Data Intact.</string>
                 <width>331</width>
                 <height>41</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Password Must Be Entered without 
@@ -1295,6 +1649,14 @@ Filling Confirm Password to Apply Changes</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_23">
              <property name="spacing">
               <number>15</number>
@@ -1309,8 +1671,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1326,6 +1690,14 @@ Filling Confirm Password to Apply Changes</string>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
               </widget>
              </item>
              <item>
@@ -1338,8 +1710,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1357,8 +1731,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -1380,6 +1756,14 @@ Filling Confirm Password to Apply Changes</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_25">
              <property name="spacing">
               <number>15</number>
@@ -1394,8 +1778,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1413,8 +1799,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -1435,8 +1823,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1454,8 +1844,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -1477,6 +1869,14 @@ Filling Confirm Password to Apply Changes</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_26">
              <property name="spacing">
               <number>15</number>
@@ -1491,8 +1891,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1510,8 +1912,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -1532,8 +1936,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1551,8 +1957,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -1574,6 +1982,14 @@ Filling Confirm Password to Apply Changes</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_27">
              <property name="spacing">
               <number>15</number>
@@ -1588,8 +2004,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1607,8 +2025,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -1640,8 +2060,10 @@ Filling Confirm Password to Apply Changes</string>
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="title">
@@ -1659,6 +2081,13 @@ Filling Confirm Password to Apply Changes</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <property name="spacing">
               <number>15</number>
@@ -1673,8 +2102,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1692,8 +2123,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -1714,8 +2147,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1731,6 +2166,13 @@ Filling Confirm Password to Apply Changes</string>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
               </widget>
              </item>
             </layout>
@@ -1744,6 +2186,13 @@ Filling Confirm Password to Apply Changes</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_14">
              <item>
               <widget class="QLabel" name="label_32">
@@ -1755,8 +2204,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1774,8 +2225,10 @@ Filling Confirm Password to Apply Changes</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="calendarPopup">
@@ -1794,6 +2247,13 @@ Filling Confirm Password to Apply Changes</string>
               <height>191</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
              <string>Pre-requisites For Modifying / Adding Data</string>
             </property>
@@ -1805,6 +2265,13 @@ Filling Confirm Password to Apply Changes</string>
                <width>361</width>
                <height>151</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="title">
               <string>For Adding / Inserting Data</string>
@@ -1818,6 +2285,13 @@ Filling Confirm Password to Apply Changes</string>
                 <height>16</height>
                </rect>
               </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>- All Fields Are Required.</string>
               </property>
@@ -1830,6 +2304,13 @@ Filling Confirm Password to Apply Changes</string>
                 <width>331</width>
                 <height>81</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Transaction Time can be lesser
@@ -1847,6 +2328,13 @@ current date.</string>
                <height>151</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="title">
               <string>For Editing / Modifying Data</string>
              </property>
@@ -1858,6 +2346,13 @@ current date.</string>
                 <width>331</width>
                 <height>31</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
@@ -1872,6 +2367,13 @@ Kept The Data Intact.</string>
                 <width>331</width>
                 <height>81</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Transaction Time can be lesser
@@ -1898,6 +2400,13 @@ current date.</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="font">
+            <font>
+             <family>Open Sans SemiBold</family>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="title">
             <string>Entries To Fill</string>
            </property>
@@ -1916,6 +2425,13 @@ current date.</string>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
              <string>Pre-requisites For Modifying / Adding Data</string>
             </property>
@@ -1927,6 +2443,13 @@ current date.</string>
                <width>361</width>
                <height>151</height>
               </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="title">
               <string>For Adding / Inserting Data</string>
@@ -1940,6 +2463,13 @@ current date.</string>
                 <height>16</height>
                </rect>
               </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>- All Fields Are Required.</string>
               </property>
@@ -1952,6 +2482,13 @@ current date.</string>
                 <width>251</width>
                 <height>16</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Passwords Must Match.</string>
@@ -1967,6 +2504,13 @@ current date.</string>
                <height>151</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="title">
               <string>For Editing / Modifying Data</string>
              </property>
@@ -1978,6 +2522,13 @@ current date.</string>
                 <width>331</width>
                 <height>31</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
@@ -1992,6 +2543,13 @@ Kept The Data Intact.</string>
                 <width>341</width>
                 <height>41</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Password Must Be Entered without 
@@ -2009,6 +2567,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <property name="spacing">
               <number>15</number>
@@ -2023,8 +2588,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2042,8 +2609,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2067,8 +2636,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2086,8 +2657,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2112,6 +2685,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <property name="spacing">
               <number>15</number>
@@ -2126,8 +2706,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2143,6 +2725,13 @@ Filling Confirm Password to Apply Changes.</string>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
               </widget>
              </item>
              <item>
@@ -2155,8 +2744,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2171,6 +2762,13 @@ Filling Confirm Password to Apply Changes.</string>
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
                </property>
                <property name="calendarPopup">
                 <bool>true</bool>
@@ -2188,6 +2786,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_8">
              <property name="spacing">
               <number>15</number>
@@ -2202,8 +2807,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2221,8 +2828,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2247,6 +2856,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_11">
              <property name="spacing">
               <number>15</number>
@@ -2261,8 +2877,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2280,8 +2898,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2305,8 +2925,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2324,8 +2946,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2350,6 +2974,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <property name="spacing">
               <number>15</number>
@@ -2364,8 +2995,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2383,8 +3016,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2409,6 +3044,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_15">
              <property name="spacing">
               <number>15</number>
@@ -2423,8 +3065,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2442,8 +3086,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2468,6 +3114,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_16">
              <property name="spacing">
               <number>15</number>
@@ -2482,8 +3135,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2501,8 +3156,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2529,8 +3186,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2548,8 +3207,10 @@ Filling Confirm Password to Apply Changes.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="maxLength">
@@ -2587,8 +3248,10 @@ Filling Confirm Password to Apply Changes.</string>
            </property>
            <property name="font">
             <font>
-             <family>Roboto Mono</family>
+             <family>Open Sans SemiBold</family>
              <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="title">
@@ -2606,6 +3269,13 @@ Filling Confirm Password to Apply Changes.</string>
               <height>121</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
              <string>Pre-requisites For Modifying / Adding Data</string>
             </property>
@@ -2618,6 +3288,13 @@ Filling Confirm Password to Apply Changes.</string>
                <height>81</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="title">
               <string>For Adding / Inserting Data</string>
              </property>
@@ -2629,6 +3306,13 @@ Filling Confirm Password to Apply Changes.</string>
                 <width>251</width>
                 <height>16</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- All Fields Are Required.</string>
@@ -2644,6 +3328,13 @@ Filling Confirm Password to Apply Changes.</string>
                <height>81</height>
               </rect>
              </property>
+             <property name="font">
+              <font>
+               <family>Open Sans SemiBold</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="title">
               <string>For Editing / Modifying Data</string>
              </property>
@@ -2655,6 +3346,13 @@ Filling Confirm Password to Apply Changes.</string>
                 <width>331</width>
                 <height>31</height>
                </rect>
+              </property>
+              <property name="font">
+               <font>
+                <family>Open Sans SemiBold</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>- Fields That Don't Require Changes Must 
@@ -2672,6 +3370,13 @@ Kept The Data Intact.</string>
               <height>31</height>
              </rect>
             </property>
+            <property name="font">
+             <font>
+              <family>Open Sans SemiBold</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_9">
              <property name="spacing">
               <number>15</number>
@@ -2686,8 +3391,10 @@ Kept The Data Intact.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2705,8 +3412,10 @@ Kept The Data Intact.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -2727,8 +3436,10 @@ Kept The Data Intact.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -2746,8 +3457,10 @@ Kept The Data Intact.</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Mono</family>
+                 <family>Open Sans SemiBold</family>
                  <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="placeholderText">
@@ -2778,8 +3491,10 @@ Kept The Data Intact.</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Mono</family>
+       <family>Open Sans SemiBold</family>
        <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="title">
@@ -2802,8 +3517,10 @@ Kept The Data Intact.</string>
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
@@ -2827,8 +3544,10 @@ Kept The Data Intact.</string>
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
@@ -2852,8 +3571,10 @@ Kept The Data Intact.</string>
         </property>
         <property name="font">
          <font>
-          <family>Roboto Mono</family>
+          <family>Open Sans SemiBold</family>
           <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
@@ -2874,8 +3595,10 @@ Kept The Data Intact.</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Mono</family>
-       <pointsize>9</pointsize>
+       <family>Open Sans SemiBold</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="frameShape">
