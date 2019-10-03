@@ -69,55 +69,62 @@ class Route88_TechnicalCore(object):
     def __init__(self, Parent=None):
         super().__init__()
 
-    def MSSQL_OpenCon(self, OBDCDriver='{ODBC Driver 17 for SQL Server}', ServerHost='localhost', UCredential=None, PCredential=None, DB_Target='Route88_Database'):
+    def MSSQL_OpenCon(self, OBDCDriver='{ODBC Driver 17 for SQL Server}', ServerHost='localhost', UCredential=None, PCredential=None, DB_Target='Route88_Database', ActiveStaffName="???", SourceFunction=None):
         try:
-            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; DATABASE=%s;UID=%s; PWD=%s" % (OBDCDriver, ServerHost, DB_Target, UCredential, PCredential))
-            print("[MSSQL Database] Connection Attempt: Staff '%s' with Username '%s' is connected @ Database %s." % ("...", UCredential, DB_Target))
+            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; DATABASE=%s;UID=%s; PWD=%s" % (OBDCDriver, ServerHost, DB_Target, UCredential, PCredential), autocommit=False)
+            print("[MSSQL Database Report @ MSSQL_OpenCon, %s] Staff '%s' with Username '%s' is connected @ Database %s." % (SourceFunction, ActiveStaffName, UCredential, DB_Target))
 
         except (Exception, MSSQL.DatabaseError) as MSSQL_OpenConErrorMsg:
             self.TechCore_Beep()
             self.StatusLabel.setText("Database Error: Cannot Connect to the MSSQL Database. Please restart.")
-            print('[Exception @ MSSQL_OpenCon] > Cannot Open / Establish Connection with the MSSQL Database. Detailed Info |> %s' % (MSSQL_OpenConErrorMsg))
+            print('[MSSQL Database Report @ MSSQL_OpenCon, %s] > Cannot Open / Establish Connection with the MSSQL Database. Detailed Info |> %s' % (SourceFunction, MSSQL_OpenConErrorMsg))
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Connection Error', "An error occured while connecting to the database.\n\nDetailed Error: '%s'.\n\n Try restarting or re-connecting to MSSQL Server and try again." % (MSSQL_OpenConErrorMsg), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program 
 
-    def MSSQL_InitCursor(self):
+    def MSSQL_InitCursor(self, SourceFunction=None):
         try:
             self.MSSQLDataWireCursor = self.MSSQLDataWire.cursor()
         except (Exception, MSSQL.DatabaseError) as CursorErrMsg:
             self.TechCore_Beep()
-            print('[Exception @ MSSQL_InitCursor] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> %s' % (CursorErrMsg))
+            print('[Exception @ MSSQL_InitCursor, %s] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> %s' % (SourceFunction, CursorErrMsg))
 
-    def MSSQL_ExecuteState(self, MySQLStatement, FetchType=None):
+    def MSSQL_ExecuteState(self, MSSQLStatement=None, FetchType=None, TableTarget=None, SourceFunction=None):
         try:
             if FetchType == 'One':
-                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchone()
+                print("[Statement Execution @ MSSQL_ExecuteState, %s | Table -> %s] > FetchType: %s, Statement | %s |" % (SourceFunction, TableTarget, FetchType, MSSQLStatement))
+                return self.MSSQLDataWireCursor.execute(MSSQLStatement).fetchone()
             elif FetchType == 'All':
-                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchall()
+                print("[Statement Execution @ MSSQL_ExecuteState, %s | Table -> %s] > FetchType: %s, Statement | %s |" % (SourceFunction, TableTarget, FetchType, MSSQLStatement))
+                return self.MSSQLDataWireCursor.execute(MSSQLStatement).fetchall()
             elif FetchType == 'FetchVal':
-                return self.MSSQLDataWireCursor.execute(MySQLStatement).fetchval()
+                print("[Statement Execution @ MSSQL_ExecuteState, %s | Table -> %s] > FetchType: %s, Statement | %s |" % (SourceFunction, TableTarget, FetchType, MSSQLStatement))
+                return self.MSSQLDataWireCursor.execute(MSSQLStatement).fetchval()
             else:
-                return self.MSSQLDataWireCursor.execute(MySQLStatement)
+                print("[Statement Execution @ MSSQL_ExecuteState, %s | Table -> %s] > FetchType: %s, Statement | %s |" % (SourceFunction, TableTarget, FetchType, MSSQLStatement))
+                return self.MSSQLDataWireCursor.execute(MSSQLStatement)
 
-        except (Exception, MSSQL.DatabaseError) as MSSQL_ExecError:
+        except MSSQL.DatabaseError as MSSQL_ExecError:
             self.TechCore_Beep()
-            print('[Exception @ MSSQL_ExecuteState] > Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (MSSQL_ExecError))
+            print('[Exception (MSSQL.DatabaseError) @ MSSQL_ExecuteState, %s] > Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (SourceFunction, MSSQL_ExecError))
+
+        except MSSQL.IntegrityError as MSSQL_ExecError:
+            self.TechCore_Beep()
+            print("[Exception (MSSQL.IntegrityError) @ MSSQL_ExecuteState, %s] > Error, Cannot Push Data @ %s. Check if you are pushing an already existing data. Data must be unique." % (SourceFunction, TableTarget))
     
-    
-    def MSSQL_CommitData(self):
+    def MSSQL_CommitData(self, SourceFunction=None):
         try:
             return self.MSSQLDataWire.commit()
         except (Exception, MSSQL.DatabaseError) as MSSQL_CommitError:
             self.TechCore_Beep()
-            print('[Exception @ MSSQL_CommitData] > Unable To Commit Data... Check your MySQL Connection and try again.Detailed Info |> %s' % (MSSQL_CommitError))
+            print('[Exception @ MSSQL_CommitData, %s] > Unable To Commit Data... Check your MySQL Connection and try again.Detailed Info |> %s' % (SourceFunction, MSSQL_CommitError))
 
     # Optional Function, but according to the documentation, we don't need to call this one explicitly. It tends to happen automatically.
-    def MSSQL_CloseCon(self):
+    def MSSQL_CloseCon(self, SourceFunction=None):
         try:
             return self.MSSQLDataWire.close()
         except (Exception, MSSQL.DatabaseError) as ClosingErr:
             self.TechCore_Beep()
-            print('[Exception @ MSSQL_CloseCon] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Detailed Info |> %s' (ClosingErr))
+            print('[Exception @ MSSQL_CloseCon, %s] > Unable to Close Connection with the MySQL Statements. Please Terminate XAMPP or Some Statements are still running. Terminate Immediately. Detailed Info |> %s' (SourceFunction, ClosingErr))
     
     #Non Database Callable Function
     def TechCore_Beep(self):
@@ -134,7 +141,7 @@ class Route88_TechnicalCore(object):
             return ObjType(self, WindTitle, MsgDetailInfo, MsgButtons)
             
         except Exception as MsgSpawnError:
-            print('[Exception @ TechCore_MessageBox] >  Error Occured While Spawning QMessageBox. Detailed Error: %s' % (MsgSpawnError))
+            print('[Exception @ TechCore_MessageBox] > An Error Occured While Spawning QMessageBox. Detailed Error: %s' % (MsgSpawnError))
             
     def TechCore_ColResp(self):
         try:
@@ -174,23 +181,14 @@ class Route88_TechnicalCore(object):
         
     # Two Exact Functions Can Be Encapsulated Into One.
     def TechCore_PosCodeToName(self, PosCode):
-        try:
-            self.MSSQL_InitCursor()
-            ConvertedToName = self.MSSQL_ExecuteState("SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode), "FetchVal")
-            return ConvertedToName
-
-        except (Exception, MSSQL.DatabaseError) as ProcessError:
-            print('[Exception @ TechCore_PosCodeToName] > Error Processing PositionCode to JobName. Detailed Info |> %s' % (ProcessError))
+        self.MSSQL_InitCursor(SourceFunction=self.TechCore_PosCodeToName.__name__)
+        ConvertedToName = self.MSSQL_ExecuteState(MSSQLStatement="SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode), FetchType="FetchVal", TableTarget="JobPosition", SourceFunction=self.TechCore_PosCodeToName.__name__)
+        return ConvertedToName
 
     def TechCore_NameToPosCode(self, JobName):
-        try:
-            self.MSSQL_InitCursor()
-            ConvertedToPosCode = self.MSSQL_ExecuteState("SELECT PositionCode FROM JobPosition WHERE JobName = '%s'" % (JobName,), "One")
-            return ConvertedToPosCode
-
-        except (Exception, MSSQL.DatabaseError) as ProcessError:
-            print('[Exception @ TechCore_NameToPosCode] > Error Processing PositionCode to JobName. Detailed Info |> %s' % (ProcessError))
-
+        self.MSSQL_InitCursor(SourceFunction=self.TechCore_NameToPosCode.__name__)
+        ConvertedToPosCode = self.MSSQL_ExecuteState(MSSQLStatement="SELECT PositionCode FROM JobPosition WHERE JobName = '%s'" % (JobName,), FetchType="One", TableTarget="JobPosition", SourceFunction=self.TechCore_PosCodeToName.__name__)
+        return ConvertedToPosCode
 
 
 class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
@@ -209,8 +207,8 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
     def LoginCore_RunAfterRender(self):
         try:
-            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
-            self.MSSQL_InitCursor()
+            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7', SourceFunction=self.LoginCore_RunAfterRender.__name__)
+            self.MSSQL_InitCursor(SourceFunction=self.LoginCore_RunAfterRender.__name__)
             self.LoginCore_CheckEnlisted()
 
         except Exception as ErrorHandler:
@@ -222,8 +220,8 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     #Route88_LoginForm UI Window Functions - StartPoint
     def LoginCore_CheckEnlisted(self):
         try:
-            self.MSSQL_InitCursor()
-            self.UserEnlistedCount = self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees", 'FetchVal')
+            self.MSSQL_InitCursor(SourceFunction=self.LoginCore_CheckEnlisted.__name__)
+            self.UserEnlistedCount = self.MSSQL_ExecuteState(MSSQLStatement="SELECT COUNT(*) FROM Employees", FetchType='FetchVal', TableTarget='Employees', SourceFunction=self.LoginCore_CheckEnlisted.__name__)
             print('[Report @ LoginCore_CheckEnlisted] > User Account Count: %s' % (self.UserEnlistedCount))
 
             if self.UserEnlistedCount == 0:
@@ -233,9 +231,9 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 
                 QtWidgets.QMessageBox.information(self, 'Route88 System', "Welcome to Route88 Hybrid System! The system detected that there is no user account recorded according to it's database. Since you launch the system with no other accounts, you will have register first as a 'Manager' in this particular time.", QtWidgets.QMessageBox.Ok)
 
-                self.Route88_FirstTimerInst = Route88_ModifierCore(ModifierMode="PushEntry", isFirstTime=True)
+                self.Route88_FirstTimerInst = Route88_ModifierCore(ModifierMode="PushEntry",isFirstTime=True, StaffInCharge_Name="???")
                 self.Route88_FirstTimerInst.exec_()
-                self.UserEnlistedCount = self.MSSQL_ExecuteState("SELECT COUNT(*) FROM Employees", 'FetchVal')
+                self.UserEnlistedCount = self.MSSQL_ExecuteState(MSSQLStatement="SELECT COUNT(*) FROM Employees", FetchType='FetchVal', TableTarget='Employees', SourceFunction=self.LoginCore_CheckEnlisted.__name__)
                 self.UserAcc_SubmitData.setDisabled(False)
                 # If it is still zero then...
                 if self.UserEnlistedCount == 0:
@@ -261,8 +259,8 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
     def LoginCore_DataSubmission(self):
         try:
-            self.MSSQL_InitCursor()
-            self.QueryReturn = self.MSSQL_ExecuteState("SELECT TOP 1 * FROM Employees WHERE EmployeeUN = '%s' AND EmployeePW = '%s'" % (self.UserAcc_UserCode.text(),self.UserAcc_Password.text()), 'One')
+            self.MSSQL_InitCursor(SourceFunction=self.LoginCore_DataSubmission.__name__)
+            self.QueryReturn = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TOP 1 * FROM Employees WHERE EmployeeUN = '%s' AND EmployeePW = '%s'" % (self.UserAcc_UserCode.text(),self.UserAcc_Password.text()), FetchType='One', TableTarget='Employees', SourceFunction=self.LoginCore_DataSubmission.__name__)
             #self.UserData = self.MSSQL_FetchAllData()
             if self.QueryReturn:
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
@@ -288,9 +286,11 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
             else:
                 self.TechCore_Beep()
                 self.StatusLabel.setText("Login Error: Credential Input Not Matched!")
-                self.UserAcc_SubmitData.setDisabled(False)
+                self.UserAcc_SubmitData.setDisabled(True)
 
                 QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Login Failed', "Login Failed! Credential Input Not Matched. Check your User Code or your Password which may be written in Caps Lock. Please Try Again.", QtWidgets.QMessageBox.Ok)
+                
+                self.UserAcc_SubmitData.setDisabled(False)
 
                 
 
@@ -374,8 +374,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_RunAfterRender(self):
         try:
-            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
-            self.MSSQL_InitCursor()
+            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7', ActiveStaffName=self.InCharge_LiteralName, SourceFunction=self.DataVCore_RunAfterRender.__name__)
+            self.MSSQL_InitCursor(SourceFunction=self.DataVCore_RunAfterRender.__name__)
             #Set All Parameters Without User Touching it for straight searching...
             self.DataVCore_PatternEnabler()
             self.DataVCore_SearchFieldSet()
@@ -523,7 +523,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setHorizontalHeaderLabels(("Transact Code", "Item Code", "Creation Time", "Last Update"))
                 self.TechCore_ColResp()
                 self.DataTableTarget = "CustTransaction"
-                self.Target_TableCol = "TransactCode"
+                self.Target_TableCol = "TransactionCode"
 
             elif self.ActiveTable == "Customer Receipt Data":
                 self.TechCore_ColOptClear()
@@ -649,7 +649,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
     def DataVCore_RenderTable(self, FunctionCall_DataFetch):
 
-        self.DataFetchExec = self.MSSQL_ExecuteState(FunctionCall_DataFetch, 'All')
+        self.DataFetchExec = self.MSSQL_ExecuteState(MSSQLStatement=FunctionCall_DataFetch, FetchType='All', TableTarget=self.ActiveTable, SourceFunction=self.DataVCore_RenderTable.__name__)
         currentRow = 0
         if self.ActiveTable == "None":
             self.TechCore_RowClear()
@@ -789,7 +789,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
     # Staff Action Functions
 
     def DataVCore_AddEntry(self):
-        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="PushEntry") #SelectedRowData)
+        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="PushEntry", StaffInCharge_Name=self.InCharge_LiteralName)
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
@@ -798,7 +798,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
         for ColIndexData in range(self.DataTable_View.columnCount()):
             SelectedColData.append(self.DataTable_View.item(self.DataTable_View.currentRow(), ColIndexData).text())
 
-        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists", DataPayload_AtRow=SelectedColData)
+        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists", DataPayload_AtRow=SelectedColData, StaffInCharge_Name=self.InCharge_LiteralName)
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
@@ -845,15 +845,15 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 else:
                     selectedData = self.DataTable_View.item(self.DataTable_View.currentRow(), 0).text()
                     print('[Database Query Process | Deletion Query] -> DELETE FROM %s WHERE %s = %s' % (self.DataTableTarget, self.Target_TableCol, selectedData))
-                    self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row %s' %    (self.DataTable_View.currentRow()))
+                    self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row %s' % (self.DataTable_View.currentRow()))
 
-                    self.MSSQLDataWireCursor.execute('DELETE FROM %s WHERE %s = %s' % (self.DataTableTarget,    self.Target_TableCol, selectedData))
+                    self.MSSQLDataWireCursor.execute('DELETE FROM %s WHERE %s = %s' % (self.DataTableTarget, self.Target_TableCol, selectedData))
 
                     self.TechCore_RowClearSelected(self.DataTable_View.currentRow())
 
                     self.MSSQL_CommitData()
 
-                    self.InventoryStatus.showMessage('Deletion Query | > Row %s has been deleted!' %    (self.DataTable_View.currentRow() + 1))
+                    self.InventoryStatus.showMessage('Deletion Query | > Data Row %s has been deleted!' % (self.DataTable_View.currentRow() + 1))
                     if self.DataTable_View.rowCount() == 0:
                         self.StaffAct_Delete.setEnabled(False)
                     else:
@@ -933,7 +933,7 @@ class Route88_POSCore(Ui_Route88_POS_SystemWindow, QtWidgets.QMainWindow, Route8
         self.ReturnWinParent.show()
 
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    def __init__(self, Parent=None, ModifierMode=None, RecentTableActive=None, DataPayload_AtRow=None, isFirstTime=None):
+    def __init__(self, Parent=None, ModifierMode=None, RecentTableActive=None, DataPayload_AtRow=None, StaffInCharge_Name=None, isFirstTime=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.DataMCore_RenderExplicits()
@@ -947,6 +947,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         self.DataPayload = DataPayload_AtRow
         self.ModifierMode = ModifierMode
         self.ActiveTargetTable = RecentTableActive
+        self.ActiveStaffName = StaffInCharge_Name
 
         self.DataMCore_isReallyFT(isFirstTime)
         self.DataMCore_RunAfterRender()
@@ -957,8 +958,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
     def DataMCore_RunAfterRender(self):
         try:
-            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7')
-            self.MSSQL_InitCursor()
+            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7', ActiveStaffName=self.ActiveStaffName, SourceFunction=self.DataMCore_RunAfterRender.__name__)
+            self.MSSQL_InitCursor(SourceFunction=self.DataMCore_RunAfterRender.__name__)
 
             if self.ActiveTargetTable == "InventoryItem":
                 self.resize(820, 420)
@@ -999,7 +1000,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.EmpEntry_TIN.setValidator(QtGui.QIntValidator())
                 self.EmpEntry_PH.setValidator(QtGui.QIntValidator())
 
-                for JobDataFetch in self.MSSQL_ExecuteState("SELECT * FROM JobPosition", "All"):
+                for JobDataFetch in self.MSSQL_ExecuteState(MSSQLStatement="SELECT * FROM JobPosition", FetchType="All", TableTarget="JobPosition", SourceFunction=self.DataMCore_RunAfterRender.__name__):
                     self.EmpEntry_PC.addItem(JobDataFetch.JobName)
 
             elif self.ActiveTargetTable == "JobPosition":
@@ -1023,7 +1024,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
     # Staff Action Function Declarations
     def DataMCore_AddEntry(self):
         try:
-            self.MSSQL_InitCursor()
+            self.MSSQL_InitCursor(SourceFunction=self.DataMCore_AddEntry.__name__)
 
             if self.ActiveTargetTable == "InventoryItem":
                 pass
@@ -1087,13 +1088,13 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                     QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password and Confirm Password is not match.", QtWidgets.QMessageBox.Ok)
 
                 else:
-                    self.MSSQL_ExecuteState("INSERT INTO Employees(EmployeeUN, EmployeePW, FirstName, LastName, PositionCode, DOB, Address, SSS, TIN, PhilHealth) VALUES ('%s', '%s', '%s', '%s', %s, '%s', '%s', '%s', '%s', '%s')" % 
-                    (self.EmpEntry_UN.text(), self.EmpEntry_PW.text(), self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.TechCore_NameToPosCode(self.EmpEntry_PC.currentText()), self.EmpEntry_DOB.date().toString("MM/dd/yyyy"), self.EmpEntry_Adrs.text(), self.EmpEntry_SSS.text(), self.EmpEntry_TIN.text(), self.EmpEntry_PH.text()))
+                    self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO Employees(EmployeeUN, EmployeePW, FirstName, LastName, PositionCode, DOB, Address, SSS, TIN, PhilHealth) VALUES ('%s', '%s', '%s', '%s', %s, '%s', '%s', '%s', '%s', '%s')" % 
+                    (self.EmpEntry_UN.text(), self.EmpEntry_PW.text(), self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.TechCore_NameToPosCode(self.EmpEntry_PC.currentText()), self.EmpEntry_DOB.date().toString("MM/dd/yyyy"), self.EmpEntry_Adrs.text(), self.EmpEntry_SSS.text(), self.EmpEntry_TIN.text(), self.EmpEntry_PH.text()), TableTarget="Employees", SourceFunction=self.DataMCore_AddEntry.__name__)
 
                     self.MSSQL_CommitData()
 
-                    self.MSSQL_ExecuteState("CREATE LOGIN %s WITH PASSWORD = '%s'" % (self.EmpEntry_UN.text(), self.EmpEntry_PW.text()))
-                    self.MSSQL_ExecuteState("CREATE USER %s for LOGIN %s" % (self.EmpEntry_UN.text(), self.EmpEntry_UN.text()))
+                    self.MSSQL_ExecuteState(MSSQLStatement="CREATE LOGIN %s WITH PASSWORD = '%s'" % (self.EmpEntry_UN.text(), self.EmpEntry_PW.text()))
+                    self.MSSQL_ExecuteState(MSSQLStatement="CREATE USER %s for LOGIN %s" % (self.EmpEntry_UN.text(), self.EmpEntry_UN.text()))
                     self.MSSQL_CommitData()
 
                     
@@ -1111,24 +1112,41 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                     self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.")
                     QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
                 else:
-                    self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES ('%s', '%s')" % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()))
-                    self.MSSQL_CommitData()
+                    try:
+                        self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES ('%s', '%s')" % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()))
+                        self.MSSQL_CommitData()
 
-                    self.Modifier_StatusLabel.setText("Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text())) 
-                    self.DataManip_PushData.setEnabled(False)
-                    QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), QtWidgets.QMessageBox.Ok)
+                        self.Modifier_StatusLabel.setText("Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), QtWidgets.QMessageBox.Ok)
+                    except (Exception, MSSQL.Error, MSSQL.IntegrityError) as PushJPError:
+                        self.TechCore_Beep()
+                        self.Modifier_StatusLabel.setText("Error, Cannot Push Data @ JobPosition. Check if you pushing an already existing data. Data must be unique.") 
+                        print("[Exception @ DataMCore_AddEntry] > Error, Cannot Push Data @ JobPosition. Check if you pushing an already existing data. Data must be unique.")
+                        QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Push Data @ JobPosition. Check if you pushing an already existing data. Data must be unique. Detailed Error: %s" % (PushJPError), QtWidgets.QMessageBox.Ok)
 
-
-        
-        except (Exception, MSSQL.Error, MSSQL.OperationalError) as PushEntryErrMsg:
+        except (Exception, MSSQL.Error, MSSQL.DatabaseError) as PushEntryErrMsg:
             self.TechCore_Beep()
-            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. Detailed Error: {}".format(str(PushEntryErrMsg)), QtWidgets.QMessageBox.Ok)
-
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. Detailed Error: %s" % (PushEntryErrMsg), QtWidgets.QMessageBox.Ok)
             print('[Exemption @ DataMCore_AddEntry] > %s' % (PushEntryErrMsg))
 
     def DataMCore_LoadEntry(self):
+        self.DataManip_ResetActiveData.setEnabled(False)
         for i in self.DataPayload:
-            print(i)
+            if self.ActiveTargetTable == "InventoryItem":
+                pass
+            elif self.ActiveTargetTable == "SupplierReference":
+                pass
+            elif self.ActiveTargetTable == "SupplierTransaction":
+                pass
+            elif self.ActiveTargetTable == "CustReceipt":
+                pass
+            elif self.ActiveTargetTable == "CustTransaction":
+                pass
+            elif self.ActiveTargetTable == "Employees":
+                pass
+            elif self.ActiveTargetTable == "JobPosition":
+                print(i)
 
 
     def DataMCore_ClearEntry(self, ActiveEntryWindow):
