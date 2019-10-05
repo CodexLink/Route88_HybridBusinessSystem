@@ -71,7 +71,7 @@ class Route88_TechnicalCore(object):
 
     def MSSQL_OpenCon(self, OBDCDriver='{ODBC Driver 17 for SQL Server}', ServerHost='localhost', UCredential=None, PCredential=None, DB_Target='Route88_Database', ActiveStaffName="???", SourceFunction=None):
         try:
-            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; DATABASE=%s;UID=%s; PWD=%s" % (OBDCDriver, ServerHost, DB_Target, UCredential, PCredential), timeout=0)
+            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; DATABASE=%s;UID=%s; PWD=%s" % (OBDCDriver, ServerHost, DB_Target, UCredential, PCredential), autocommit=False)
             print("[MSSQL Database Report @ MSSQL_OpenCon, %s] Staff '%s' with Username '%s' is connected @ Database %s." % (SourceFunction, ActiveStaffName, UCredential, DB_Target))
 
         except (Exception, MSSQL.DatabaseError) as MSSQL_OpenConErrorMsg:
@@ -233,8 +233,9 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
 
             if self.UserEnlistedCount == 0:
                 self.TechCore_Beep()
-                #self.MSSQL_ExecuteState(MSSQLStatement="{CALL FT_SetupPosJobs}")
-                
+                self.MSSQL_ExecuteState(MSSQLStatement="{CALL FT_SetupPosJobs}")
+                self.MSSQL_CommitData()
+
                 QtWidgets.QMessageBox.information(self, 'Route88 System', "Welcome to Route88 Hybrid System! The system detected that there is no user account recorded according to it's database. Since you launch the system with no other accounts, you will have register first as a 'Manager' in this particular time.", QtWidgets.QMessageBox.Ok)
 
                 self.Route88_FirstTimerInst = Route88_ModifierCore(ModifierMode="PushEntry", isFirstTime=True, StaffInCharge_Name="???")
@@ -1002,9 +1003,12 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.EmpEntry_SSS.setValidator(QtGui.QIntValidator())
                 self.EmpEntry_TIN.setValidator(QtGui.QIntValidator())
                 self.EmpEntry_PH.setValidator(QtGui.QIntValidator())
-
-                for JobDataFetch in self.MSSQL_ExecuteState(MSSQLStatement="SELECT * FROM JobPosition", FetchType="All", TableTarget="JobPosition", SourceFunction=self.DataMCore_RunAfterRender.__name__):
-                    self.EmpEntry_PC.addItem(JobDataFetch.JobName)
+                # ! Loads All Possible Job To Enroll for Employees
+                try:
+                    for JobDataFetch in self.MSSQL_ExecuteState(MSSQLStatement="SELECT * FROM JobPosition", FetchType="All", TableTarget="JobPosition", SourceFunction=self.DataMCore_RunAfterRender.__name__):
+                        self.EmpEntry_PC.addItem(JobDataFetch.JobName)
+                except MSSQL.Error as Error:
+                    print(Error)
 
             elif self.ActiveTargetTable == "JobPosition":
                 self.resize(820, 380)
@@ -1024,8 +1028,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         if isReallyLFT:
             self.ActiveTargetTable = "Employees"
 
-        for DisableIndex in range(1, self.EmpEntry_PC.maxCount()):
-            pass
+        #for DisableIndex in range(1, self.EmpEntry_PC.maxCount()):
+        #    pass
             #self.EmpEntry_PC.setEnabled(False)
 
     # Staff Action Function Declarations
@@ -1137,22 +1141,20 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
     def DataMCore_LoadEntry(self):
         self.DataManip_ResetActiveData.setEnabled(False)
-        for i in self.DataPayload:
-            if self.ActiveTargetTable == "InventoryItem":
-                pass
-            elif self.ActiveTargetTable == "SupplierReference":
-                pass
-            elif self.ActiveTargetTable == "SupplierTransaction":
-                pass
-            elif self.ActiveTargetTable == "CustReceipt":
-                pass
-            elif self.ActiveTargetTable == "CustTransaction":
-                pass
-            elif self.ActiveTargetTable == "Employees":
-                pass
-            elif self.ActiveTargetTable == "JobPosition":
-                print(i)
-
+        if self.ActiveTargetTable == "InventoryItem":
+            pass
+        elif self.ActiveTargetTable == "SupplierReference":
+            pass
+        elif self.ActiveTargetTable == "SupplierTransaction":
+            pass
+        elif self.ActiveTargetTable == "CustReceipt":
+            pass
+        elif self.ActiveTargetTable == "CustTransaction":
+            pass
+        elif self.ActiveTargetTable == "Employees":
+            pass
+        elif self.ActiveTargetTable == "JobPosition":
+           pass
 
     def DataMCore_ClearEntry(self, ActiveEntryWindow):
         self.DataManip_PushData.setEnabled(True)
