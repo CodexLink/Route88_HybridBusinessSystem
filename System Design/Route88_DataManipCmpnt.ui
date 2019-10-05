@@ -79,7 +79,7 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>5</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="InventoryData_Window">
         <attribute name="title">
@@ -442,7 +442,7 @@
                 <bool>true</bool>
                </property>
                <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <set>Qt::AlignCenter</set>
                </property>
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::UpDownArrows</enum>
@@ -492,6 +492,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
                <property name="prefix">
                 <string>₱ </string>
                </property>
@@ -536,6 +539,9 @@
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
                <property name="calendarPopup">
                 <bool>true</bool>
@@ -781,6 +787,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
@@ -822,6 +831,9 @@
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
                <property name="calendarPopup">
                 <bool>true</bool>
@@ -1189,6 +1201,9 @@ caution.</string>
                <property name="wrapping">
                 <bool>true</bool>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::PlusMinus</enum>
                </property>
@@ -1449,6 +1464,9 @@ current date.</string>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
                <property name="calendarPopup">
                 <bool>true</bool>
@@ -2231,6 +2249,9 @@ Filling Confirm Password to Apply Changes</string>
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
@@ -2769,6 +2790,9 @@ Filling Confirm Password to Apply Changes.</string>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
                <property name="calendarPopup">
                 <bool>true</bool>

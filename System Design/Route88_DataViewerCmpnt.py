@@ -336,6 +336,7 @@ class Ui_Route88_DataViewer_Window(object):
         self.StaffAct_RefreshData.setObjectName("StaffAct_RefreshData")
         self.horizontalLayout_4.addWidget(self.StaffAct_RefreshData)
         self.StaffAct_Rollback = QtWidgets.QPushButton(self.groupBox_2)
+        self.StaffAct_Rollback.setEnabled(False)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)

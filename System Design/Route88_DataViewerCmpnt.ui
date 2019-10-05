@@ -642,27 +642,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="StaffAct_Rollback">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <family>Open Sans SemiBold</family>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Rollback Changes</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
