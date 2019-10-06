@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Route88_AboutUsWindow</class>
+ <widget class="QDialog" name="Route88_AboutUsWindow">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>649</width>
+    <height>532</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>649</width>
+    <height>326</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Route88 System | About Us</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>IcoDisplay/r_88.ico</normaloff>IcoDisplay/r_88.ico</iconset>
+  </property>
+  <widget class="QPushButton" name="AboutSystem_CloseWnd">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>470</y>
+     <width>141</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Close Window</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>331</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="title">
+    <string>Group Members and their Role/s</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Janrey Licas - Project Lead, Full Stack Developer</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Charles Ian Mascarenas - POS Designer and 
+QA Tester</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_8">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Jan Patrick Moreno - Full Stack Designer</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_9">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Brenda Hernandez - QA Tester and Researcher</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>651</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>401</width>
+     <height>101</height>
+    </size>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="NoRole">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>85</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="NoRole">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>85</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>13</red>
+         <green>71</green>
+         <blue>161</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="NoRole">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>85</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:rgb(13, 71, 161)</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>31</y>
+      <width>651</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans SemiBold</family>
+      <pointsize>18</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255)</string>
+    </property>
+    <property name="text">
+     <string>Route88 Bike Café</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>60</y>
+      <width>661</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans SemiBold</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255)</string>
+    </property>
+    <property name="text">
+     <string>About This System |  Point of Sale and Management System</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>81</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans SemiBold</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>IcoDisplay/r_88.ico</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>1</y>
+      <width>2</width>
+      <height>2</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans SemiBold</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
+    </layout>
+   </widget>
+   <zorder>label_4</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>label_3</zorder>
+   <zorder>label_5</zorder>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>110</y>
+     <width>291</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="title">
+    <string>About This System</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QLabel" name="label_7">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Route88 Hybrid System is a system that
+consists of a Point-of-Sales and Inventory
+Management System.
+
+This system was specifically used for a
+Cafe named as &quot;Route 88 Bike Cafe&quot;. As
+they need to do some management of
+items and orders easier and better.</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>330</y>
+     <width>291</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="title">
+    <string>Subject Description</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_13">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>CPE 012 | Database Management System
+Under Engr. Royce B. Chua</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>330</y>
+     <width>331</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="title">
+    <string>System License and Library Usages</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <widget class="QLabel" name="label_15">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>System is licensed under GPL-3.0</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_14">
+      <property name="font">
+       <font>
+        <family>Open Sans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Modules Used, PyQT5, PyODBC, OS Module and,
+Subprocess</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="label_16">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>500</y>
+     <width>221</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans</family>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::ActionsContextMenu</enum>
+   </property>
+   <property name="text">
+    <string>&lt;a href=&quot;https://github.com/CodexLink/Route88_HybridSystem&quot;&gt;Route 88 Hybrid System Github Link&lt;/a&gt;</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_17">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>450</y>
+     <width>461</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Open Sans SemiBold</family>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+   <property name="text">
+    <string>Thank you for using our program!
+For more information check the link below...</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>false</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

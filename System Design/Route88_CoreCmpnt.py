@@ -36,8 +36,6 @@
                     Includes
                 -> <ClassShortName>_RenderExplicits
                 -> <ClassShortName>_RunAfterRender
-
-    
     Legends:
         Definitions:
             _RenderExplicits -> Render Explicit Elements
@@ -52,7 +50,6 @@
 import subprocess as sysHandler
 from os import sys
 
-import qdarkstyle
 from PyQt5 import QtCore, QtGui, QtTest, QtWidgets
 from PyQt5.QtMultimedia import QSound
 
@@ -62,32 +59,36 @@ from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
 from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
 from Route88_LoginCmpnt import Ui_Route88_Login_Window
 from Route88_POSCmpnt import Ui_Route88_POS_SystemWindow
-
+from Route88_AboutSystemCmpnt import Ui_Route88_AboutUsWindow
 
 # This class is a database controller by wrapping all confusing parts into a callable function... and any other such that requires global function calling.
 class Route88_TechnicalCore(object):
     def __init__(self, Parent=None):
         super().__init__()
 
+    # * Python to MSSQL Adaptation
     def MSSQL_OpenCon(self, OBDCDriver='{ODBC Driver 17 for SQL Server}', ServerHost='localhost', UCredential=None, PCredential=None, DB_Target='Route88_Database', ActiveStaffName="???", SourceFunction=None):
         try:
-            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; DATABASE=%s;UID=%s; PWD=%s" % (OBDCDriver, ServerHost, DB_Target, UCredential, PCredential), autocommit=False)
+            self.MSSQLDataWire = MSSQL.connect("DRIVER=%s; SERVER=%s; DATABASE=%s;UID=%s; PWD=%s" % (OBDCDriver, ServerHost, DB_Target, UCredential, PCredential), autocommit=True)
             print("[MSSQL Database Report @ MSSQL_OpenCon, %s] Staff '%s' with Username '%s' is connected @ Database %s." % (SourceFunction, ActiveStaffName, UCredential, DB_Target))
 
         except (Exception, MSSQL.DatabaseError) as MSSQL_OpenConErrorMsg:
             self.TechCore_Beep()
-            self.StatusLabel.setText("Database Error: Cannot Connect to the MSSQL Database. Please restart.")
+            #self.StatusLabel.setText("Database Error: Cannot Connect to the MSSQL Database. Please restart.")
             print('[MSSQL Database Report @ MSSQL_OpenCon, %s] > Cannot Open / Establish Connection with the MSSQL Database. Detailed Info |> %s' % (SourceFunction, MSSQL_OpenConErrorMsg))
             QtWidgets.QMessageBox.critical(self, 'Route88 System | Database Connection Error', "An error occured while connecting to the database.\n\nDetailed Error: '%s'.\n\n Try restarting or re-connecting to MSSQL Server and try again." % (MSSQL_OpenConErrorMsg), QtWidgets.QMessageBox.Ok)
             sys.exit() # Terminate the program 
 
+    # * Data Selector Initializer
     def MSSQL_InitCursor(self, SourceFunction=None):
         try:
             self.MSSQLDataWireCursor = self.MSSQLDataWire.cursor()
+
         except (Exception, MSSQL.DatabaseError) as CursorErrMsg:
             self.TechCore_Beep()
             print('[Exception @ MSSQL_InitCursor, %s] > Invalid Cursor Set. Report this problem to the developers. Detailed Info |> %s' % (SourceFunction, CursorErrMsg))
 
+    # * Executes Multiple Types of Choice of Execute. This was an actual nice wrapper with specific exception being catched.
     def MSSQL_ExecuteState(self, MSSQLStatement=None, FetchType=None, TableTarget=None, SourceFunction=None):
         try:
             if FetchType == 'One':
@@ -103,29 +104,45 @@ class Route88_TechnicalCore(object):
                 print("[Statement Execution @ MSSQL_ExecuteState, %s | Table -> %s] > FetchType: %s, Statement | %s |" % (SourceFunction, TableTarget, FetchType, MSSQLStatement))
                 return self.MSSQLDataWireCursor.execute(MSSQLStatement)
 
+        except MSSQL.IntegrityError as MSSQL_ExecError:
+            self.TechCore_Beep()
+            print("[Exception (MSSQL.IntegrityError) @ MSSQL_ExecuteState, %s] > Error, Cannot Push Data @ %s. Check if you are pushing an already existing data. Data must be unique." % (SourceFunction, TableTarget))
+            #self.Modifier_StatusLabel.setText("Error, Cannot Push Data @ %s. Check if you pushing an already existing data. Data must be unique." % (TableTarget))
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Push Data @ %s. Check if you pushing an already existing data. Data must be unique. Detailed Error: %s" % (TableTarget, MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
+            raise Exception
+    
+        except MSSQL.ProgrammingError as MSSQL_ExecError:
+            self.TechCore_Beep()
+            print("[Exception (MSSQL.ProgrammingError) @ MSSQL_ExecuteState, %s] > Error, Cannot Access Table %s. You don't have sufficient permission to do so..." % (SourceFunction, TableTarget))
+            #self.InventoryStatus.showMessage("Error, Cannot Access Table %s. You don't have sufficient permission to do so..." % (TableTarget))
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Access Table %s. You don't have sufficient permission to do so... Detailed Error: %s" % (TableTarget, MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
+            #raise Exception
+
+
         except MSSQL.DatabaseError as MSSQL_ExecError:
             self.TechCore_Beep()
             print('[Exception (MSSQL.DatabaseError) @ MSSQL_ExecuteState, %s] > Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (SourceFunction, MSSQL_ExecError))
 
-        except MSSQL.IntegrityError as MSSQL_ExecError:
-            self.TechCore_Beep()
-            print("[Exception (MSSQL.IntegrityError) @ MSSQL_ExecuteState, %s] > Error, Cannot Push Data @ %s. Check if you are pushing an already existing data. Data must be unique." % (SourceFunction, TableTarget))
-    
+
+    # * Explicit Transaction Function Call. Useful for Actual Execution Transaction ON Function Local Scope (NOT from SQL Server Studio)
     def MSSQL_CommitData(self, SourceFunction=None):
         try:
             return self.MSSQLDataWire.commit()
+
         except MSSQL.DatabaseError as MSSQL_CommitError:
             self.TechCore_Beep()
             print('[Exception @ MSSQL_CommitData, %s] > Unable To Commit Data... Check your MySQL Connection and try again.Detailed Info |> %s' % (SourceFunction, MSSQL_CommitError))
 
+    # * Explicit Transaction Function Call. Useful for Actual Execution Transaction ON Function Local Scope (NOT from SQL Server Studio)
     def MSSQL_RollbackData(self, SourceFunction=None):
         try:
             return self.MSSQLDataWire.rollback()
+
         except MSSQL.DatabaseError as RollbackErrMsg:
             self.TechCore_Beep()
             print('[Exception @ MSSQL_RollbackData, %s] > Unable To Commit Data... Check your MSSQL Connection and try again. Detailed Info |> %s' % (SourceFunction, RollbackErrMsg))
             
-    # Optional Function, but according to the documentation, we don't need to call this one explicitly. It tends to happen automatically.
+    # * Optional Function, but according to the documentation, we don't need to call this one explicitly. It tends to happen automatically.
     def MSSQL_CloseCon(self, SourceFunction=None):
         try:
             return self.MSSQLDataWire.close()
@@ -133,12 +150,12 @@ class Route88_TechnicalCore(object):
             self.TechCore_Beep()
             print('[Exception @ MSSQL_CloseCon, %s] > Unable to Close Connection with the MSSQL Statements. Program Terminates Immediately. Detailed Info |> %s' (SourceFunction, ClosingErr))
     
-    #Non Database Callable Function
+    # * Assured Non-Throwing Function Error. use of Try-Except Cluase is not needed.
     def TechCore_Beep(self):
         return QtWidgets.QApplication.beep()
 
-    #Not sure for this one...
-    def TechCore_MessageBox(self, ObjType=None, WindTitle=None, MsgDetailInfo=None, MsgButtons=None):
+    # ! Not sure for this one...
+    def TechCore_MessageBox(self, ObjType=None, WindTitle=None, MsgDetailInfo=None, MsgButtons=None, SourceFunction=None):
         try:
             # TODO > For Future Usage.
                 #ConfirmDelMsg = QtWidgets.QMessageBox()
@@ -149,53 +166,144 @@ class Route88_TechnicalCore(object):
             
         except Exception as MsgSpawnError:
             print('[Exception @ TechCore_MessageBox] > An Error Occured While Spawning QMessageBox. Detailed Error: %s' % (MsgSpawnError))
-            
-    def TechCore_ColResp(self):
+    
+    # * Side Component function To Call For Renderingn Tables with Respective Column Count from Explicit UI Integration of Data.
+    def TechCore_ColResp(self, SourceFunction=None):
         try:
             self.DataTable_View.resizeColumnsToContents()
             for SetCellFixedElem in range(self.DataTable_View.columnCount()):
-                self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem,   QtWidgets.QHeaderView.Stretch)
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem, QtWidgets.QHeaderView.Stretch)
+        
         except Exception as ResponseError:
-            print('[Exception @ TechCore_ColResp] > Error Responsive Rendering in Table View. Detailed Info |> %s' % (ResponseError))
+            print('[Exception @ TechCore_ColResp, %s] > Error Responsive Rendering in Table View. Detailed Info |> %s' % (SourceFunction, ResponseError))
     
-    def TechCore_RowClear(self):
+    # * Side Component Function To Call When One Of The TextChanged Detected Changes on Mangaement View Window
+    def TechCore_RowClear(self, SourceFunction=None):
         try:
             self.DataTable_View.clearContents()
             self.DataTable_View.setRowCount(0)
 
         except Exception as RowClearMsg:
-            print('[Exception @ TechCore_RowClear] > Row Clearing Returns Error. Detailed Info |> %s' % (RowClearMsg))
+            print('[Exception @ TechCore_RowClear, %s] > Row Clearing Returns Error. Detailed Info |> %s' % (SourceFunction, RowClearMsg))
     
-    def TechCore_RowClearSelected(self, rowIndex):
-        return self.DataTable_View.removeRow(rowIndex)
-
-    def TechCore_ColOptClear(self):
+    # * Side Component To Remove Selected Row After Successfull Operation Other Functions.
+    def TechCore_RowClearSelected(self, rowIndex, SourceFunction=None):
         try:
-            ColOptIndex = 1
+            return self.DataTable_View.removeRow(rowIndex)
+        
+        except Exception as Err:
+            print('[Exception @ TechCore_RowClearSelected, %s] > Row Clearing Returns Error. Detailed Info |> %s' % (SourceFunction, Err))
+
+
+    # * Clears All Search Query Candidate Except for Index[0] Which Is None
+    def TechCore_ColOptClear(self, SourceFunction=None):
+        try:
+            ColOptIndex = 0 # Offset Column To Remove
             self.Query_ColumnOpt.setCurrentIndex(0)
-            while self.Query_ColumnOpt.count() != 2:
+            while self.Query_ColumnOpt.count() != 1:
                 self.Query_ColumnOpt.removeItem(ColOptIndex + 1)
 
         except Exception as ColOptClearMsg:
-            print('[Exception @ TechCore_ColOptClear] > Column Clearing Returns Error. Detailed Info |> %s' % (ColOptClearMsg))
+            print('[Exception @ TechCore_ColOptClear, %s] > Column Clearing Returns Error. Detailed Info |> %s' % (SourceFunction, ColOptClearMsg))
 
-    def TechCore_DisableExcept(self, ExceptGivenNum):
-        for TabIndex in range(self.Tab_SelectionSelectives.count()):
-            if TabIndex == ExceptGivenNum:
-                continue
-            else:
-                self.Tab_SelectionSelectives.setTabEnabled(TabIndex, False)
-        
-    # Two Exact Functions Can Be Encapsulated Into One.
-    def TechCore_PosCodeToName(self, PosCode):
-        self.MSSQL_InitCursor(SourceFunction=self.TechCore_PosCodeToName.__name__)
-        ConvertedToName = self.MSSQL_ExecuteState(MSSQLStatement="SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode), FetchType="FetchVal", TableTarget="JobPosition", SourceFunction=self.TechCore_PosCodeToName.__name__)
-        return ConvertedToName
+    # * Useful for Disabling Other Tabs Other Than Active or Selected Table
+    def TechCore_DisableExcept(self, ExceptGivenNum, SourceFunction=None):
+        try:
+            for TabIndex in range(self.Tab_SelectionSelectives.count()):
+                if TabIndex == ExceptGivenNum:
+                    continue
+                else:
+                    self.Tab_SelectionSelectives.setTabEnabled(TabIndex, False)
+        except Exception as Err:
+            print('[Exception @ TechCore_DisableExcept, %s] > Tab Disabling Process occured an Error. Detailed Info |> %s' % (SourceFunction, Err))
 
-    def TechCore_NameToPosCode(self, JobName):
-        self.MSSQL_InitCursor(SourceFunction=self.TechCore_NameToPosCode.__name__)
-        ConvertedToPosCode = self.MSSQL_ExecuteState(MSSQLStatement="SELECT PositionCode FROM JobPosition WHERE JobName = '%s'" % (JobName), FetchType="One", TableTarget="JobPosition", SourceFunction=self.TechCore_PosCodeToName.__name__)
-        return ConvertedToPosCode[0]
+
+    # * Turns String To An Index Based Specifically Used For QComboBox on Modifier Instance
+    def TechCore_StrToIndex(self, RespectiveComboBox, StrToCompare, SourceFunction=None):
+        DefaultIndex = 0
+        try:
+            if self.ActiveTargetTable == "InventoryItem":
+                if RespectiveComboBox == "Item Type":
+                    for IndexCandidate in range(self.InvEntry_IT.count()):
+                        if StrToCompare == self.InvEntry_IT.itemText(IndexCandidate):
+                            return IndexCandidate
+                    return DefaultIndex
+
+                else:
+                    for IndexCandidate in range(0, self.InvEntry_MT.count()):
+                        if StrToCompare == self.InvEntry_MT.itemText(IndexCandidate):
+                            return IndexCandidate
+                    return DefaultIndex
+    
+            elif self.ActiveTargetTable == "SupplierTransaction":
+                pass
+    
+            elif self.ActiveTargetTable == "CustTransaction":
+                pass
+    
+            elif self.ActiveTargetTable == "CustReceipt":
+                pass
+    
+            elif self.ActiveTargetTable == "JobPosition":
+                pass
+    
+            elif self.ActiveTargetTable == "Employees":
+                pass
+        except Exception as Err:
+            print('[Exception @ TechCore_StrToIndex, %s] > Existing Data Rendering Error (Specifically for QComboBox). Detailed Info |> %s' % (SourceFunction, Err))
+    
+    # TODO: Two Exact Functions Can Be Encapsulated Into One.
+    # * Gets PosCode and Retuns String Name with Respect to PositionCode.
+
+    def TechCore_PosCodeToName(self, PosCode, SourceFunction=None):
+        try:
+            self.MSSQL_InitCursor(SourceFunction=self.TechCore_PosCodeToName.__name__)
+            ConvertedToName = self.MSSQL_ExecuteState(MSSQLStatement="SELECT JobName FROM JobPosition WHERE PositionCode = %s" % (PosCode), FetchType="FetchVal", TableTarget="JobPosition", SourceFunction=self.TechCore_PosCodeToName.__name__)
+            return ConvertedToName
+
+        except Exception as Err:
+            print('[Exception @ TechCore_PosCodeToName, %s] Error Processing Position Code String Literal... Detailed Error |> %s' % (SourceFunction, Err))
+
+    # * Gets String Name and Retuns PositionCOde with Respect to String Name
+    def TechCore_NameToPosCode(self, JobName, SourceFunction=None):
+        try:
+            self.MSSQL_InitCursor(SourceFunction=self.TechCore_NameToPosCode.__name__)
+            ConvertedToPosCode = self.MSSQL_ExecuteState(MSSQLStatement="SELECT PositionCode FROM JobPosition WHERE JobName = '%s'" % (JobName), FetchType="One", TableTarget="JobPosition", SourceFunction=self.TechCore_PosCodeToName.__name__)
+            return ConvertedToPosCode[0]
+            
+        except Exception as Err:
+            print('[Exception @ TechCore_NameToPosCode, %s] Error Processing String Literal to Position Code... Detailed Error |> %s' % (SourceFunction, Err))
+             
+    # * Sets Current QComboBox Index Based On User's Data from Job Position Code
+    def TechCore_EditBindComboBox(self, PosCode, SourceFunction=None):
+        try:
+            if self.ActiveTargetTable == "SupplierReference":
+                pass
+    
+            elif self.ActiveTargetTable == "InventoryItem":
+                pass
+    
+            elif self.ActiveTargetTable == "SupplierTransaction":
+                pass
+    
+            elif self.ActiveTargetTable == "CustTransaction":
+                pass
+    
+            elif self.ActiveTargetTable == "CustReceipt":
+                pass
+    
+            elif self.ActiveTargetTable == "JobPosition":
+                pass
+    
+            elif self.ActiveTargetTable == "Employees":
+                for SetIndexCandidate in range(self.EmpEntry_PC.count()):
+                    print(SetIndexCandidate)
+                    if int(PosCode) == SetIndexCandidate:
+                        print(SetIndexCandidate, PosCode)
+                        return self.EmpEntry_PC.setCurrentIndex(SetIndexCandidate)
+        except Exception as Err:
+            print('[Exception @ TechCore_NameToPosCode, %s] Error Binding Data to QComboBox by Index. Detailed Error |> %s' % (SourceFunction, Err))
+
 
 
 class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_TechnicalCore):
@@ -228,7 +336,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
     def LoginCore_CheckEnlisted(self):
         try:
             self.MSSQL_InitCursor(SourceFunction=self.LoginCore_CheckEnlisted.__name__)
-            self.UserEnlistedCount = self.MSSQL_ExecuteState(MSSQLStatement="SELECT COUNT(*) FROM Employees", FetchType='FetchVal', TableTarget='Employees', SourceFunction=self.LoginCore_CheckEnlisted.__name__)
+            self.UserEnlistedCount = self.MSSQL_ExecuteState(MSSQLStatement="SELECT dbo.return_CountEmp()", FetchType='FetchVal', TableTarget='Employees', SourceFunction=self.LoginCore_CheckEnlisted.__name__)
             print('[Report @ LoginCore_CheckEnlisted] > User Account Count: %s' % (self.UserEnlistedCount))
 
             if self.UserEnlistedCount == 0:
@@ -241,7 +349,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.Route88_FirstTimerInst = Route88_ModifierCore(ModifierMode="PushEntry", isFirstTime=True, StaffInCharge_Name="???")
                 self.Route88_FirstTimerInst.exec_()
 
-                self.UserEnlistedCount = self.MSSQL_ExecuteState(MSSQLStatement="SELECT COUNT(*) FROM Employees", FetchType='FetchVal', TableTarget='Employees', SourceFunction=self.LoginCore_CheckEnlisted.__name__)
+                self.UserEnlistedCount = self.MSSQL_ExecuteState(MSSQLStatement="SELECT dbo.return_CountEmp()", FetchType='FetchVal', TableTarget='Employees', SourceFunction=self.LoginCore_CheckEnlisted.__name__)
                 self.UserAcc_SubmitData.setDisabled(False)
                 # If it is still zero then...
                 if self.UserEnlistedCount == 0:
@@ -277,7 +385,8 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 
                 self.UserLiteralName = "%s %s" % (self.QueryReturn.FirstName, self.QueryReturn.LastName)
                 self.UserPosInfo = self.TechCore_PosCodeToName(self.QueryReturn.PositionCode)
-                
+                self.UserUN = self.QueryReturn.EmployeeUN
+                self.UserPW = self.QueryReturn.EmployeePW
                 QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '%s | Job Info |> %s." % (self.UserLiteralName, self.UserPosInfo), QtWidgets.QMessageBox.Ok)
                 self.StatusLabel.setText("Successfully Logged in as %s %s" % (self.QueryReturn.FirstName, self.QueryReturn.LastName))
 
@@ -285,7 +394,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.MSSQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
                 self.close()
 
-                self.Route88_MCInst = Route88_WindowController(Staff_Name=self.UserLiteralName, Staff_Job=self.UserPosInfo, Staff_DBUser='Route_TempUser', Staff_DBPass='123456789')
+                self.Route88_MCInst = Route88_WindowController(Staff_Name=self.UserLiteralName, Staff_Job=self.UserPosInfo, Staff_DBUser=self.UserUN, Staff_DBPass=self.UserPW)
                 self.Route88_MCInst.show()
 
             else:
@@ -296,8 +405,6 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Login Failed', "Login Failed! Credential Input Not Matched. Check your User Code or your Password which may be written in Caps Lock. Please Try Again.", QtWidgets.QMessageBox.Ok)
                 
                 self.UserAcc_SubmitData.setDisabled(False)
-
-                
 
         except (Exception, MSSQL.DatabaseError) as LoginSubmissionErrorMsg:
             self.TechCore_Beep()
@@ -363,23 +470,14 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             #self.currentRow = 1
             self.InventoryStatus = QtWidgets.QStatusBar()
             self.setStatusBar(self.InventoryStatus)
-            #self.DataTable_View.setRowCount(self.currentRow)
 
-            # Add Function To Detect And Fix Column Based on Selected Table
-            #for SetCellFixedElem in range(10):
-            #    self.DataTable_View.horizontalHeader().setSectionResizeMode(SetCellFixedElem, QtWidgets.QHeaderView.ResizeToContents)
-#
-            #self.Query_ColumnOpt.model().item(1).setEnabled(False)
-#
-            #self.DataTable_View.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
-            #self.DataTable_View.horizontalHeader().setSectionResizeMode(9, QtWidgets.QHeaderView.Stretch)
         except (Exception, MSSQL.DatabaseError) as RenderErrorMsg:
             self.InventoryStatus.showMessage('Application Error: {0}'.format(RenderErrorMsg))
             print('[Exception Thrown @ DataVCore_RenderExplicits] > Detailed Info |> {0}'.format(RenderErrorMsg))
 
     def DataVCore_RunAfterRender(self):
         try:
-            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7', ActiveStaffName=self.InCharge_LiteralName, SourceFunction=self.DataVCore_RunAfterRender.__name__)
+            self.MSSQL_OpenCon(UCredential=self.InCharge_DBUser, PCredential=self.InCharge_DBPass, ActiveStaffName=self.InCharge_LiteralName, SourceFunction=self.DataVCore_RunAfterRender.__name__)
             self.MSSQL_InitCursor(SourceFunction=self.DataVCore_RunAfterRender.__name__)
             #Set All Parameters Without User Touching it for straight searching...
             self.DataVCore_PatternEnabler()
@@ -465,23 +563,6 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTableTarget = None
                 self.Target_TableCol = None
 
-            elif self.ActiveTable == "Inventory Reference Data":
-                self.TechCore_ColOptClear()
-                self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("ItemCode")
-                self.Query_ColumnOpt.addItem("ItemName")
-                self.Query_ColumnOpt.addItem("ItemCost")
-                self.Query_ColumnOpt.addItem("ExpiryDate")
-                self.Query_ColumnOpt.addItem("AvailableStock")
-                self.Query_ColumnOpt.addItem("CreationTime")
-                self.Query_ColumnOpt.addItem("LastUpdate")
-                self.DataTable_View.setColumnCount(7)
-                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Item Name", "Item Cost", "Expiry Date", "Available Stock", "Creation Time", "Last Update"))
-                self.TechCore_ColResp()
-                self.DataTableTarget = "InventoryItem"
-                self.Target_TableCol = "ItemCode"
-
-
             elif self.ActiveTable == "Supplier Reference Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
@@ -495,8 +576,27 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setColumnCount(6)
                 self.DataTable_View.setHorizontalHeaderLabels(("Supplier Code", "Supplier Name", "Last Delivery Date", "Next Delivery Date", "Creation Time", "Last Update"))
                 self.TechCore_ColResp()
+                self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "SupplierReference"
                 self.Target_TableCol = "SupplierCode"
+
+            elif self.ActiveTable == "Inventory Reference Data":
+                self.TechCore_ColOptClear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("ItemCode")
+                self.Query_ColumnOpt.addItem("ItemName")
+                self.Query_ColumnOpt.addItem("ItemType")
+                self.Query_ColumnOpt.addItem("MaterialType")
+                self.Query_ColumnOpt.addItem("AvailableStock")
+                self.Query_ColumnOpt.addItem("ItemCost")
+                self.Query_ColumnOpt.addItem("ExpiryDate")
+                self.Query_ColumnOpt.addItem("CreationTime")
+                self.Query_ColumnOpt.addItem("LastUpdate")
+                self.DataTable_View.setColumnCount(9)
+                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Item Name", "Item Type", "Material Type", "Available Stock", "Item Cost", "Expiry Date", "Creation Time", "Last Update"))
+                self.TechCore_ColResp()
+                self.DataTableTarget = "InventoryItem"
+                self.Target_TableCol = "ItemCode"
 
             elif self.ActiveTable == "Supplier Transaction Data":
                 self.TechCore_ColOptClear()
@@ -504,17 +604,18 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("ItemCode")
                 self.Query_ColumnOpt.addItem("OrderCode")
                 self.Query_ColumnOpt.addItem("SupplierCode")
-                self.Query_ColumnOpt.addItem("OrderDate")
                 self.Query_ColumnOpt.addItem("QuantityReceived")
+                self.Query_ColumnOpt.addItem("OrderDate")
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
 
                 self.DataTable_View.setColumnCount(7)
-                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Item Name", "Item Cost", "Expiry Date", "Available Stock", "Creation Time", "Last Update"))
+                self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Order Code", "Supplier Code", "Quantities Received", "Order Date", "Creation Time", "Last Update"))
                 self.TechCore_ColResp()
                 self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "SupplierTransaction"
                 self.Target_TableCol = "ItemCode"
+
 
             elif self.ActiveTable == "Customer Transaction Data":
                 self.TechCore_ColOptClear()
@@ -543,20 +644,31 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("VATRate")
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
-                self.DataTable_View.setColumnCount(10)
-                self.DataTable_View.setHorizontalHeaderLabels(("TransactCode Primary", "TransactCode Secondary", "Total Cost", "Vatable Cost", "Vat Exempt", "Zero Rated", "Net Vat", "Vat Rate", "Creation Time"))
-                self.TechCore_ColResp()
 
-                self.DataTable_View.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+                self.DataTable_View.setColumnCount(10)
+                self.TechCore_ColResp()
+                self.DataTable_View.setHorizontalHeaderLabels(("Primary TransactCode", "Secondary TransactCode", "Total Cost", "Vatable Cost", "Vat Exempt", "Zero Rated", "Net Vat", "Vat Rate", "Creation Time"))
                 self.DataTableTarget = "CustReceipt"
                 self.Target_TableCol = "TransactCode_Pri"
+
+
+            elif self.ActiveTable == "Job Reference Data":
+                self.TechCore_ColOptClear()
+                self.Query_ColumnOpt.setEnabled(True)
+                self.Query_ColumnOpt.addItem("PositionCode")
+                self.Query_ColumnOpt.addItem("JobName")
+
+                self.DataTable_View.setColumnCount(2)
+                self.DataTable_View.setHorizontalHeaderLabels(("Position Code", "Job Name"))
+                self.TechCore_ColResp()
+                self.DataTableTarget = "JobPosition"
+                self.Target_TableCol = "PositionCode"
 
             elif self.ActiveTable == "Employee Reference Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
                 self.Query_ColumnOpt.addItem("EmployeeCode")
                 self.Query_ColumnOpt.addItem("EmployeeUN")
-                self.Query_ColumnOpt.addItem("EmployeePW")
                 self.Query_ColumnOpt.addItem("FirstName")
                 self.Query_ColumnOpt.addItem("LastName")
                 self.Query_ColumnOpt.addItem("PositionCode")
@@ -568,25 +680,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
                 
-                self.DataTable_View.setColumnCount(13)
-                self.DataTable_View.setHorizontalHeaderLabels(("Employee Code", "Employee UN", "Employee PW", "First Name", "Last Name",  "Position Code", "DOB", "Address", "SSS", "TIN", "PhilHealth", "Creation Time", "Last Update"))
+                self.DataTable_View.setColumnCount(12)
+                self.DataTable_View.setHorizontalHeaderLabels(("Employee Code", "Employee UN", "First Name", "Last Name",  "Position Code", "DOB", "Address", "SSS", "TIN", "PhilHealth", "Creation Time", "Last Update"))
                 self.TechCore_ColResp()
-
                 self.DataTableTarget = "Employees"
                 self.Target_TableCol = "EmployeeCode"
-
-            elif self.ActiveTable == "Job Reference Data":
-                self.TechCore_ColOptClear()
-                self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("PositionCode")
-                self.Query_ColumnOpt.addItem("JobName")
-
-                self.DataTable_View.setColumnCount(2)
-                self.DataTable_View.setHorizontalHeaderLabels(("Position Code", "Job Name"))
-                self.TechCore_ColResp()
-
-                self.DataTableTarget = "JobPosition"
-                self.Target_TableCol = "PositionCode"
 
             self.DataVCore_Encap_RowData()
             self.DataVCore_LoadTableData()
@@ -648,138 +746,146 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
                 self.DataVCore_RenderTable("SELECT * FROM %s WHERE %s %s '%s'" % (self.DataTableTarget, self.FieldParameter, self.OperatorParameter, self.TargetParameter))
 
-        except (Exception, MSSQL.Error, MSSQL.OperationalError) as SearchQueryError:
+        except MSSQL.DataError as SearchQueryError:
             self.InventoryStatus.showMessage('Application Error: Value Searching Returns Error. Detailed Info > %s' (SearchQueryError))
             print('[Exception Thrown @ DataVCore_ValSearch] > Value Searching Returns Error. Detailed Info > %s' (SearchQueryError))
 
     def DataVCore_RenderTable(self, FunctionCall_DataFetch):
-        self.DataFetchExec = self.MSSQL_ExecuteState(MSSQLStatement=FunctionCall_DataFetch, FetchType='All', TableTarget=self.ActiveTable, SourceFunction=self.DataVCore_RenderTable.__name__)
-        currentRow = 0
-        if self.ActiveTable == "None":
-            self.TechCore_RowClear()
-            print('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
-            self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
+        try:
+            self.DataFetchExec = self.MSSQL_ExecuteState(MSSQLStatement=FunctionCall_DataFetch, FetchType='All', TableTarget=self.ActiveTable, SourceFunction=self.DataVCore_RenderTable.__name__)
+            currentRow = 0
+            if self.ActiveTable == "None":
+                self.TechCore_RowClear()
+                print('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
+                self.InventoryStatus.showMessage('[Report @ DataVCore_RenderTable] > Active Data Table is None. Nothing to show.')
+    
+            elif self.ActiveTable == "Inventory Reference Data":
+                for InventoryData in self.DataFetchExec:
+                    self.DataTable_View.setRowCount(currentRow + 1)
+    
+                    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
+                    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemName)))
+                    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemType)))
+                    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.MaterialType)))
+                    self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.AvailableStock)))
+                    self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCost)))
+                    self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ExpiryDate)))
+                    self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                    self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+    
+                    for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                        ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                        ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                    currentRow += 1
+    
 
-        elif self.ActiveTable == "Inventory Reference Data":
-            for InventoryData in self.DataFetchExec:
-                self.DataTable_View.setRowCount(currentRow + 1)
+            elif self.ActiveTable == "Supplier Reference Data":
+                for InventoryData in self.DataFetchExec:
+                    self.DataTable_View.setRowCount(currentRow + 1)
+    
+                    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierCode)))
+                    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierName)))
+                    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastDeliveryDate)))
+                    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.NextDeliveryDate)))
+                    self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                    self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+    
+                    for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                        ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                        ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                    currentRow += 1
+    
+            elif self.ActiveTable == "Supplier Transaction Data":
+                for InventoryData in self.DataFetchExec:
+                    self.DataTable_View.setRowCount(currentRow + 1)
+    
+                    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
+                    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.OrderCode)))
+                    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierCode)))
+                    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.QuantityReceived)))
+                    self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.OrderDate)))
+                    self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                    self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+    
+                    for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                        ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                        ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                    currentRow += 1
+    
+            elif self.ActiveTable == "Customer Receipt Data":
+                for InventoryData in self.DataFetchExec:
+                    self.DataTable_View.setRowCount(currentRow + 1)
+    
+                    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactCode_Pri)))
+                    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactCode_Sec)))
+                    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TotalCost)))
+                    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VatableCost)))
+                    self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VatExempt)))
+                    self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ZeroRated)))
+                    self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.NetVat)))
+                    self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VatRate)))
+                    self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                    self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+    
+                    for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                        ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                        ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                    currentRow += 1
 
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemName)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCost)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ExpiryDate)))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.AvailableStock)))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+            elif self.ActiveTable == "Customer Transaction Data":
+                for InventoryData in self.DataFetchExec:
+                    self.DataTable_View.setRowCount(currentRow + 1)
+    
+                    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactionCode)))
+                    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
+                    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+    
+                    for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                        ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                        ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                    currentRow += 1
+    
+    
+            elif self.ActiveTable == "Job Reference Data":
+                for InventoryData in self.DataFetchExec:
+                    self.DataTable_View.setRowCount(currentRow + 1)
+    
+                    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PositionCode)))
+                    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.JobName)))
+    
+                    for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                        ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                        ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                    currentRow += 1
 
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
-
-
-        elif self.ActiveTable == "Supplier Reference Data":
-            for InventoryData in self.DataFetchExec:
-                self.DataTable_View.setRowCount(currentRow + 1)
-
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierName)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastDeliveryDate)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.NextDeliveryDate)))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
-
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
-
-        elif self.ActiveTable == "Supplier Transaction Data":
-            for InventoryData in self.DataFetchExec:
-                self.DataTable_View.setRowCount(currentRow + 1)
-
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.OrderCode)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SupplierCode)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.OrderDate)))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.QuantityReceived)))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
-
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
-
-        elif self.ActiveTable == "Customer Transaction Data":
-            for InventoryData in self.DataFetchExec:
-                self.DataTable_View.setRowCount(currentRow + 1)
-
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactionCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ItemCode)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
-
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
-
-        elif self.ActiveTable == "Customer Receipt Data":
-            for InventoryData in self.DataFetchExec:
-                self.DataTable_View.setRowCount(currentRow + 1)
-
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactCode_Pri)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TransactCode_Sec)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TotalCost)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VatableCost)))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VatExempt)))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.ZeroRated)))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.NetVat)))
-                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.VatRate)))
-                self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
-
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
-
-        elif self.ActiveTable == "Employee Reference Data":
-            for InventoryData in self.DataFetchExec:
-                self.DataTable_View.setRowCount(currentRow + 1)
-
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeeCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeeUN)))
-                self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeePW)))
-                self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.FirstName)))
-                self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastName)))
-                self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PositionCode)))
-                self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.DOB)))
-                self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.Address)))
-                self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SSS)))
-                self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
-                self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PhilHealth)))
-                self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
-                self.DataTable_View.setItem(currentRow, 12, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
-                self.DataTable_View.setItem(currentRow, 13, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
-
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
-                
-        elif self.ActiveTable == "Job Reference Data":
-            for InventoryData in self.DataFetchExec:
-                self.DataTable_View.setRowCount(currentRow + 1)
-
-                self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PositionCode)))
-                self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.JobName)))
-
-                for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
-                    ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
-                    ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
-                currentRow += 1
+            elif self.ActiveTable == "Employee Reference Data":
+                for InventoryData in self.DataFetchExec:
+                    self.DataTable_View.setRowCount(currentRow + 1)
+    
+                    self.DataTable_View.setItem(currentRow, 0, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeeCode)))
+                    self.DataTable_View.setItem(currentRow, 1, QtWidgets.QTableWidgetItem('%s' % (InventoryData.EmployeeUN)))
+                    self.DataTable_View.setItem(currentRow, 2, QtWidgets.QTableWidgetItem('%s' % (InventoryData.FirstName)))
+                    self.DataTable_View.setItem(currentRow, 3, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastName)))
+                    self.DataTable_View.setItem(currentRow, 4, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PositionCode)))
+                    self.DataTable_View.setItem(currentRow, 5, QtWidgets.QTableWidgetItem('%s' % (InventoryData.DOB)))
+                    self.DataTable_View.setItem(currentRow, 6, QtWidgets.QTableWidgetItem('%s' % (InventoryData.Address)))
+                    self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SSS)))
+                    self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
+                    self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PhilHealth)))
+                    self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
+                    self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                    self.DataTable_View.setItem(currentRow, 12, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+    
+                    for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
+                        ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
+                        ColumnPosFixer.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                    currentRow += 1
+                    
+        except MSSQL.DataError as IterError:
+            self.InventoryStatus.showMessage('[Database Query Process | Search Query] -> An Error Occured While Searching Value. Data Type might not be the same.')
+            print('[Exception Thrown @ DataVCore_RenderTable] ->  An Error Occured While Searching Value. Data Type might not be the same. Detailed Error |> %s' % IterError)
+    
 
     def DataVCore_Encap_RowData(self):
         if self.DataTable_View.currentRow() != -1:
@@ -789,22 +895,27 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.StaffAct_Delete.setEnabled(False)
             self.StaffAct_Edit.setEnabled(False)
 
-    
     # Staff Action Functions
 
     def DataVCore_AddEntry(self):
-        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="PushEntry", StaffInCharge_Name=self.InCharge_LiteralName)
+        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="PushEntry", StaffInCharge_Name=self.InCharge_LiteralName, Staff_DBUser=self.InCharge_DBUser, Staff_DBPass=self.InCharge_DBPass)
         self.ModifierDialog.exec_()
         self.DataVCore_RefreshData()
 
     def DataVCore_EditEntry(self):
-        SelectedColData = [] 
-        for ColIndexData in range(self.DataTable_View.columnCount()):
-            SelectedColData.append(self.DataTable_View.item(self.DataTable_View.currentRow(), ColIndexData).text())
+        try:
+            SelectedColData = [] 
+            for ColIndexData in range(self.DataTable_View.columnCount()):
+                SelectedColData.append(self.DataTable_View.item(self.DataTable_View.currentRow(), ColIndexData).text())
 
-        self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists", DataPayload_AtRow=SelectedColData, StaffInCharge_Name=self.InCharge_LiteralName)
-        self.ModifierDialog.exec_()
-        self.DataVCore_RefreshData()
+            self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists", DataPayload_AtRow=SelectedColData, StaffInCharge_Name=self.InCharge_LiteralName, Staff_DBUser=self.InCharge_DBUser, Staff_DBPass=self.InCharge_DBPass)
+            self.ModifierDialog.exec_()
+            self.DataVCore_RefreshData()
+        except Exception:
+            self.StaffAct_Edit.setEnabled(False)
+            self.StaffAct_Delete.setEnabled(False)
+            self.InventoryStatus.showMessage('Select Data Error > Selected Data is Forgotten, Please Select The Data You Wish To Delete or Edit again.')
+
 
     def DataVCore_DeleteEntry(self):
         try:
@@ -936,8 +1047,20 @@ class Route88_POSCore(Ui_Route88_POS_SystemWindow, QtWidgets.QMainWindow, Route8
         self.ReturnWinParent = Route88_WindowController(Staff_Name=self.POS_StaffName, Staff_Job=self.POS_StaffJob, Staff_DBUser=self.POS_Staff_DBU, Staff_DBPass=self.POS_Staff_DBP)
         self.ReturnWinParent.show()
 
+class Route88_AboutUsCore(Ui_Route88_AboutUsWindow, QtWidgets.QDialog, Route88_TechnicalCore):
+    def __init__(self, Parent=None):
+        super(Route88_AboutUsCore, self).__init__(Parent=Parent)
+        self.setupUi(self)
+        self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
+
+        self.AboutSystem_CloseWnd.clicked.connect(self.AboutUs_ReturnWindow)
+
+    def AboutUs_ReturnWindow(self):
+        self.close()
+
 class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog, Route88_TechnicalCore):
-    def __init__(self, Parent=None, ModifierMode=None, RecentTableActive=None, DataPayload_AtRow=None, StaffInCharge_Name=None, isFirstTime=None):
+    def __init__(self, Parent=None, ModifierMode=None, RecentTableActive=None, DataPayload_AtRow=None, StaffInCharge_Name=None, isFirstTime=None, Staff_DBUser=None, Staff_DBPass=None):
         super(Route88_ModifierCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.DataMCore_RenderExplicits()
@@ -952,69 +1075,80 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         self.ModifierMode = ModifierMode
         self.ActiveTargetTable = RecentTableActive
         self.ActiveStaffName = StaffInCharge_Name
+        self.ActiveStaffUN = Staff_DBUser
+        self.ActiveStaffPW = Staff_DBPass
 
-        self.DataMCore_isReallyFT(isFirstTime)
-        self.DataMCore_RunAfterRender()
+        self.DataMCore_RunAfterRender(isFirstTime)
 
         # Technical Functions
     def DataMCore_RenderExplicits(self):
         pass
 
-    def DataMCore_RunAfterRender(self):
+    def DataMCore_RunAfterRender(self, isReallyLFT):
         try:
-            self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7', ActiveStaffName=self.ActiveStaffName, SourceFunction=self.DataMCore_RunAfterRender.__name__)
-            self.MSSQL_InitCursor(SourceFunction=self.DataMCore_RunAfterRender.__name__)
+            if isReallyLFT:
+                self.ActiveTargetTable = "Employees"
+                self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7', ActiveStaffName=self.ActiveStaffName, SourceFunction=self.DataMCore_RunAfterRender.__name__)
+                self.MSSQL_InitCursor(SourceFunction=self.DataMCore_RunAfterRender.__name__)
+            else:
+                self.MSSQL_OpenCon(UCredential=self.ActiveStaffUN, PCredential=self.ActiveStaffPW, ActiveStaffName=self.ActiveStaffName, SourceFunction=self.DataMCore_RunAfterRender.__name__)
+                self.MSSQL_InitCursor(SourceFunction=self.DataMCore_RunAfterRender.__name__)
 
-            if self.ActiveTargetTable == "InventoryItem":
-                self.resize(820, 420)
-                self.Tab_SelectionSelectives.setCurrentIndex(0)
-                self.TechCore_DisableExcept(0)
-                self.InvEntry_ED.setDateTime(QtCore.QDateTime.currentDateTime())
-            
-            elif self.ActiveTargetTable == "SupplierReference":
+            if self.ActiveTargetTable == "SupplierReference":
                 self.resize(820, 620)
-                self.Tab_SelectionSelectives.setCurrentIndex(3)
-                self.TechCore_DisableExcept(3)
+                self.Tab_SelectionSelectives.setCurrentIndex(0)
+                self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
                 self.SuppEntry_LDD.setDateTime(QtCore.QDateTime.currentDateTime())
                 self.SuppEntry_NDD.setDateTime(QtCore.QDateTime.currentDateTime())
+                self.SuppEntry_SC.setValidator(QtGui.QIntValidator())
 
+            elif self.ActiveTargetTable == "InventoryItem":
+                self.resize(820, 420)
+                self.Tab_SelectionSelectives.setCurrentIndex(1)
+                self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
+                self.InvEntry_ED.setDateTime(QtCore.QDateTime.currentDateTime())
+                self.InvEntry_IC.setValidator(QtGui.QIntValidator())
+            
             elif self.ActiveTargetTable == "SupplierTransaction":
                 self.resize(820, 540)
-                self.Tab_SelectionSelectives.setCurrentIndex(4)
-                self.TechCore_DisableExcept(4)
+                self.Tab_SelectionSelectives.setCurrentIndex(2)
+                self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
                 self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
-
-            elif self.ActiveTargetTable == "CustReceipt":
-                self.resize(820, 600)
-                self.Tab_SelectionSelectives.setCurrentIndex(1)
-                self.TechCore_DisableExcept(1)
+                self.SuppTrEntry_OC.setValidator(QtGui.QIntValidator())
 
             elif self.ActiveTargetTable == "CustTransaction":
                 self.resize(820, 510)
-                self.Tab_SelectionSelectives.setCurrentIndex(2)
-                self.TechCore_DisableExcept(2)
+                self.Tab_SelectionSelectives.setCurrentIndex(3)
+                self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
+                self.CustTr_TC.setValidator(QtGui.QIntValidator())
+
+            elif self.ActiveTargetTable == "CustReceipt":
+                self.resize(820, 600)
+                self.Tab_SelectionSelectives.setCurrentIndex(4)
+                self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
+
+
+            elif self.ActiveTargetTable == "JobPosition":
+                self.resize(820, 380)
+                self.Tab_SelectionSelectives.setCurrentIndex(5)
+                self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
+                self.JobPEntry_PC.setValidator(QtGui.QIntValidator())
 
             elif self.ActiveTargetTable == "Employees":
                 self.resize(820, 740)
-                self.Tab_SelectionSelectives.setCurrentIndex(5)
-                self.TechCore_DisableExcept(5)
+                self.Tab_SelectionSelectives.setCurrentIndex(6)
+                self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
                 self.EmpEntry_DOB.setDateTime(QtCore.QDateTime.currentDateTime())
                 # Restrict These QLineEdit Object to Accept Only Integer.
-                self.EmpEntry_SSS.setValidator(QtGui.QIntValidator())
-                self.EmpEntry_TIN.setValidator(QtGui.QIntValidator())
-                self.EmpEntry_PH.setValidator(QtGui.QIntValidator())
+                self.EmpEntry_SSS.setValidator(QtGui.QDoubleValidator())
+                self.EmpEntry_TIN.setValidator(QtGui.QDoubleValidator())
+                self.EmpEntry_PH.setValidator(QtGui.QDoubleValidator())
                 # ! Loads All Possible Job To Enroll for Employees
                 try:
                     for JobDataFetch in self.MSSQL_ExecuteState(MSSQLStatement="SELECT * FROM JobPosition", FetchType="All", TableTarget="JobPosition", SourceFunction=self.DataMCore_RunAfterRender.__name__):
                         self.EmpEntry_PC.addItem(JobDataFetch.JobName)
                 except MSSQL.Error as Error:
-                    print(Error)
-
-            elif self.ActiveTargetTable == "JobPosition":
-                self.resize(820, 380)
-                self.Tab_SelectionSelectives.setCurrentIndex(6)
-                self.TechCore_DisableExcept(6)
-                self.JobPEntry_PC.setValidator(QtGui.QIntValidator())
+                    pass
 
             #Preloads Data Received, Ternary Operator
             self.DataMCore_LoadEntry() if self.ModifierMode == "ModifyDataExists" else None
@@ -1023,10 +1157,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         except (Exception, MSSQL.DatabaseError) as DataMCore_ARErr:
             self.TechCore_Beep()
             print('[Exception @ DataMCore_RunAfterRender] > Error Rendering Modifier Core: RunAfterRender. Detailed Error: %s' % (DataMCore_ARErr))
-        
-    def DataMCore_isReallyFT(self, isReallyLFT):
-        if isReallyLFT:
-            self.ActiveTargetTable = "Employees"
+    
 
         #for DisableIndex in range(1, self.EmpEntry_PC.maxCount()):
         #    pass
@@ -1034,132 +1165,163 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
     # Staff Action Function Declarations
     def DataMCore_AddEntry(self):
-        try:
-            self.MSSQL_InitCursor(SourceFunction=self.DataMCore_AddEntry.__name__)
+        self.MSSQL_InitCursor(SourceFunction=self.DataMCore_AddEntry.__name__)
 
-            if self.ActiveTargetTable == "InventoryItem":
-                pass
-            elif self.ActiveTargetTable == "SupplierReference":
-                pass
-            elif self.ActiveTargetTable == "SupplierTransaction":
-                pass
-            elif self.ActiveTargetTable == "CustReceipt":
-                pass
-            elif self.ActiveTargetTable == "CustTransaction":
-                pass
-            elif self.ActiveTargetTable == "Employees":
-                if len(self.EmpEntry_FN.text()) < 2:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
-
-                elif len(self.EmpEntry_LN.text()) < 2:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
-
-                elif self.EmpEntry_PC.currentIndex() == -1:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Position Code is not yet selected.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Position Code is not yet selected.", QtWidgets.QMessageBox.Ok)
-
-                elif len(self.EmpEntry_Adrs.text()) < 10:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.", QtWidgets.QMessageBox.Ok)
-                
-                elif len(self.EmpEntry_SSS.text()) != self.EmpEntry_SSS.maxLength():
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's SSS must be 10 Numbers.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's SSS must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
-
-                elif len(self.EmpEntry_TIN.text()) != self.EmpEntry_TIN.maxLength():
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's TIN must be 10 Numbers.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's TIN must be 12 Numbers.", QtWidgets.QMessageBox.Ok)
-                
-                elif len(self.EmpEntry_PH.text()) != self.EmpEntry_PH.maxLength():
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
-
-                elif len(self.EmpEntry_UN.text()) < 5:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Username must be more than 5 characters.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Username must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
-
-                elif len(self.EmpEntry_PW.text()) < 5:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password must be more than 5 characters.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
-
-                elif self.EmpEntry_PW.text() != self.EmpEntry_CPW.text():
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password and Confirm Password is not match.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password and Confirm Password is not match.", QtWidgets.QMessageBox.Ok)
-
-                else:
-                    self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO Employees(EmployeeUN, EmployeePW, FirstName, LastName, PositionCode, DOB, Address, SSS, TIN, PhilHealth) VALUES ('%s', '%s', '%s', '%s', %s, '%s', '%s', '%s', '%s', '%s')" % 
-                    (self.EmpEntry_UN.text(), self.EmpEntry_PW.text(), self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.TechCore_NameToPosCode(self.EmpEntry_PC.currentText()), self.EmpEntry_DOB.date().toString("MM/dd/yyyy"), self.EmpEntry_Adrs.text(), self.EmpEntry_SSS.text(), self.EmpEntry_TIN.text(), self.EmpEntry_PH.text()), TableTarget="Employees", SourceFunction=self.DataMCore_AddEntry.__name__)
-                    self.MSSQL_ExecuteState(MSSQLStatement="CREATE LOGIN %s WITH PASSWORD = '%s'" % (self.EmpEntry_UN.text(), self.EmpEntry_PW.text()), TableTarget="<Classified>", SourceFunction=self.DataMCore_AddEntry.__name__)
-                    self.MSSQL_ExecuteState(MSSQLStatement="CREATE USER %s for LOGIN %s" % (self.EmpEntry_UN.text(), self.EmpEntry_UN.text()), TableTarget="<Classified>", SourceFunction=self.DataMCore_AddEntry.__name__)
-                    self.MSSQL_CommitData()
-
-                    
-                    self.Modifier_StatusLabel.setText("Staff %s %s is added to the database! Clear Data To Add More Staff." % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text())) 
-                    self.DataManip_PushData.setEnabled(False)
-                    QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Staff %s %s is added to the database!" % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text()), QtWidgets.QMessageBox.Ok)
-
-            elif self.ActiveTargetTable == "JobPosition":
-                if len(self.JobPEntry_PC.text()) == 0:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Code Should Not Be Empty!")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Code Should Not Be Empty!", QtWidgets.QMessageBox.Ok)
-                elif len(self.JobPEntry_PN.text()) < 2:
-                    self.TechCore_Beep()
-                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.")
-                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
-                else:
-                    try:
-                        self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES ('%s', '%s')" % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()),TableTarget="JobPosition", SourceFunction=self.DataMCore_AddEntry.__name__)
-                        self.MSSQL_CommitData()
-
-                        self.Modifier_StatusLabel.setText("Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text())) 
-                        self.DataManip_PushData.setEnabled(False)
-
-                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), QtWidgets.QMessageBox.Ok)
-                    except (Exception, MSSQL.Error, MSSQL.IntegrityError) as PushJPError:
-                        self.TechCore_Beep()
-                        self.Modifier_StatusLabel.setText("Error, Cannot Push Data @ JobPosition. Check if you pushing an already existing data. Data must be unique.") 
-                        print("[Exception @ DataMCore_AddEntry] > Error, Cannot Push Data @ JobPosition. Check if you pushing an already existing data. Data must be unique.")
-                        QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Push Data @ JobPosition. Check if you pushing an already existing data. Data must be unique. Detailed Error: %s" % (PushJPError), QtWidgets.QMessageBox.Ok)
-
-        except (Exception, MSSQL.Error, MSSQL.DatabaseError) as PushEntryErrMsg:
-            self.TechCore_Beep()
-            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, cannot push data from the database. Check your fields or your database connection. Detailed Error: %s" % (PushEntryErrMsg), QtWidgets.QMessageBox.Ok)
-            print('[Exemption @ DataMCore_AddEntry] > %s' % (PushEntryErrMsg))
-
-    def DataMCore_LoadEntry(self):
-        self.DataManip_ResetActiveData.setEnabled(False)
-        if self.ActiveTargetTable == "InventoryItem":
+        if self.ActiveTargetTable == "SupplierReference":
             pass
-        elif self.ActiveTargetTable == "SupplierReference":
+        elif self.ActiveTargetTable == "InventoryItem":
             pass
         elif self.ActiveTargetTable == "SupplierTransaction":
             pass
-        elif self.ActiveTargetTable == "CustReceipt":
-            pass
         elif self.ActiveTargetTable == "CustTransaction":
             pass
-        elif self.ActiveTargetTable == "Employees":
+        elif self.ActiveTargetTable == "CustReceipt":
             pass
         elif self.ActiveTargetTable == "JobPosition":
-           pass
+            if len(self.JobPEntry_PC.text()) == 0:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Code Should Not Be Empty!")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Code Should Not Be Empty!", QtWidgets.QMessageBox.Ok)
+            elif len(self.JobPEntry_PN.text()) < 2:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
+            else:
+                try:
+                    self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES ('%s', '%s')" % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()),TableTarget="JobPosition", SourceFunction=self.DataMCore_AddEntry.__name__)
+                    self.MSSQL_CommitData()
+                    self.Modifier_StatusLabel.setText("Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text())) 
+                    self.DataManip_PushData.setEnabled(False)
+                    QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), QtWidgets.QMessageBox.Ok)
+                except Exception:
+                    pass
+        elif self.ActiveTargetTable == "Employees":
+            if len(self.EmpEntry_FN.text()) < 2:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
+
+            elif len(self.EmpEntry_LN.text()) < 2:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
+
+            elif self.EmpEntry_PC.currentIndex() == -1:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Position Code is not yet selected.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Position Code is not yet selected.", QtWidgets.QMessageBox.Ok)
+
+            elif len(self.EmpEntry_Adrs.text()) < 10:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.", QtWidgets.QMessageBox.Ok)
+            
+            elif len(self.EmpEntry_SSS.text()) != self.EmpEntry_SSS.maxLength():
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's SSS must be 10 Numbers.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's SSS must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
+
+            elif len(self.EmpEntry_TIN.text()) != self.EmpEntry_TIN.maxLength():
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's TIN must be 10 Numbers.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's TIN must be 12 Numbers.", QtWidgets.QMessageBox.Ok)
+        
+            elif len(self.EmpEntry_PH.text()) != self.EmpEntry_PH.maxLength():
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
+
+            elif len(self.EmpEntry_UN.text()) < 5:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Username must be more than 5 characters.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Username must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
+
+            elif len(self.EmpEntry_PW.text()) < 5:
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password must be more than 5 characters.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
+
+            elif self.EmpEntry_PW.text() != self.EmpEntry_CPW.text():
+                self.TechCore_Beep()
+                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password and Confirm Password is not match.")
+                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password and Confirm Password is not match.", QtWidgets.QMessageBox.Ok)
+
+            else:
+                try:
+                    self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO Employees(EmployeeUN, EmployeePW, FirstName, LastName, PositionCode, DOB, Address, SSS, TIN, PhilHealth) VALUES ('%s', '%s', '%s', '%s', %s, '%s', '%s', '%s', '%s', '%s')" % 
+                    (self.EmpEntry_UN.text(), self.EmpEntry_PW.text(), self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.TechCore_NameToPosCode(self.EmpEntry_PC.currentText()), self.EmpEntry_DOB.date().toString("MM/dd/yyyy"), self.EmpEntry_Adrs.text(), self.EmpEntry_SSS.text(), self.EmpEntry_TIN.text(), self.EmpEntry_PH.text()), TableTarget="Employees", SourceFunction=self.DataMCore_AddEntry.__name__)
+
+                    #self.MSSQL_ExecuteState(MSSQLStatement="CREATE LOGIN %s WITH PASSWORD = '%s'" % (self.EmpEntry_UN.text(), self.EmpEntry_PW.text()), TableTarget="<Classified>", SourceFunction=self.DataMCore_AddEntry.__name__)
+                    #if self.EmpEntry_PC.currentIndex() == 0:
+                    #    self.MSSQL_ExecuteState(MSSQLStatement="{CALL sp_addrolemember '%s', '%s'}" % ('db_accessadmin', self.EmpEntry_UN.text()), TableTarget="<Classified>", SourceFunction=self.DataMCore_AddEntry.__name__)
+
+                    self.MSSQL_CommitData()
+                except (Exception, MSSQL.Error):
+                    self.MSSQL_RollbackData(SourceFunction=self.DataMCore_AddEntry.__name__)
+
+                self.Modifier_StatusLabel.setText("Staff %s %s is added to the database! Clear Data To Add More Staff." % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text())) 
+                self.DataManip_PushData.setEnabled(False)
+                QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Staff %s %s is added to the database!" % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text()), QtWidgets.QMessageBox.Ok)
+
+    def DataMCore_LoadEntry(self):
+        self.DataManip_ResetActiveData.setEnabled(False)
+        if self.ActiveTargetTable == "SupplierReference":
+            self.SuppEntry_SC.setText(self.DataPayload[0])
+            self.SuppEntry_SN.setText(self.DataPayload[1])
+            self.SuppEntry_LDD.setDate(QtCore.QDate.fromString(self.DataPayload[2], "yyyy-MM-dd"))
+            self.SuppEntry_NDD.setDate(QtCore.QDate.fromString(self.DataPayload[3], "yyyy-MM-dd"))
+            
+        elif self.ActiveTargetTable == "InventoryItem":
+            print(self.DataPayload[4])
+            print(self.DataPayload[5])
+            self.InvEntry_IC.setText(self.DataPayload[0])
+            self.InvEntry_IN.setText(self.DataPayload[1])
+            self.InvEntry_IT.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Item Type", StrToCompare=self.DataPayload[2], SourceFunction=self.DataMCore_LoadEntry.__name__))
+            self.InvEntry_MT.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Material Type", StrToCompare=self.DataPayload[3], SourceFunction=self.DataMCore_LoadEntry.__name__))
+            
+            self.InvEntry_Q.setValue(int(self.DataPayload[4]))
+            self.InvEntry_C.setValue(float(self.DataPayload[5]))
+            self.InvEntry_ED.setDate(QtCore.QDate.fromString(self.DataPayload[6], "yyyy-MM-dd"))
+
+        elif self.ActiveTargetTable == "SupplierTransaction":
+            self.SuppEntry_SN.setText(self.DataPayload[1])
+
+        elif self.ActiveTargetTable == "CustTransaction":
+            self.SuppEntry_SN.setText(self.DataPayload[1])
+
+        elif self.ActiveTargetTable == "CustReceipt":
+            self.SuppEntry_SN.setText(self.DataPayload[1])
+
+        elif self.ActiveTargetTable == "JobPosition":
+           self.JobPEntry_PC.setText(self.DataPayload[0])
+           self.JobPEntry_PN.setText(self.DataPayload[1])
+
+        elif self.ActiveTargetTable == "Employees":
+            # self.DataPayload Index #2 is Ignored Due To Displaying Employees Password
+            self.EmpEntry_UN.setText(self.DataPayload[1])
+            self.EmpEntry_FN.setText(self.DataPayload[3])
+            self.EmpEntry_LN.setText(self.DataPayload[4])
+            self.TechCore_EditBindComboBox(self.DataPayload[5])
+            self.EmpEntry_DOB.setDate(QtCore.QDate.fromString(self.DataPayload[6], "yyyy-MM-dd"))
+            self.EmpEntry_Adrs.setText(self.DataPayload[7])
+            self.EmpEntry_SSS.setText(self.DataPayload[8])
+            self.EmpEntry_TIN.setText(self.DataPayload[9])
+            self.EmpEntry_PH.setText(self.DataPayload[10])
+            
+            self.EmpEntry_UN.setEnabled(False)
 
     def DataMCore_ClearEntry(self, ActiveEntryWindow):
         self.DataManip_PushData.setEnabled(True)
 
         if self.Tab_SelectionSelectives.currentIndex() == 0:
+            self.SuppEntry_SC.clear()
+            self.SuppEntry_SN.clear()
+            self.SuppEntry_LDD.setDateTime(QtCore.QDateTime.currentDateTime())
+            self.SuppEntry_NDD.setDateTime(QtCore.QDateTime.currentDateTime())
+            self.Modifier_StatusLabel.setText('Fields Cleared on Supplier Reference Window. Ready!')
+            print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Supplier Reference Window. Ready!')
+
+        if self.Tab_SelectionSelectives.currentIndex() == 1:
             self.InvEntry_IC.clear()
             self.InvEntry_IN.clear()
             self.InvEntry_IT.setCurrentIndex(0)
@@ -1170,14 +1332,6 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.Modifier_StatusLabel.setText('Fields Cleared on Inventory Reference Window. Ready!')
             print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Inventory Reference Window. Ready!')
 
-        elif self.Tab_SelectionSelectives.currentIndex() == 1:
-            self.SuppEntry_SC.clear()
-            self.SuppEntry_SN.clear()
-            self.SuppEntry_LDD.setDateTime(QtCore.QDateTime.currentDateTime())
-            self.SuppEntry_NDD.setDateTime(QtCore.QDateTime.currentDateTime())
-            self.Modifier_StatusLabel.setText('Fields Cleared on Supplier Reference Window. Ready!')
-            print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Supplier Reference Window. Ready!')
-
         elif self.Tab_SelectionSelectives.currentIndex() == 2:
             self.SuppTrEntry_IC.setCurrentIndex(0)
             self.SuppTrEntry_OC.setCurrentIndex(0)
@@ -1186,8 +1340,15 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.SuppTrEntry_QOR.setValue(0)
             self.Modifier_StatusLabel.setText('Fields Cleared on Supplier Transaction Window. Ready!')
             print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Supplier Transaction Window. Ready!')
-            
+
         elif self.Tab_SelectionSelectives.currentIndex() == 3:
+            self.CustTr_TC.clear()
+            self.CustTr_IC.setCurrentIndex(0)
+            self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
+            self.Modifier_StatusLabel.setText('Fields Cleared on Customer Transaction Window. Ready!')
+            print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Customer Transaction Window. Ready!')
+
+        elif self.Tab_SelectionSelectives.currentIndex() == 4:
             self.CustREntry_TrC.setCurrentIndex(0)
             self.CustREntry_TC.clear()
             self.CustREntry_VC.clear()
@@ -1198,14 +1359,14 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.Modifier_StatusLabel.setText('Fields Cleared on Customer Receipt Window. Ready!')
             print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Customer Receipt Window. Ready!')
 
-        elif self.Tab_SelectionSelectives.currentIndex() == 4:
-            self.CustTr_TC.clear()
-            self.CustTr_IC.setCurrentIndex(0)
-            self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
-            self.Modifier_StatusLabel.setText('Fields Cleared on Customer Transaction Window. Ready!')
-            print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Customer Transaction Window. Ready!')
 
         elif self.Tab_SelectionSelectives.currentIndex() == 5:
+            self.JobPEntry_PC.clear()
+            self.JobPEntry_PN.clear()
+            self.Modifier_StatusLabel.setText('Fields Cleared on Job Reference Window. Ready!')
+            print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Job Reference Window. Ready!')
+
+        elif self.Tab_SelectionSelectives.currentIndex() == 6:
             self.EmpEntry_FN.clear()
             self.EmpEntry_LN.clear()
             self.EmpEntry_PC.setCurrentIndex(0)
@@ -1221,36 +1382,12 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.Modifier_StatusLabel.setText('Fields Cleared on Employee Reference Window. Ready!')
             print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Employee Reference Window. Ready!')
 
-        elif self.Tab_SelectionSelectives.currentIndex() == 6:
-            self.JobPEntry_PC.clear()
-            self.JobPEntry_PN.clear()
-            self.Modifier_StatusLabel.setText('Fields Cleared on Job Reference Window. Ready!')
-            print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Job Reference Window. Ready!')
-
         else:
             self.Modifier_StatusLabel.setText('[Exception @ Modifier_ClearEntry] Current Index of Selected Tab does not match from any defined conditions.')
             print('[Exception @ Modifier_ClearEntry] Current Index of Selected Tab does not match from any defined conditions.')
 
     def GetDataVCore_ItemValue(self): # For Edit Functions
         pass
-
-    # We use this one to identify which table are we going to push some actions.
-    # Going to be deprecated. Onces we are able to pass a user from another table then we are good to go.
-    def DataMCore_GetTargetTable(self):
-        TabWindowCandidate = self.Tab_SelectionSelectives.tabText(self.Tab_SelectionSelectives.currentIndex())
-        if TabWindowCandidate == 'Inventory Entries':
-            return 'InventoryList'
-        elif TabWindowCandidate == 'Employee Entries':
-            return 'Employees'
-        elif TabWindowCandidate == 'Supplier Entries':
-            return 'SupplierList'
-        elif TabWindowCandidate == 'Transaction Entries':
-            return 'Transaction_Total'
-        elif TabWindowCandidate == 'Position Entries':
-            return 'JobPosition'
-        else:
-            print('[Exception @ GetDataVCore_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
-            raise ValueError('[Exception @ GetDataVCore_ItemValue] -> Selected Candidate does not exist from List of QTabWidgetItem Names')
 
 
 class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, Route88_TechnicalCore):
@@ -1269,7 +1406,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.ctrl_ExitProgram.clicked.connect(self.close)
         self.ctrl_ManagementSystem.clicked.connect(self.ShowManagementCore)
         self.ctrl_POSSystem.clicked.connect(self.ShowPOSCore)
-        #self.ctrl_AboutSystem.clicked.connect(self.)
+        self.ctrl_AboutSystem.clicked.connect(self.ShowAboutCore)
         self.ControllerCore_RunAfterRender()
 
     def ShowLoginCore(self):
@@ -1285,10 +1422,10 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
     def ShowPOSCore(self):
         self.Route88_POSInst = Route88_POSCore(StaffInCharge_Name=self.StaffLiteralName, StaffInCharge_Job=self.StaffCurrentJob, StaffInCharge_DBUser=self.StaffDBUser, StaffInCharge_DBPass=self.StaffDBPass)
         self.Route88_POSInst.show()
-        self.close()
 
     def ShowAboutCore(self):
-        pass
+        self.Route88_AboutInst = Route88_AboutUsCore()
+        self.Route88_AboutInst.show()
 
     def ControllerCore_RunAfterRender(self):
         self.user_StaffName.setText(self.StaffLiteralName)
