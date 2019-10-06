@@ -219,7 +219,7 @@ class Route88_TechnicalCore(object):
 
 
     # * Turns String To An Index Based Specifically Used For QComboBox on Modifier Instance
-    def TechCore_StrToIndex(self, RespectiveComboBox, StrToCompare, SourceFunction=None):
+    def TechCore_StrToIndex(self, RespectiveComboBox=None, StrToCompare=None, SourceFunction=None):
         DefaultIndex = 0
         try:
             if self.ActiveTargetTable == "InventoryItem":
@@ -228,7 +228,6 @@ class Route88_TechnicalCore(object):
                         if StrToCompare == self.InvEntry_IT.itemText(IndexCandidate):
                             return IndexCandidate
                     return DefaultIndex
-
                 else:
                     for IndexCandidate in range(0, self.InvEntry_MT.count()):
                         if StrToCompare == self.InvEntry_MT.itemText(IndexCandidate):
@@ -236,19 +235,35 @@ class Route88_TechnicalCore(object):
                     return DefaultIndex
     
             elif self.ActiveTargetTable == "SupplierTransaction":
-                pass
+                if RespectiveComboBox == "Item Code":
+                    for IndexCandidate in range(0, self.SuppTrEntry_IC.count()):
+                        if StrToCompare == self.SuppTrEntry_IC.itemText(IndexCandidate):
+                            return IndexCandidate
+                    return DefaultIndex
+                else:
+                    for IndexCandidate in range(0, self.SuppTrEntry_SC.count()):
+                        if StrToCompare == self.SuppTrEntry_SC.itemText(IndexCandidate):
+                            return IndexCandidate
+                    return DefaultIndex
     
             elif self.ActiveTargetTable == "CustTransaction":
-                pass
+                for IndexCandidate in range(0, self.CustTr_IC.count()):
+                    if StrToCompare == self.CustTr_IC.itemText(IndexCandidate):
+                        return IndexCandidate
+                return DefaultIndex
     
             elif self.ActiveTargetTable == "CustReceipt":
-                pass
+                if RespectiveComboBox == "Primary Transaction Code":
+                    for IndexCandidate in range(0, self.CustREntry_PTrC.count()):
+                        if StrToCompare == self.CustREntry_PTrC.itemText(IndexCandidate):
+                            return IndexCandidate
+                    return DefaultIndex
+                else:
+                    for IndexCandidate in range(0, self.CustREntry_STrC.count()):
+                        if StrToCompare == self.CustREntry_STrC.itemText(IndexCandidate):
+                            return IndexCandidate
+                    return DefaultIndex
     
-            elif self.ActiveTargetTable == "JobPosition":
-                pass
-    
-            elif self.ActiveTargetTable == "Employees":
-                pass
         except Exception as Err:
             print('[Exception @ TechCore_StrToIndex, %s] > Existing Data Rendering Error (Specifically for QComboBox). Detailed Info |> %s' % (SourceFunction, Err))
     
@@ -273,7 +288,46 @@ class Route88_TechnicalCore(object):
             
         except Exception as Err:
             print('[Exception @ TechCore_NameToPosCode, %s] Error Processing String Literal to Position Code... Detailed Error |> %s' % (SourceFunction, Err))
-             
+    
+    # * Iterates Through Specific Tables Set on 'self.ActiveTargetTable' And Fills Up Specific ComboBox
+    def TechCore_FillUpBox(self):
+        try:
+            if self.ActiveTargetTable == "SupplierReference":
+                pass
+    
+            elif self.ActiveTargetTable == "InventoryItem":
+                pass
+    
+            elif self.ActiveTargetTable == "SupplierTransaction":
+                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT SupplierCode FROM SupplierReference", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
+                for ItemCandidate in self.DataHandler_Load:
+                    self.SuppTrEntry_IC.addItem(str(ItemCandidate.SupplierCode))
+                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT ItemCode FROM InventoryItem", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
+                for ItemCandidate in self.DataHandler_Load:
+                    self.SuppTrEntry_SC.addItem(str(ItemCandidate.ItemCode))
+
+            elif self.ActiveTargetTable == "CustTransaction":
+                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT ItemCode FROM InventoryItem", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
+                for ItemCandidate in self.DataHandler_Load:
+                    self.CustTr_IC.addItem(str(ItemCandidate.ItemCode))
+    
+            elif self.ActiveTargetTable == "CustReceipt":
+                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TransactCode_Pri FROM CustReceipt", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
+                for ItemCandidate in self.DataHandler_Load:
+                    self.CustREntry_PTrC.addItem(str(ItemCandidate.TransactCode_Pri))
+
+                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TransactCode_Sec FROM CustReceipt", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
+                for ItemCandidate in self.DataHandler_Load:
+                    self.CustREntry_STrC.addItem(str(ItemCandidate.TransactCode_Sec))
+    
+            elif self.ActiveTargetTable == "JobPosition":
+                pass
+    
+            elif self.ActiveTargetTable == "Employees":
+                pass
+        except (Exception, MSSQL.Error) as IterToBoxErr:
+            pass
+
     # * Sets Current QComboBox Index Based On User's Data from Job Position Code
     def TechCore_EditBindComboBox(self, PosCode, SourceFunction=None):
         try:
@@ -626,7 +680,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("LastUpdate")
 
                 self.DataTable_View.setColumnCount(4)
-                self.DataTable_View.setHorizontalHeaderLabels(("Transact Code", "Item Code", "Creation Time", "Last Update"))
+                self.DataTable_View.setHorizontalHeaderLabels(("Transaction Code", "Item Code", "Creation Time", "Last Update"))
                 self.TechCore_ColResp()
                 self.DataTableTarget = "CustTransaction"
                 self.Target_TableCol = "TransactionCode"
@@ -647,7 +701,7 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
                 self.DataTable_View.setColumnCount(10)
                 self.TechCore_ColResp()
-                self.DataTable_View.setHorizontalHeaderLabels(("Primary TransactCode", "Secondary TransactCode", "Total Cost", "Vatable Cost", "Vat Exempt", "Zero Rated", "Net Vat", "Vat Rate", "Creation Time"))
+                self.DataTable_View.setHorizontalHeaderLabels(("Primary TransactCode", "Secondary TransactCode", "Total Cost", "Vatable Cost", "Vat Exempt", "Zero Rated", "Net Vat", "Vat Rate", "Creation Time", "Last Update"))
                 self.DataTableTarget = "CustReceipt"
                 self.Target_TableCol = "TransactCode_Pri"
 
@@ -999,7 +1053,7 @@ class Route88_POSCore(Ui_Route88_POS_SystemWindow, QtWidgets.QMainWindow, Route8
         super(Route88_POSCore, self).__init__(Parent=Parent)
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
-        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint)
+        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
         
         self.POS_StaffName = StaffInCharge_Name
         self.POS_StaffJob = StaffInCharge_Job
@@ -1115,9 +1169,10 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
                 self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
                 self.SuppTrEntry_OC.setValidator(QtGui.QIntValidator())
+                self.TechCore_FillUpBox()
 
             elif self.ActiveTargetTable == "CustTransaction":
-                self.resize(820, 510)
+                self.resize(820, 450)
                 self.Tab_SelectionSelectives.setCurrentIndex(3)
                 self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
                 self.CustTr_TC.setValidator(QtGui.QIntValidator())
@@ -1152,7 +1207,6 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
             #Preloads Data Received, Ternary Operator
             self.DataMCore_LoadEntry() if self.ModifierMode == "ModifyDataExists" else None
-                
 
         except (Exception, MSSQL.DatabaseError) as DataMCore_ARErr:
             self.TechCore_Beep()
@@ -1264,6 +1318,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Staff %s %s is added to the database!" % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text()), QtWidgets.QMessageBox.Ok)
 
     def DataMCore_LoadEntry(self):
+        self.DataManip_PushData.setText("Apply Modified Entry")
         self.DataManip_ResetActiveData.setEnabled(False)
         if self.ActiveTargetTable == "SupplierReference":
             self.SuppEntry_SC.setText(self.DataPayload[0])
@@ -1272,8 +1327,6 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.SuppEntry_NDD.setDate(QtCore.QDate.fromString(self.DataPayload[3], "yyyy-MM-dd"))
             
         elif self.ActiveTargetTable == "InventoryItem":
-            print(self.DataPayload[4])
-            print(self.DataPayload[5])
             self.InvEntry_IC.setText(self.DataPayload[0])
             self.InvEntry_IN.setText(self.DataPayload[1])
             self.InvEntry_IT.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Item Type", StrToCompare=self.DataPayload[2], SourceFunction=self.DataMCore_LoadEntry.__name__))
@@ -1284,13 +1337,28 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             self.InvEntry_ED.setDate(QtCore.QDate.fromString(self.DataPayload[6], "yyyy-MM-dd"))
 
         elif self.ActiveTargetTable == "SupplierTransaction":
-            self.SuppEntry_SN.setText(self.DataPayload[1])
+            self.TechCore_FillUpBox()
+            self.SuppTrEntry_IC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Item Code", StrToCompare=self.DataPayload[0], SourceFunction=self.DataMCore_LoadEntry.__name__))
+            self.SuppTrEntry_OC.setText(self.DataPayload[1])
+            self.SuppTrEntry_SC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Supplier Code", StrToCompare=self.DataPayload[2], SourceFunction=self.DataMCore_LoadEntry.__name__))
+            self.SuppTrEntry_QOR.setValue(int(self.DataPayload[3]))
+            self.SuppTrEntry_OD.setDate(QtCore.QDate.fromString(self.DataPayload[4], "yyyy-MM-dd"))
 
         elif self.ActiveTargetTable == "CustTransaction":
-            self.SuppEntry_SN.setText(self.DataPayload[1])
+            self.TechCore_FillUpBox()
+            self.CustTr_TC.setText(self.DataPayload[0])
+            self.CustTr_IC.setCurrentIndex(self.TechCore_StrToIndex(StrToCompare=self.DataPayload[1], SourceFunction=self.DataMCore_LoadEntry.__name__))
 
         elif self.ActiveTargetTable == "CustReceipt":
-            self.SuppEntry_SN.setText(self.DataPayload[1])
+            self.TechCore_FillUpBox()
+            self.CustREntry_PTrC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Primary Transaction Code", StrToCompare=self.DataPayload[0], SourceFunction=self.DataMCore_LoadEntry.__name__))
+            self.CustREntry_STrC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Secondary Transaction Code", StrToCompare=self.DataPayload[1], SourceFunction=self.DataMCore_LoadEntry.__name__))
+            self.CustREntry_TC.setText(self.DataPayload[2])
+            self.CustREntry_VC.setText(self.DataPayload[3])
+            self.CustREntry_VE.setText(self.DataPayload[4])
+            self.CustREntry_ZR.setText(self.DataPayload[5])
+            self.CustREntry_NV.setText(self.DataPayload[6])
+            self.CustREntry_VR.setText(self.DataPayload[7])
 
         elif self.ActiveTargetTable == "JobPosition":
            self.JobPEntry_PC.setText(self.DataPayload[0])
@@ -1349,7 +1417,8 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             print('[Execution @ DataMCore_ClearEntry] -> Finished Clearing Up Fields @ Customer Transaction Window. Ready!')
 
         elif self.Tab_SelectionSelectives.currentIndex() == 4:
-            self.CustREntry_TrC.setCurrentIndex(0)
+            self.CustREntry_PTrC.setCurrentIndex(0)
+            self.CustREntry_STrC.setCurrentIndex(0)
             self.CustREntry_TC.clear()
             self.CustREntry_VC.clear()
             self.CustREntry_VE.clear()
@@ -1422,6 +1491,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
     def ShowPOSCore(self):
         self.Route88_POSInst = Route88_POSCore(StaffInCharge_Name=self.StaffLiteralName, StaffInCharge_Job=self.StaffCurrentJob, StaffInCharge_DBUser=self.StaffDBUser, StaffInCharge_DBPass=self.StaffDBPass)
         self.Route88_POSInst.show()
+        self.close()
 
     def ShowAboutCore(self):
         self.Route88_AboutInst = Route88_AboutUsCore()

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>708</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -79,7 +79,7 @@
         </font>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>4</number>
        </property>
        <property name="tabBarAutoHide">
         <bool>false</bool>
@@ -1629,75 +1629,11 @@ current date.</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="layoutWidget_4">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>80</y>
-              <width>751</width>
-              <height>31</height>
-             </rect>
-            </property>
-            <property name="font">
-             <font>
-              <family>Open Sans SemiBold</family>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_14">
-             <item>
-              <widget class="QLabel" name="label_32">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Open Sans SemiBold</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Creation Time</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDateTimeEdit" name="CustTr_CT">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Open Sans SemiBold</family>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="calendarPopup">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
            <widget class="QGroupBox" name="groupBox_9">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>140</y>
+              <y>80</y>
               <width>751</width>
               <height>191</height>
              </rect>
@@ -2059,12 +1995,12 @@ Filling Confirm Password to Apply Changes</string>
                 </font>
                </property>
                <property name="text">
-                <string>Transaction Code</string>
+                <string>Primary Transaction Code</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="CustREntry_TrC">
+              <widget class="QComboBox" name="CustREntry_PTrC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2082,7 +2018,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_61">
+              <widget class="QLabel" name="label_62">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -2098,14 +2034,14 @@ Filling Confirm Password to Apply Changes</string>
                 </font>
                </property>
                <property name="text">
-                <string>Total Cost</string>
+                <string>Secondary Transaction Code</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="CustREntry_TC">
+              <widget class="QComboBox" name="CustREntry_STrC">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -2117,12 +2053,6 @@ Filling Confirm Password to Apply Changes</string>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
-               </property>
-               <property name="placeholderText">
-                <string>Required To Fill...</string>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -2398,6 +2328,51 @@ Filling Confirm Password to Apply Changes</string>
              </item>
              <item>
               <widget class="QLineEdit" name="CustREntry_VR">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="placeholderText">
+                <string>Required To Fill...</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_61">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans SemiBold</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Total Cost</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="CustREntry_TC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -3566,7 +3541,7 @@ Filling Confirm Password to Apply Changes.</string>
          </font>
         </property>
         <property name="text">
-         <string>Add / Apply Modified Entry</string>
+         <string>Add Entries</string>
         </property>
        </widget>
       </item>
@@ -3593,7 +3568,7 @@ Filling Confirm Password to Apply Changes.</string>
          </font>
         </property>
         <property name="text">
-         <string>Clear Entry</string>
+         <string>Clear Entries</string>
         </property>
        </widget>
       </item>

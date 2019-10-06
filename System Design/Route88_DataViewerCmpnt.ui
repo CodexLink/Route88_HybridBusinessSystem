@@ -540,7 +540,7 @@
           <string/>
          </property>
          <property name="text">
-          <string>Add Entry</string>
+          <string>Add New Data</string>
          </property>
         </widget>
        </item>
@@ -573,7 +573,7 @@
           <string/>
          </property>
          <property name="text">
-          <string>Edit / Modify Selected Entry</string>
+          <string>Edit / Modify Selected Row's Data</string>
          </property>
         </widget>
        </item>
@@ -603,7 +603,7 @@
           <string/>
          </property>
          <property name="text">
-          <string>Delete Selected Entry</string>
+          <string>Delete Selected Data</string>
          </property>
         </widget>
        </item>
@@ -633,7 +633,7 @@
           <string/>
          </property>
          <property name="text">
-          <string>Refresh Database</string>
+          <string>Refresh Database and Update Table</string>
          </property>
         </widget>
        </item>
