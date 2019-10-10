@@ -48,18 +48,23 @@
                 > This was implemented right after setupUi(). Because, we have to   initialize every value from the database which would then be shown after  UI has been render. So that when the engine initiates .show(). All values is already there. So in sort, setup Values and Elements.
 '''
 import subprocess as sysHandler
+import time
+from datetime import date, datetime
 from os import sys
 
+from dateutil.parser import parse as DateParse
 from PyQt5 import QtCore, QtGui, QtTest, QtWidgets
 from PyQt5.QtMultimedia import QSound
 
 import pyodbc as MSSQL
+# ! Route88 Static UI Files.
+from Route88_AboutSystemCmpnt import Ui_Route88_AboutUsWindow
 from Route88_ControllerCmpnt import Ui_Route88_Controller_Window
 from Route88_DataManipCmpnt import Ui_Route88_DataManipulation_Window
 from Route88_DataViewerCmpnt import Ui_Route88_DataViewer_Window
 from Route88_LoginCmpnt import Ui_Route88_Login_Window
 from Route88_POSCmpnt import Ui_Route88_POS_SystemWindow
-from Route88_AboutSystemCmpnt import Ui_Route88_AboutUsWindow
+
 
 # This class is a database controller by wrapping all confusing parts into a callable function... and any other such that requires global function calling.
 class Route88_TechnicalCore(object):
@@ -106,16 +111,16 @@ class Route88_TechnicalCore(object):
 
         except MSSQL.IntegrityError as MSSQL_ExecError:
             self.TechCore_Beep()
-            print("[Exception (MSSQL.IntegrityError) @ MSSQL_ExecuteState, %s] > Error, Cannot Push Data @ %s. Check if you are pushing an already existing data. Data must be unique." % (SourceFunction, TableTarget))
+            print("[Exception (MSSQL.IntegrityError) @ MSSQL_ExecuteState, %s] > Error, Cannot Push Data @ %s. Check the data you are trying to push. Posibly Duplicate Attempt Insertion. Data must be unique." % (SourceFunction, TableTarget))
             #self.Modifier_StatusLabel.setText("Error, Cannot Push Data @ %s. Check if you pushing an already existing data. Data must be unique." % (TableTarget))
-            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Push Data @ %s. Check if you pushing an already existing data. Data must be unique. Detailed Error: %s" % (TableTarget, MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Push Data @ %s. Check if you are already pushing an existing data. Data must be unique. Detailed Error: %s" % (TableTarget, MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
             raise Exception
     
         except MSSQL.ProgrammingError as MSSQL_ExecError:
             self.TechCore_Beep()
-            print("[Exception (MSSQL.ProgrammingError) @ MSSQL_ExecuteState, %s] > Error, Cannot Access Table %s. You don't have sufficient permission to do so..." % (SourceFunction, TableTarget))
+            print("[Exception (MSSQL.ProgrammingError) @ MSSQL_ExecuteState, %s] > Error, Cannot Access Table %s. Detailed Error: %s" % (SourceFunction, TableTarget, MSSQL_ExecError))
             #self.InventoryStatus.showMessage("Error, Cannot Access Table %s. You don't have sufficient permission to do so..." % (TableTarget))
-            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Access Table %s. You don't have sufficient permission to do so... Detailed Error: %s" % (TableTarget, MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Insertion Error', "Error, Cannot Access Table %s. Syntax might the cause... Detailed Error: %s" % (TableTarget, MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
             #raise Exception
 
 
@@ -253,16 +258,10 @@ class Route88_TechnicalCore(object):
                 return DefaultIndex
     
             elif self.ActiveTargetTable == "CustReceipt":
-                if RespectiveComboBox == "Primary Transaction Code":
-                    for IndexCandidate in range(0, self.CustREntry_PTrC.count()):
-                        if StrToCompare == self.CustREntry_PTrC.itemText(IndexCandidate):
-                            return IndexCandidate
-                    return DefaultIndex
-                else:
-                    for IndexCandidate in range(0, self.CustREntry_STrC.count()):
-                        if StrToCompare == self.CustREntry_STrC.itemText(IndexCandidate):
-                            return IndexCandidate
-                    return DefaultIndex
+                for IndexCandidate in range(0, self.CustREntry_STrC.count()):
+                    if StrToCompare == self.CustREntry_STrC.itemText(IndexCandidate):
+                        return IndexCandidate
+                return DefaultIndex
     
         except Exception as Err:
             print('[Exception @ TechCore_StrToIndex, %s] > Existing Data Rendering Error (Specifically for QComboBox). Detailed Info |> %s' % (SourceFunction, Err))
@@ -302,6 +301,7 @@ class Route88_TechnicalCore(object):
                 self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT SupplierCode FROM SupplierReference", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
                 for ItemCandidate in self.DataHandler_Load:
                     self.SuppTrEntry_IC.addItem(str(ItemCandidate.SupplierCode))
+                
                 self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT ItemCode FROM InventoryItem", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
                 for ItemCandidate in self.DataHandler_Load:
                     self.SuppTrEntry_SC.addItem(str(ItemCandidate.ItemCode))
@@ -312,19 +312,16 @@ class Route88_TechnicalCore(object):
                     self.CustTr_IC.addItem(str(ItemCandidate.ItemCode))
     
             elif self.ActiveTargetTable == "CustReceipt":
-                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TransactCode_Pri FROM CustReceipt", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
+                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TransactionCode FROM CustTransaction", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
                 for ItemCandidate in self.DataHandler_Load:
-                    self.CustREntry_PTrC.addItem(str(ItemCandidate.TransactCode_Pri))
-
-                self.DataHandler_Load = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TransactCode_Sec FROM CustReceipt", FetchType="All", TableTarget=self.ActiveTargetTable, SourceFunction=self.TechCore_FillUpBox.__name__)
-                for ItemCandidate in self.DataHandler_Load:
-                    self.CustREntry_STrC.addItem(str(ItemCandidate.TransactCode_Sec))
+                    self.CustREntry_STrC.addItem(str(ItemCandidate.TransactionCode))
     
             elif self.ActiveTargetTable == "JobPosition":
                 pass
     
             elif self.ActiveTargetTable == "Employees":
                 pass
+
         except (Exception, MSSQL.Error) as IterToBoxErr:
             pass
 
@@ -367,9 +364,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         # Window Flags
         self.setWindowFlags(QtCore.Qt.Dialog | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowShadeButtonHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint)
-        # Button Binds for Window 'Route88_LoginForm'
-        self.UserAcc_UserCode.returnPressed.connect(self.UserAcc_SubmitData.click)
-        self.UserAcc_Password.returnPressed.connect(self.UserAcc_SubmitData.click)
+
         self.UserAcc_SubmitData.clicked.connect(self.LoginCore_DataSubmission)
         # RunAfterRender Slot
         self.LoginCore_RunAfterRender()
@@ -379,7 +374,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
             self.MSSQL_OpenCon(UCredential='Route88_TempAuth', PCredential='Route88_Group7', SourceFunction=self.LoginCore_RunAfterRender.__name__)
             self.MSSQL_InitCursor(SourceFunction=self.LoginCore_RunAfterRender.__name__)
             self.LoginCore_CheckEnlisted()
-
+    
         except Exception as ErrorHandler:
             self.TechCore_Beep()
             print('[Exception @ LoginCore_RunAfterRender] > One of the MySQL Required Components Returns Error. Detailed Info |> {}'.format(str(ErrorHandler)))
@@ -431,7 +426,6 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
         try:
             self.MSSQL_InitCursor(SourceFunction=self.LoginCore_DataSubmission.__name__)
             self.QueryReturn = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TOP 1 * FROM Employees WHERE EmployeeUN = '%s' AND EmployeePW = '%s'" % (self.UserAcc_UserCode.text(),self.UserAcc_Password.text()), FetchType='One', TableTarget='Employees', SourceFunction=self.LoginCore_DataSubmission.__name__)
-            #self.UserData = self.MSSQL_FetchAllData()
             if self.QueryReturn:
                 QSound.play("SysSounds/LoginSuccessNotify.wav")
                 self.StatusLabel.setText("Login Success: Credential Input Matched!")
@@ -442,10 +436,10 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.UserUN = self.QueryReturn.EmployeeUN
                 self.UserPW = self.QueryReturn.EmployeePW
                 QtWidgets.QMessageBox.information(self, 'Route88 Login Form | Login Success', "Login Success! You have are now logged in as ... '%s | Job Info |> %s." % (self.UserLiteralName, self.UserPosInfo), QtWidgets.QMessageBox.Ok)
-                self.StatusLabel.setText("Successfully Logged in as %s %s" % (self.QueryReturn.FirstName, self.QueryReturn.LastName))
+                self.StatusLabel.setText("Successfully Logged in as %s %s ..." % (self.QueryReturn.FirstName, self.QueryReturn.LastName))
 
                 QtTest.QTest.qWait(1300)
-                self.MSSQL_CloseCon() # Reconnect to Anothe SQ: Usage with Specific User Parameters
+                self.MSSQL_CloseCon()
                 self.close()
 
                 self.Route88_MCInst = Route88_WindowController(Staff_Name=self.UserLiteralName, Staff_Job=self.UserPosInfo, Staff_DBUser=self.UserUN, Staff_DBPass=self.UserPW)
@@ -457,7 +451,7 @@ class Route88_LoginCore(Ui_Route88_Login_Window, QtWidgets.QDialog, Route88_Tech
                 self.UserAcc_SubmitData.setDisabled(True)
 
                 QtWidgets.QMessageBox.critical(self, 'Route88 Login Form | Login Failed', "Login Failed! Credential Input Not Matched. Check your User Code or your Password which may be written in Caps Lock. Please Try Again.", QtWidgets.QMessageBox.Ok)
-                
+
                 self.UserAcc_SubmitData.setDisabled(False)
 
         except (Exception, MSSQL.DatabaseError) as LoginSubmissionErrorMsg:
@@ -486,10 +480,12 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
 
         self.DataVCore_RenderExplicits()
 
+        self.Query_ColumnOpt.currentIndexChanged.connect(self.Query_ValueToSearch.clear)
         self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_SearchFieldSet)
         self.Query_Operator.currentIndexChanged.connect(self.DataVCore_OperatorSet)
 
         self.Query_ColumnOpt.currentIndexChanged.connect(self.DataVCore_ValSearch)
+
         self.Query_Operator.currentIndexChanged.connect(self.DataVCore_ValSearch)
 
         self.Query_ValueToSearch.textChanged.connect(self.DataVCore_PatternSetter)
@@ -627,6 +623,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
 
+                self.Query_ColumnOpt.setEnabled(True)
+
                 self.DataTable_View.setColumnCount(6)
                 self.DataTable_View.setHorizontalHeaderLabels(("Supplier Code", "Supplier Name", "Last Delivery Date", "Next Delivery Date", "Creation Time", "Last Update"))
                 self.TechCore_ColResp()
@@ -666,15 +664,14 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                 self.DataTable_View.setColumnCount(7)
                 self.DataTable_View.setHorizontalHeaderLabels(("Item Code", "Order Code", "Supplier Code", "Quantities Received", "Order Date", "Creation Time", "Last Update"))
                 self.TechCore_ColResp()
-                self.DataTable_View.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
                 self.DataTableTarget = "SupplierTransaction"
-                self.Target_TableCol = "ItemCode"
+                self.Target_TableCol = "OrderCode"
 
 
             elif self.ActiveTable == "Customer Transaction Data":
                 self.TechCore_ColOptClear()
                 self.Query_ColumnOpt.setEnabled(True)
-                self.Query_ColumnOpt.addItem("TransactCode")
+                self.Query_ColumnOpt.addItem("TransactionCode")
                 self.Query_ColumnOpt.addItem("ItemCode")
                 self.Query_ColumnOpt.addItem("CreationTime")
                 self.Query_ColumnOpt.addItem("LastUpdate")
@@ -927,9 +924,8 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     self.DataTable_View.setItem(currentRow, 7, QtWidgets.QTableWidgetItem('%s' % (InventoryData.SSS)))
                     self.DataTable_View.setItem(currentRow, 8, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
                     self.DataTable_View.setItem(currentRow, 9, QtWidgets.QTableWidgetItem('%s' % (InventoryData.PhilHealth)))
-                    self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('%s' % (InventoryData.TIN)))
-                    self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
-                    self.DataTable_View.setItem(currentRow, 12, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
+                    self.DataTable_View.setItem(currentRow, 10, QtWidgets.QTableWidgetItem('%s' % (InventoryData.CreationTime)))
+                    self.DataTable_View.setItem(currentRow, 11, QtWidgets.QTableWidgetItem('%s' % (InventoryData.LastUpdate)))
     
                     for SetCellFixedWidth in range(0, self.DataTable_View.columnCount()):
                         ColumnPosFixer = self.DataTable_View.item(currentRow, SetCellFixedWidth)
@@ -965,10 +961,11 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
             self.ModifierDialog = Route88_ModifierCore(RecentTableActive=self.DataTableTarget, ModifierMode="ModifyDataExists", DataPayload_AtRow=SelectedColData, StaffInCharge_Name=self.InCharge_LiteralName, Staff_DBUser=self.InCharge_DBUser, Staff_DBPass=self.InCharge_DBPass)
             self.ModifierDialog.exec_()
             self.DataVCore_RefreshData()
+
         except Exception:
             self.StaffAct_Edit.setEnabled(False)
             self.StaffAct_Delete.setEnabled(False)
-            self.InventoryStatus.showMessage('Select Data Error > Selected Data is Forgotten, Please Select The Data You Wish To Delete or Edit again.')
+            self.InventoryStatus.showMessage('Select Data Error > Selected Data is Left Forgotten. Please Select The Data You Wish To Delete or Edit Again.')
 
 
     def DataVCore_DeleteEntry(self):
@@ -1017,22 +1014,34 @@ class Route88_ManagementCore(Ui_Route88_DataViewer_Window, QtWidgets.QMainWindow
                     self.InventoryStatus.showMessage('Deletion Query: Processing to Delete Row %s' % (self.DataTable_View.currentRow()))
 
                     self.MSSQLDataWireCursor.execute('DELETE FROM %s WHERE %s = %s' % (self.DataTableTarget, self.Target_TableCol, selectedData))
+                    self.MSSQL_CommitData()
 
                     self.TechCore_RowClearSelected(self.DataTable_View.currentRow())
 
-                    self.MSSQL_CommitData()
-
-                    self.InventoryStatus.showMessage('Deletion Query | > Data Row %s has been deleted!' % (self.DataTable_View.currentRow() + 1))
+                    self.InventoryStatus.showMessage('Deletion Query | > Data Row %s from %s has been deleted!' % (self.DataTable_View.currentRow() + 1, self.DataTableTarget))
                     if self.DataTable_View.rowCount() == 0:
                         self.StaffAct_Delete.setEnabled(False)
                     else:
                         self.StaffAct_Delete.setEnabled(True)
 
-
-        except (Exception, MSSQL.Error, MSSQL.OperationalError) as DelectionErrMsg:
-            self.InventoryStatus.showMessage('[Database Query Process | Deletion Query] -> No Selected Row To Delete...')
-            print('[Exception Thrown @ DataVCore_DeleteEntry] -> There Might Be No Selected Row To Delete... Detailed Error |> {}'.format(str(DelectionErrMsg)))
+        except MSSQL.IntegrityError as MSSQL_ExecError:
+            self.TechCore_Beep()
+            print('[Exception Thrown @ DataVCore_DeleteEntry] > There Might Be Data Deletion Error. Check for Child Before Deleting Its Parent. Detailed Error |> %s' % MSSQL_ExecError)
+            self.InventoryStatus.showMessage('Database Query Process | Deletion Query > Data Deletion Error. Check for Childs Data Before Deleting Its Parent Data.')
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', 'There Might Be Data Deletion Error. Check for Child Before Deleting Its Parent. Detailed Error |> %s' % MSSQL_ExecError, QtWidgets.QMessageBox.Ok)
     
+    
+        except MSSQL.ProgrammingError as MSSQL_ExecError:
+            self.TechCore_Beep()
+            print("[Exception Thrown @ DataVCore_DeleteEntry, %s] > Error, Cannot Access Table. Check The Syntax or Data Relationship. Detailed Error: %s" % (self.DataTableTarget, MSSQL_ExecError))
+            self.InventoryStatus.showMessage("Error, Cannot Do Tasked Actions at Table %s." % self.DataTableTarget)
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Cannot Access Table. Check The Syntax or Data Relationship. Detailed Error: %s" % (MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
+
+        except MSSQL.DatabaseError as MSSQL_ExecError:
+            self.TechCore_Beep()
+            print('[Exception Thrown @ DataVCore_DeleteEntry, %s] > Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (self.DataTableTarget, MSSQL_ExecError))
+            self.InventoryStatus.showMessage('Error in SQL Statements. Double check your statements. Please report this to the developer.')
+            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', 'Error in SQL Statements. Double check your statements. Detailed Info |> %s' % (MSSQL_ExecError), QtWidgets.QMessageBox.Ok)
     # Exit Function
     def DataVCore_ReturnWindow(self):
         self.close()
@@ -1122,7 +1131,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
         self.setWindowIcon(QtGui.QIcon('IcoDisplay/r_88.ico'))
         
         self.DataManip_CloseWindow.clicked.connect(self.close)
-        self.DataManip_PushData.clicked.connect(self.DataMCore_AddEntry)
+        self.DataManip_PushData.clicked.connect(self.DataMCore_EntryManipulation)
         self.DataManip_ResetActiveData.clicked.connect(self.DataMCore_ClearEntry)
 
         self.DataPayload = DataPayload_AtRow
@@ -1169,7 +1178,6 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
                 self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
                 self.SuppTrEntry_OC.setValidator(QtGui.QIntValidator())
-                self.TechCore_FillUpBox()
 
             elif self.ActiveTargetTable == "CustTransaction":
                 self.resize(820, 450)
@@ -1180,6 +1188,13 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
             elif self.ActiveTargetTable == "CustReceipt":
                 self.resize(820, 600)
                 self.Tab_SelectionSelectives.setCurrentIndex(4)
+                self.CustREntry_PTrC.setValidator(QtGui.QIntValidator())
+                self.CustREntry_TC.setValidator(QtGui.QIntValidator())
+                self.CustREntry_VC.setValidator(QtGui.QIntValidator())
+                self.CustREntry_VE.setValidator(QtGui.QIntValidator())
+                self.CustREntry_ZR.setValidator(QtGui.QIntValidator())
+                self.CustREntry_NV.setValidator(QtGui.QIntValidator())
+                self.CustREntry_VR.setValidator(QtGui.QIntValidator())
                 self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
 
 
@@ -1194,7 +1209,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                 self.Tab_SelectionSelectives.setCurrentIndex(6)
                 self.TechCore_DisableExcept(self.Tab_SelectionSelectives.currentIndex())
                 self.EmpEntry_DOB.setDateTime(QtCore.QDateTime.currentDateTime())
-                # Restrict These QLineEdit Object to Accept Only Integer.
+                # Restrict These QLineEdit Objects to Accept Only Integer.
                 self.EmpEntry_SSS.setValidator(QtGui.QDoubleValidator())
                 self.EmpEntry_TIN.setValidator(QtGui.QDoubleValidator())
                 self.EmpEntry_PH.setValidator(QtGui.QDoubleValidator())
@@ -1206,177 +1221,433 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
                     pass
 
             #Preloads Data Received, Ternary Operator
-            self.DataMCore_LoadEntry() if self.ModifierMode == "ModifyDataExists" else None
+            self.DataMCore_LoadExistEntry() if self.ModifierMode == "ModifyDataExists" else self.DataMCore_LoadItems()
 
         except (Exception, MSSQL.DatabaseError) as DataMCore_ARErr:
             self.TechCore_Beep()
             print('[Exception @ DataMCore_RunAfterRender] > Error Rendering Modifier Core: RunAfterRender. Detailed Error: %s' % (DataMCore_ARErr))
-    
-
-        #for DisableIndex in range(1, self.EmpEntry_PC.maxCount()):
-        #    pass
-            #self.EmpEntry_PC.setEnabled(False)
 
     # Staff Action Function Declarations
-    def DataMCore_AddEntry(self):
-        self.MSSQL_InitCursor(SourceFunction=self.DataMCore_AddEntry.__name__)
+    def DataMCore_EntryManipulation(self):
+        try:
+            self.MSSQL_InitCursor(SourceFunction=self.DataMCore_EntryManipulation.__name__)
+    
+            if self.ActiveTargetTable == "SupplierReference":
+                if len(self.SuppEntry_SC.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Supplier Code should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Supplier Code should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.SuppEntry_SN.text()) < 5:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Supplier Name Should Be More Than 5 Characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Supplier Name  Should Be More Than 5 Characters.", QtWidgets.QMessageBox.Ok)
+                
+                elif DateParse(self.SuppEntry_LDD.date().toString("MM/dd/yyyy")) > DateParse(self.SuppEntry_NDD.date().toString("MM/dd/yyyy")):
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, Last Delivery Date is Higher Than Next Delivery Date!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Last Delivery Date is Higher Than Next Delivery Date!", QtWidgets.QMessageBox.Ok)
+                else:
+                    # ! Insert Something here.
+                    if self.ModifierMode == "PushEntry":
+                        self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO %s(SupplierCode, SupplierName, LastDeliveryDate, NextDeliveryDate) VALUES (%s, '%s', '%s', '%s')" % (self.ActiveTargetTable, self.SuppEntry_SC.text(), self.SuppEntry_SN.text(), self.SuppEntry_LDD.date().toString("MM/dd/yyyy"), self.SuppEntry_NDD.date().toString("MM/dd/yyyy")), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Supplier Reference #%s with Supplier Name '%s' is added to the database! Clear Data To Add More..." % (self.SuppEntry_SC.text(), self.SuppEntry_SN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Supplier Reference %s with Supplier Name '%s' is added to the database! Clear Data To Add More..." % (self.SuppEntry_SC.text(), self.SuppEntry_SN.text()), QtWidgets.QMessageBox.Ok)
+                    
+                    else:
+                        self.MSSQL_ExecuteState(MSSQLStatement="UPDATE %s SET SupplierName = '%s', LastDeliveryDate = '%s', NextDeliveryDate = '%s' WHERE SupplierCode = %s" % (self.ActiveTargetTable, self.SuppEntry_SN.text(), self.SuppEntry_LDD.date().toString("MM/dd/yyyy"), self.SuppEntry_NDD.date().toString("MM/dd/yyyy"), self.SuppEntry_SC.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Supplier Reference #%s with Supplier Name '%s' has it's data modification applied to the database!" % (self.SuppEntry_SC.text(), self.SuppEntry_SN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Supplier Reference %s with Supplier Name '%s' has it's data modification applied to the database!" % (self.SuppEntry_SC.text(), self.SuppEntry_SN.text()), QtWidgets.QMessageBox.Ok)
 
-        if self.ActiveTargetTable == "SupplierReference":
-            pass
-        elif self.ActiveTargetTable == "InventoryItem":
-            pass
-        elif self.ActiveTargetTable == "SupplierTransaction":
-            pass
+            elif self.ActiveTargetTable == "InventoryItem":
+                setExpiryDate = self.InvEntry_ED.date().toString("MM/dd/yyyy")
+                nonset_CurrentDate = date.today().strftime("%m/%d/%Y")
+
+                ExpiryDate = time.strptime(setExpiryDate, "%m/%d/%Y")
+                CurrentDate = time.strptime(nonset_CurrentDate, "%m/%d/%Y")
+
+                if len(self.InvEntry_IC.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Item Code should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Item Code should not be empty!", QtWidgets.QMessageBox.Ok)
+
+                elif len(self.InvEntry_IN.text()) < 2:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Item Name Should Be More Than 2 Characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Item Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
+
+                elif self.InvEntry_IT.currentIndex() == -1:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Item Type Must Have a Valid Selected Value!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Item Type Must Have Valid Selected Value!", QtWidgets.QMessageBox.Ok)
+
+                elif self.InvEntry_MT.currentIndex() == -1:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Material Type Must Have a Valid Selected Value!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Material Type Must Have Valid Selected Value!", QtWidgets.QMessageBox.Ok)
+
+                elif self.InvEntry_Q.value() == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Available Stock should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Available Stock should not be empty!", QtWidgets.QMessageBox.Ok)
+
+                elif self.InvEntry_C.value() == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Item Cost should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Item Cost should not be empty!", QtWidgets.QMessageBox.Ok)
+
+                elif ExpiryDate < CurrentDate:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Expiry Date Should Not Be Lesser Than Today's Date!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Expiry Date Should Not Be Lesser Than Today's Date!", QtWidgets.QMessageBox.Ok)
+
+                else:
+                    if self.ModifierMode == "PushEntry":
+                        self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO %s(ItemCode, ItemName, ItemType, MaterialType, AvailableStock, ItemCost, ExpiryDate) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (self.ActiveTargetTable, self.InvEntry_IC.text(), self.InvEntry_IN.text(), self.InvEntry_IT.currentText(), self.InvEntry_MT.currentText(), self.InvEntry_Q.value(), self.InvEntry_C.value(), self.InvEntry_ED.date().toString("MM/dd/yyyy")), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Inventory Item #%s with Item Name '%s' is added to the database! Clear Data To Add More..." % (self.InvEntry_IC.text(), self.InvEntry_IN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Supplier Reference %s with Supplier Name '%s' is added to the database! Clear Data To Add More..." % (self.InvEntry_IC.text(), self.InvEntry_IN.text()), QtWidgets.QMessageBox.Ok)
+                    else:
+                        self.MSSQL_ExecuteState(MSSQLStatement="UPDATE %s SET ItemName = '%s', ItemType = '%s', MaterialType = '%s', AvailableStock = %s, ItemCost = %s, ExpiryDate = '%s' WHERE ItemCode = %s" % (self.ActiveTargetTable, self.InvEntry_IN.text(), self.InvEntry_IT.currentText(), self.InvEntry_MT.currentText(), self.InvEntry_Q.value(), self.InvEntry_C.value(), self.InvEntry_ED.date().toString("MM/dd/yyyy"), self.InvEntry_IC.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Inventory Item #%s with Item Name '%s' has it's data modification applied to the database!" % (self.InvEntry_IC.text(), self.InvEntry_IN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Supplier Reference %s with Supplier Name '%s' has it's data modification applied to the database!" % (self.InvEntry_IC.text(), self.InvEntry_IN.text()), QtWidgets.QMessageBox.Ok)
+
+            elif self.ActiveTargetTable == "SupplierTransaction":
+                setOrderDate = self.SuppTrEntry_OD.date().toString("MM/dd/yyyy")
+                nonset_CurrentDate = date.today().strftime("%m/%d/%Y")
+
+                OrderDate = time.strptime(setOrderDate, "%m/%d/%Y")
+                CurrentDate = time.strptime(nonset_CurrentDate, "%m/%d/%Y")
+
+                if self.SuppTrEntry_IC.currentIndex() == -1:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Item Code Must Have a Valid Selected Value!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Item Code Must Have a Valid Selected Value!", QtWidgets.QMessageBox.Ok)
+
+                elif len(self.SuppTrEntry_OC.text()) == 0:  
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Order Code should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Order Code should not be empty!", QtWidgets.QMessageBox.Ok)
+
+                elif self.SuppTrEntry_SC.currentIndex() == -1:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Supplier Code Must Have Valid Selected Value!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Supplier Code Must Have Valid Selected Value!", QtWidgets.QMessageBox.Ok)
+
+                elif self.SuppTrEntry_QOR.value() == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Quantity Order Receipt Value should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Quantity Order Receipt Value should not be empty!", QtWidgets.QMessageBox.Ok)
+
+                elif OrderDate > CurrentDate:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Order Date Should Not Be More Than Current Date!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Order Date Should Not Be More Than Current Date!", QtWidgets.QMessageBox.Ok)
+                    
+                else:
+                    if self.ModifierMode == "PushEntry":
+                        self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO %s(ItemCode, OrderCode, SupplierCode, QuantityReceived, OrderDate) VALUES (%s, '%s', '%s', '%s', '%s')" % (self.ActiveTargetTable, self.SuppTrEntry_IC.currentText(), self.SuppTrEntry_OC.text(), self.SuppTrEntry_SC.currentText(), self.SuppTrEntry_QOR.value(), self.SuppTrEntry_OD.date().toString("MM/dd/yyyy")), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Supplier Transaction Order Code '%s', Item Code #%s and Supplier Code #%s is added to the database! Clear Data To Add More..." % (self.SuppTrEntry_OC.text(), self.SuppTrEntry_IC.currentText(), self.SuppTrEntry_SC.currentText())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Supplier Transaction Order Code '%s', Item Code #%s and Supplier Code #%s is added to the database! Clear Data To Add More..." % (self.SuppTrEntry_OC.text(), self.SuppTrEntry_IC.currentText(), self.SuppTrEntry_SC.currentText()), QtWidgets.QMessageBox.Ok)
+                    
+                    else:
+                        self.MSSQL_ExecuteState(MSSQLStatement="UPDATE %s SET ItemCode=%s, SupplierCode=%s, QuantityReceived=%s, OrderDate='%s' WHERE OrderCode = %s" % (self.ActiveTargetTable, self.SuppTrEntry_IC.currentText(), self.SuppTrEntry_SC.currentText(), self.SuppTrEntry_QOR.value(), self.SuppTrEntry_OD.date().toString("MM/dd/yyyy"), self.SuppTrEntry_OC.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Supplier Transaction Order Code '%s', Item Code #%s and Supplier Code #%s is added to the database! Clear Data To Add More..." % (self.SuppTrEntry_OC.text(), self.SuppTrEntry_IC.currentText(), self.SuppTrEntry_SC.currentText())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Supplier Transaction Order Code '%s', Item Code #%s and Supplier Code #%s is added to the database! Clear Data To Add More..." % (self.SuppTrEntry_OC.text(), self.SuppTrEntry_IC.currentText(), self.SuppTrEntry_SC.currentText()), QtWidgets.QMessageBox.Ok)
+
+            elif self.ActiveTargetTable == "CustTransaction":
+                if len(self.CustTr_TC.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Transaction Code should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Transaction Code should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif self.CustTr_IC.currentIndex() == -1:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Item Code Must Have a Valid Selected Value!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Item Code Must Have a Valid Selected Value!", QtWidgets.QMessageBox.Ok)
+                    
+                else:
+                    if self.ModifierMode == "PushEntry":
+                        self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO %s(TransactionCode, ItemCode) VALUES (%s, %s)" % (self.ActiveTargetTable, self.CustTr_TC.text(), self.CustTr_IC.currentText()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Customer Transaction #%s with Item Code '%s' is added to the database! Clear Data To Add More..." % (self.CustTr_TC.text(), self.CustTr_IC.currentText())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Customer Transaction #%s with Item Code #%s Clear Data To Add More..." % (self.CustTr_TC.text(), self.CustTr_IC.currentText()), QtWidgets.QMessageBox.Ok)
+                    
+                    else:
+                        self.MSSQL_ExecuteState(MSSQLStatement="UPDATE %s SET ItemCode = %s WHERE TransactionCode = %s AND ItemCode = %s" % (self.ActiveTargetTable, self.CustTr_IC.currentText(), self.CustTr_TC.text(), self.OldStateItemCode), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Customer Transaction #%s with Item Code '%s' has it's data modification applied to the database!" % (self.CustTr_TC.text(), self.CustTr_IC.currentText())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Customer Transaction #%s with Item Code #%s has it's data modification applied to the database!" % (self.CustTr_TC.text(), self.CustTr_IC.currentText()), QtWidgets.QMessageBox.Ok)
+                    
+
+            elif self.ActiveTargetTable == "CustReceipt":
+                if len(self.CustREntry_PTrC.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Primary Transaction Code Must Have Valid Selected Value!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Primary Transaction Code Must Have Valid Selected Value!", QtWidgets.QMessageBox.Ok)
+
+                elif self.CustREntry_STrC.currentIndex() == -1:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Secondary Transaction Code Must Have Valid Selected Value!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Secondary Transaction Code Must Have Valid Selected Value!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.CustREntry_VC.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. VATable Cost should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. VATable Cost should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.CustREntry_VE.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. VATable Exempt should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. VATable Exempt should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.CustREntry_ZR.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Zero Rated should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Zero Rated should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.CustREntry_NV.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Net VAT should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Net VAT should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.CustREntry_VR.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Vat Rate should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Vat Rate should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.CustREntry_TC.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Total Cost should not be empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Total Cost should not be empty!", QtWidgets.QMessageBox.Ok)
+                
+                else:
+                    if self.ModifierMode == "PushEntry":
+                        self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO %s(TransactCode_Pri, TransactCode_Sec, TotalCost, VATableCost, VATExempt, ZeroRated, NetVAT, VATRate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" % (self.ActiveTargetTable, self.CustREntry_PTrC.text(), self.CustREntry_STrC.currentText(), self.CustREntry_VC.text(), self.CustREntry_VE.text(), self.CustREntry_ZR.text(), self.CustREntry_NV.text(), self.CustREntry_VR.text(), self.CustREntry_TC.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Customer Receipt #%s with Secondary Transaction Code '%s' is added to the database! Clear Data To Add More..." % (self.CustREntry_PTrC.text(), self.CustREntry_STrC.currentText())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Customer Receipt #%s with Transaction Code '%s' is added to the database! Clear Data To Add More..." % (self.CustREntry_PTrC.text(), self.CustREntry_STrC.currentText()), QtWidgets.QMessageBox.Ok)
+                        
+                    else:  
+                        self.MSSQL_ExecuteState(MSSQLStatement="UPDATE %s SET TransactCode_Sec = %s, TotalCost = %s, VATableCost = %s, VATExempt = %s, ZeroRated = %s, NetVAT = %s, VATRate = %s WHERE TransactCode_Pri = %s" % (self.ActiveTargetTable, self.CustREntry_STrC.currentText(), self.CustREntry_TC.text(), self.CustREntry_VC.text(), self.CustREntry_VE.text(), self.CustREntry_ZR.text(), self.CustREntry_NV.text(), self.CustREntry_VR.text(), self.CustREntry_PTrC.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Customer Receipt #%s with Transaction Code '%s' has it's data modification applied to the database!" % (self.CustREntry_PTrC.text(), self.CustREntry_STrC.currentText())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Customer Receipt #%s with Secondary Transaction Code '%s' has it's data modification applied to the database!" % (self.CustREntry_PTrC.text(), self.CustREntry_STrC.currentText()), QtWidgets.QMessageBox.Ok)
+                        
+            elif self.ActiveTargetTable == "JobPosition":
+                if len(self.JobPEntry_PC.text()) == 0:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Code Should Not Be Empty!")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Code Should Not Be Empty!", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.JobPEntry_PN.text()) < 2:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
+                
+                else:
+                    if self.ModifierMode == "PushEntry":
+                        self.MSSQL_ExecuteState("INSERT INTO %s VALUES ('%s', '%s')" % (self.ActiveTargetTable, self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Job Position #%s with Job Description of %s is added to the database! Clear Data To Add More..." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Job Position #%s with Job Description of %s is added to the database! Clear Data To Add More..." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), QtWidgets.QMessageBox.Ok)
+                    
+                    else:     
+                        self.MSSQL_ExecuteState("UPDATE %s SET JobName='%s' WHERE PositionCode = %s" % (self.ActiveTargetTable, self.JobPEntry_PN.text(), self.JobPEntry_PC.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Job Position #%s with Job Description of %s is added to the database! Clear Data To Add More..." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Job Position #%s with Job Description of %s is added to the database! Clear Data To Add More..." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), QtWidgets.QMessageBox.Ok)
+
+            elif self.ActiveTargetTable == "Employees":
+                if len(self.EmpEntry_FN.text()) < 2:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
+    
+                elif len(self.EmpEntry_LN.text()) < 2:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
+    
+                elif self.EmpEntry_PC.currentIndex() == -1:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Position Code is not yet selected.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Position Code is not yet selected.", QtWidgets.QMessageBox.Ok)
+    
+                elif len(self.EmpEntry_Adrs.text()) < 10:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.", QtWidgets.QMessageBox.Ok)
+                
+                elif len(self.EmpEntry_SSS.text()) != self.EmpEntry_SSS.maxLength():
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's SSS must be 10 Numbers.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's SSS must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
+    
+                elif len(self.EmpEntry_TIN.text()) != self.EmpEntry_TIN.maxLength():
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's TIN must be 10 Numbers.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's TIN must be 12 Numbers.", QtWidgets.QMessageBox.Ok)
+            
+                elif len(self.EmpEntry_PH.text()) != self.EmpEntry_PH.maxLength():
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
+    
+                elif len(self.EmpEntry_UN.text()) < 5:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Username must be more than 5 characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Username must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
+    
+                elif len(self.EmpEntry_PW.text()) < 5:
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password must be more than 5 characters.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
+    
+                elif self.EmpEntry_PW.text() != self.EmpEntry_CPW.text():
+                    self.TechCore_Beep()
+                    self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password and Confirm Password is not match.")
+                    QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password and Confirm Password is not match.", QtWidgets.QMessageBox.Ok)
+    
+                else:
+                    if self.ModifierMode == "PushEntry":
+                        self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO %s(EmployeeUN, EmployeePW, FirstName, LastName, PositionCode, DOB, Address, SSS, TIN, PhilHealth) VALUES ('%s', '%s', '%s', '%s', %s, '%s', '%s', '%s', '%s', '%s')" % (self.ActiveTargetTable, self.EmpEntry_UN.text(), self.EmpEntry_PW.text(), self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.TechCore_NameToPosCode(self.EmpEntry_PC.currentText()), self.EmpEntry_DOB.date().toString("MM/dd/yyyy"), self.EmpEntry_Adrs.text(), self.EmpEntry_SSS.text(), self.EmpEntry_TIN.text(), self.EmpEntry_PH.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        self.MSSQL_CommitData()
+                        self.Modifier_StatusLabel.setText("Staff '%s %s' with Username '%s' is added to the database! Clear Data To Add More Staff." % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.EmpEntry_UN.text())) 
+                        self.DataManip_PushData.setEnabled(False)
+                        QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Staff %s %s is added to the database!" % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text()), QtWidgets.QMessageBox.Ok)
+                    
+                    else:
+                        LoginStatsReturn = self.MSSQL_ExecuteState(MSSQLStatement="SELECT TOP 1 * FROM Employees WHERE EmployeeUN = '%s' AND EmployeePW = '%s'" % (self.EmpEntry_UN.text(), self.EmpEntry_PW.text()), FetchType='One', TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                        
+                        if LoginStatsReturn:
+                            ReturnState = self.MSSQL_ExecuteState(MSSQLStatement="UPDATE %s SET FirstName = '%s', LastName = '%s', PositionCode = %s, DOB = '%s', Address = '%s', SSS = '%s', TIN = '%s', PhilHealth = '%s' WHERE EmployeeUN = '%s' AND EmployeeUN = '%s'" % 
+                            (self.ActiveTargetTable, self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.TechCore_NameToPosCode(self.EmpEntry_PC.currentText()), self.EmpEntry_DOB.date().toString("MM/dd/yyyy"), self.EmpEntry_Adrs.text(), self.EmpEntry_SSS.text(), self.EmpEntry_TIN.text(), self.EmpEntry_PH.text(), self.EmpEntry_UN.text(), self.EmpEntry_PW.text()), TableTarget=self.ActiveTargetTable, SourceFunction=self.DataMCore_EntryManipulation.__name__)
+                            self.MSSQL_CommitData()
+                            self.Modifier_StatusLabel.setText("Staff '%s %s' with Username '%s' is added to the database! Clear Data To Add More Staff." % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.EmpEntry_UN.text())) 
+                            self.DataManip_PushData.setEnabled(False)
+                            QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Staff %s %s is added to the database!" % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text()), QtWidgets.QMessageBox.Ok)
+                        
+                        else:
+                            self.DataManip_PushData.setEnabled(True)
+                            QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation', "Staff %s %s has data modification not applied from the database. This was due to password not being match to employee's password." % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text()), QtWidgets.QMessageBox.Ok)
+                        
+
+
+
+        except (Exception, MSSQL.Error) as DataEntryError:
+            self.TechCore_Beep()
+            self.MSSQL_RollbackData(SourceFunction=self.DataMCore_EntryManipulation.__name__)
+            self.Modifier_StatusLabel.setText("Error, an unknown phenomenon occured. Check Debugger Output for more Information.")
+            print('[Exception @ DataMCore_EntryManipulation] > Data Insertion Unknown Error Occured. Detailed Error: %s' % (DataEntryError))
+    
+    def DataMCore_LoadItems(self):
+        if self.ActiveTargetTable == "SupplierTransaction":
+            self.TechCore_FillUpBox()
+
         elif self.ActiveTargetTable == "CustTransaction":
-            pass
-        elif self.ActiveTargetTable == "CustReceipt":
-            pass
-        elif self.ActiveTargetTable == "JobPosition":
-            if len(self.JobPEntry_PC.text()) == 0:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Code Should Not Be Empty!")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Code Should Not Be Empty!", QtWidgets.QMessageBox.Ok)
-            elif len(self.JobPEntry_PN.text()) < 2:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Job Position Name Description Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
-            else:
-                try:
-                    self.MSSQL_ExecuteState("INSERT INTO JobPosition VALUES ('%s', '%s')" % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()),TableTarget="JobPosition", SourceFunction=self.DataMCore_AddEntry.__name__)
-                    self.MSSQL_CommitData()
-                    self.Modifier_StatusLabel.setText("Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text())) 
-                    self.DataManip_PushData.setEnabled(False)
-                    QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Position Code %s with Job Name of %s is added to the database! Clear Data To Add More Staff." % (self.JobPEntry_PC.text(), self.JobPEntry_PN.text()), QtWidgets.QMessageBox.Ok)
-                except Exception:
-                    pass
-        elif self.ActiveTargetTable == "Employees":
-            if len(self.EmpEntry_FN.text()) < 2:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's First Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
-
-            elif len(self.EmpEntry_LN.text()) < 2:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Last Name Should Be More Than 2 Characters.", QtWidgets.QMessageBox.Ok)
-
-            elif self.EmpEntry_PC.currentIndex() == -1:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Position Code is not yet selected.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Position Code is not yet selected.", QtWidgets.QMessageBox.Ok)
-
-            elif len(self.EmpEntry_Adrs.text()) < 10:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Address Should Be More Than 10 Characters.", QtWidgets.QMessageBox.Ok)
-            
-            elif len(self.EmpEntry_SSS.text()) != self.EmpEntry_SSS.maxLength():
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's SSS must be 10 Numbers.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's SSS must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
-
-            elif len(self.EmpEntry_TIN.text()) != self.EmpEntry_TIN.maxLength():
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's TIN must be 10 Numbers.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's TIN must be 12 Numbers.", QtWidgets.QMessageBox.Ok)
-        
-            elif len(self.EmpEntry_PH.text()) != self.EmpEntry_PH.maxLength():
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's PhilHealth must be 10 Numbers.", QtWidgets.QMessageBox.Ok)
-
-            elif len(self.EmpEntry_UN.text()) < 5:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Username must be more than 5 characters.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Username must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
-
-            elif len(self.EmpEntry_PW.text()) < 5:
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password must be more than 5 characters.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password must be more than 5 characters.", QtWidgets.QMessageBox.Ok)
-
-            elif self.EmpEntry_PW.text() != self.EmpEntry_CPW.text():
-                self.TechCore_Beep()
-                self.Modifier_StatusLabel.setText("Error, cannot push data from the database. Employee's Password and Confirm Password is not match.")
-                QtWidgets.QMessageBox.critical(self, 'Route88 System | Data Manipulation Error', "Error, cannot push data from the database. Employee's Password and Confirm Password is not match.", QtWidgets.QMessageBox.Ok)
-
-            else:
-                try:
-                    self.MSSQL_ExecuteState(MSSQLStatement="INSERT INTO Employees(EmployeeUN, EmployeePW, FirstName, LastName, PositionCode, DOB, Address, SSS, TIN, PhilHealth) VALUES ('%s', '%s', '%s', '%s', %s, '%s', '%s', '%s', '%s', '%s')" % 
-                    (self.EmpEntry_UN.text(), self.EmpEntry_PW.text(), self.EmpEntry_FN.text(), self.EmpEntry_LN.text(), self.TechCore_NameToPosCode(self.EmpEntry_PC.currentText()), self.EmpEntry_DOB.date().toString("MM/dd/yyyy"), self.EmpEntry_Adrs.text(), self.EmpEntry_SSS.text(), self.EmpEntry_TIN.text(), self.EmpEntry_PH.text()), TableTarget="Employees", SourceFunction=self.DataMCore_AddEntry.__name__)
-
-                    #self.MSSQL_ExecuteState(MSSQLStatement="CREATE LOGIN %s WITH PASSWORD = '%s'" % (self.EmpEntry_UN.text(), self.EmpEntry_PW.text()), TableTarget="<Classified>", SourceFunction=self.DataMCore_AddEntry.__name__)
-                    #if self.EmpEntry_PC.currentIndex() == 0:
-                    #    self.MSSQL_ExecuteState(MSSQLStatement="{CALL sp_addrolemember '%s', '%s'}" % ('db_accessadmin', self.EmpEntry_UN.text()), TableTarget="<Classified>", SourceFunction=self.DataMCore_AddEntry.__name__)
-
-                    self.MSSQL_CommitData()
-                except (Exception, MSSQL.Error):
-                    self.MSSQL_RollbackData(SourceFunction=self.DataMCore_AddEntry.__name__)
-
-                self.Modifier_StatusLabel.setText("Staff %s %s is added to the database! Clear Data To Add More Staff." % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text())) 
-                self.DataManip_PushData.setEnabled(False)
-                QtWidgets.QMessageBox.information(self, 'Route88 System | Data Manipulation', "Staff %s %s is added to the database!" % (self.EmpEntry_FN.text(), self.EmpEntry_LN.text()), QtWidgets.QMessageBox.Ok)
-
-    def DataMCore_LoadEntry(self):
-        self.DataManip_PushData.setText("Apply Modified Entry")
-        self.DataManip_ResetActiveData.setEnabled(False)
-        if self.ActiveTargetTable == "SupplierReference":
-            self.SuppEntry_SC.setText(self.DataPayload[0])
-            self.SuppEntry_SN.setText(self.DataPayload[1])
-            self.SuppEntry_LDD.setDate(QtCore.QDate.fromString(self.DataPayload[2], "yyyy-MM-dd"))
-            self.SuppEntry_NDD.setDate(QtCore.QDate.fromString(self.DataPayload[3], "yyyy-MM-dd"))
-            
-        elif self.ActiveTargetTable == "InventoryItem":
-            self.InvEntry_IC.setText(self.DataPayload[0])
-            self.InvEntry_IN.setText(self.DataPayload[1])
-            self.InvEntry_IT.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Item Type", StrToCompare=self.DataPayload[2], SourceFunction=self.DataMCore_LoadEntry.__name__))
-            self.InvEntry_MT.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Material Type", StrToCompare=self.DataPayload[3], SourceFunction=self.DataMCore_LoadEntry.__name__))
-            
-            self.InvEntry_Q.setValue(int(self.DataPayload[4]))
-            self.InvEntry_C.setValue(float(self.DataPayload[5]))
-            self.InvEntry_ED.setDate(QtCore.QDate.fromString(self.DataPayload[6], "yyyy-MM-dd"))
-
-        elif self.ActiveTargetTable == "SupplierTransaction":
             self.TechCore_FillUpBox()
-            self.SuppTrEntry_IC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Item Code", StrToCompare=self.DataPayload[0], SourceFunction=self.DataMCore_LoadEntry.__name__))
-            self.SuppTrEntry_OC.setText(self.DataPayload[1])
-            self.SuppTrEntry_SC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Supplier Code", StrToCompare=self.DataPayload[2], SourceFunction=self.DataMCore_LoadEntry.__name__))
-            self.SuppTrEntry_QOR.setValue(int(self.DataPayload[3]))
-            self.SuppTrEntry_OD.setDate(QtCore.QDate.fromString(self.DataPayload[4], "yyyy-MM-dd"))
-
-        elif self.ActiveTargetTable == "CustTransaction":
-            self.TechCore_FillUpBox()
-            self.CustTr_TC.setText(self.DataPayload[0])
-            self.CustTr_IC.setCurrentIndex(self.TechCore_StrToIndex(StrToCompare=self.DataPayload[1], SourceFunction=self.DataMCore_LoadEntry.__name__))
 
         elif self.ActiveTargetTable == "CustReceipt":
             self.TechCore_FillUpBox()
-            self.CustREntry_PTrC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Primary Transaction Code", StrToCompare=self.DataPayload[0], SourceFunction=self.DataMCore_LoadEntry.__name__))
-            self.CustREntry_STrC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Secondary Transaction Code", StrToCompare=self.DataPayload[1], SourceFunction=self.DataMCore_LoadEntry.__name__))
-            self.CustREntry_TC.setText(self.DataPayload[2])
-            self.CustREntry_VC.setText(self.DataPayload[3])
-            self.CustREntry_VE.setText(self.DataPayload[4])
-            self.CustREntry_ZR.setText(self.DataPayload[5])
-            self.CustREntry_NV.setText(self.DataPayload[6])
-            self.CustREntry_VR.setText(self.DataPayload[7])
 
-        elif self.ActiveTargetTable == "JobPosition":
-           self.JobPEntry_PC.setText(self.DataPayload[0])
-           self.JobPEntry_PN.setText(self.DataPayload[1])
+    def DataMCore_LoadExistEntry(self):
+        try:
+            self.DataManip_PushData.setText("Apply Modified Entry")
+            self.DataManip_ResetActiveData.setEnabled(False)
 
-        elif self.ActiveTargetTable == "Employees":
-            # self.DataPayload Index #2 is Ignored Due To Displaying Employees Password
-            self.EmpEntry_UN.setText(self.DataPayload[1])
-            self.EmpEntry_FN.setText(self.DataPayload[3])
-            self.EmpEntry_LN.setText(self.DataPayload[4])
-            self.TechCore_EditBindComboBox(self.DataPayload[5])
-            self.EmpEntry_DOB.setDate(QtCore.QDate.fromString(self.DataPayload[6], "yyyy-MM-dd"))
-            self.EmpEntry_Adrs.setText(self.DataPayload[7])
-            self.EmpEntry_SSS.setText(self.DataPayload[8])
-            self.EmpEntry_TIN.setText(self.DataPayload[9])
-            self.EmpEntry_PH.setText(self.DataPayload[10])
-            
-            self.EmpEntry_UN.setEnabled(False)
+            if self.ActiveTargetTable == "SupplierReference":
+                self.SuppEntry_SC.setText(self.DataPayload[0])
+                self.SuppEntry_SN.setText(self.DataPayload[1])
+                self.SuppEntry_LDD.setDate(QtCore.QDate.fromString(self.DataPayload[2], "yyyy-MM-dd"))
+                self.SuppEntry_NDD.setDate(QtCore.QDate.fromString(self.DataPayload[3], "yyyy-MM-dd"))
+
+                self.SuppEntry_SC.setEnabled(False)
+                
+            elif self.ActiveTargetTable == "InventoryItem":
+                self.InvEntry_IC.setText(self.DataPayload[0])
+                self.InvEntry_IN.setText(self.DataPayload[1])
+                self.InvEntry_IT.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Item Type", StrToCompare=self.DataPayload[2], SourceFunction=self.DataMCore_LoadExistEntry.__name__))
+                self.InvEntry_MT.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Material Type", StrToCompare=self.DataPayload[3], SourceFunction=self.DataMCore_LoadExistEntry.__name__))
+                
+                self.InvEntry_Q.setValue(int(self.DataPayload[4]))
+                self.InvEntry_C.setValue(float(self.DataPayload[5]))
+                self.InvEntry_ED.setDate(QtCore.QDate.fromString(self.DataPayload[6], "yyyy-MM-dd"))
+
+                self.InvEntry_IC.setEnabled(False)
+
+            elif self.ActiveTargetTable == "SupplierTransaction":
+                self.TechCore_FillUpBox()
+                self.SuppTrEntry_IC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Item Code", StrToCompare=self.DataPayload[0], SourceFunction=self.DataMCore_LoadExistEntry.__name__))
+                self.SuppTrEntry_OC.setText(self.DataPayload[1])
+                self.SuppTrEntry_SC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Supplier Code", StrToCompare=self.DataPayload[2], SourceFunction=self.DataMCore_LoadExistEntry.__name__))
+                self.SuppTrEntry_QOR.setValue(int(self.DataPayload[3]))
+                self.SuppTrEntry_OD.setDate(QtCore.QDate.fromString(self.DataPayload[4], "yyyy-MM-dd"))
+
+                self.SuppTrEntry_OC.setEnabled(False)
+
+            elif self.ActiveTargetTable == "CustTransaction":
+                self.TechCore_FillUpBox()
+                self.CustTr_TC.setText(self.DataPayload[0])
+                self.CustTr_IC.setCurrentIndex(self.TechCore_StrToIndex(StrToCompare=self.DataPayload[1], SourceFunction=self.DataMCore_LoadExistEntry.__name__))
+                self.OldStateItemCode = self.DataPayload[1] # ! ! ! BYPASS
+                self.CustTr_TC.setEnabled(False)
+                
+            elif self.ActiveTargetTable == "CustReceipt":
+                self.TechCore_FillUpBox()
+                self.CustREntry_PTrC.setText(self.DataPayload[0])
+                self.CustREntry_STrC.setCurrentIndex(self.TechCore_StrToIndex(RespectiveComboBox="Secondary Transaction Code", StrToCompare=self.DataPayload[1], SourceFunction=self.DataMCore_LoadExistEntry.__name__))
+                self.CustREntry_TC.setText(self.DataPayload[2])
+                self.CustREntry_VC.setText(self.DataPayload[3])
+                self.CustREntry_VE.setText(self.DataPayload[4])
+                self.CustREntry_ZR.setText(self.DataPayload[5])
+                self.CustREntry_NV.setText(self.DataPayload[6])
+                self.CustREntry_VR.setText(self.DataPayload[7])
+                
+                self.CustREntry_PTrC.setEnabled(False)
+
+            elif self.ActiveTargetTable == "JobPosition":
+                self.JobPEntry_PC.setText(self.DataPayload[0])
+                self.JobPEntry_PN.setText(self.DataPayload[1])
+
+                self.JobPEntry_PC.setEnabled(False)
+
+            elif self.ActiveTargetTable == "Employees":
+                # self.DataPayload Index #2 is Ignored Due To Displaying Employees Password
+                self.EmpEntry_UN.setText(self.DataPayload[1])
+                self.EmpEntry_FN.setText(self.DataPayload[2])
+                self.EmpEntry_LN.setText(self.DataPayload[3])
+                self.TechCore_EditBindComboBox(self.DataPayload[4])
+                self.EmpEntry_DOB.setDate(QtCore.QDate.fromString(self.DataPayload[5], "yyyy-MM-dd"))
+                self.EmpEntry_Adrs.setText(self.DataPayload[6])
+                self.EmpEntry_SSS.setText(self.DataPayload[7])
+                self.EmpEntry_TIN.setText(self.DataPayload[8])
+                self.EmpEntry_PH.setText(self.DataPayload[9])
+                
+                self.EmpEntry_UN.setEnabled(False)
+
+        except Exception as RenderValError:
+            self.TechCore_Beep()
+            self.Modifier_StatusLabel.setText("Error, an unknown phenomenon occured. Check Debugger Output for more Information.")
+            print('[Exception @ DataMCore_LoadExistEntry] > Data Rendering Unknown Error Occured. Detailed Error: %s' % (RenderValError))
+    
 
     def DataMCore_ClearEntry(self, ActiveEntryWindow):
         self.DataManip_PushData.setEnabled(True)
@@ -1402,7 +1673,7 @@ class Route88_ModifierCore(Ui_Route88_DataManipulation_Window, QtWidgets.QDialog
 
         elif self.Tab_SelectionSelectives.currentIndex() == 2:
             self.SuppTrEntry_IC.setCurrentIndex(0)
-            self.SuppTrEntry_OC.setCurrentIndex(0)
+            self.SuppTrEntry_OC.clear()
             self.SuppTrEntry_SC.setCurrentIndex(0)
             self.SuppTrEntry_OD.setDateTime(QtCore.QDateTime.currentDateTime())
             self.SuppTrEntry_QOR.setValue(0)
@@ -1501,12 +1772,12 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
         self.user_StaffName.setText(self.StaffLiteralName)
         self.user_JobPosition.setText(self.StaffCurrentJob)
 
-        if self.StaffCurrentJob == "Manager" or self.StaffCurrentJob == "General Manager" or self.StaffCurrentJob == "Assistant Manager":
+        if self.StaffCurrentJob == "Manager" or self.StaffCurrentJob == "General Manager" or self.StaffCurrentJob == "Shift Manager" or self.StaffCurrentJob == "Assistant Manager":
             self.ctrl_ManagementSystem.setEnabled(True)
             self.ctrl_POSSystem.setEnabled(True)
             self.StatusLabel.setText('Staff {} is logged on. Welcome~!'.format(self.StaffLiteralName))
 
-        elif self.StaffCurrentJob == "Cashier":
+        elif self.StaffCurrentJob == "Supervisor" or self.StaffCurrentJob == "Cashier":
             self.ctrl_ManagementSystem.setEnabled(False)
             self.ctrl_POSSystem.setEnabled(True)
             self.StatusLabel.setText('Staff Restrictions has been activated for Staff {}.'.format(self.StaffLiteralName))
@@ -1515,7 +1786,7 @@ class Route88_WindowController(Ui_Route88_Controller_Window, QtWidgets.QDialog, 
             self.ctrl_ManagementSystem.setEnabled(False)
             self.ctrl_POSSystem.setEnabled(False)
             self.TechCore_Beep()
-            QtWidgets.QMessageBox.critical(self, 'Route88 Window Controller | User Error', "Staff is Logged Successfully but Not Permitted To Use Any Of The Systems. Sorry!", QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.critical(self, 'Route88 Window Controller | User Error', "Staff is Logged On Successfully But Is Not Permitted To Use Any Of The Systems. Sorry!", QtWidgets.QMessageBox.Ok)
             self.StatusLabel.setText('Staff is Logged Successfully but Not Permitted To Use Any Of The Systems. Sorry!'.format(self.StaffLiteralName))
 
 # Literal Procedural Programming Part

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>450</height>
+    <height>516</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1201,7 +1201,7 @@ caution.</string>
               </widget>
              </item>
              <item>
-              <widget class="QDateTimeEdit" name="SuppTrEntry_OD">
+              <widget class="QDateEdit" name="SuppTrEntry_OD">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -1421,6 +1421,9 @@ current date.</string>
              </item>
              <item>
               <widget class="QComboBox" name="SuppTrEntry_SC">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2000,7 +2003,7 @@ Filling Confirm Password to Apply Changes</string>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="CustREntry_PTrC">
+              <widget class="QLineEdit" name="CustREntry_PTrC">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
                  <horstretch>0</horstretch>
@@ -2014,6 +2017,12 @@ Filling Confirm Password to Apply Changes</string>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="placeholderText">
+                <string>Required To Fill...</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
                </property>
               </widget>
              </item>

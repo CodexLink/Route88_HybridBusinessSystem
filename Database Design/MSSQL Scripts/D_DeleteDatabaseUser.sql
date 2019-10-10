@@ -12,12 +12,11 @@ CREATE TRIGGER dbo.RM_UserData_Login
    AFTER DELETE
 AS 
 BEGIN
-	DECLARE @rm_SelectedEmpUN VARCHAR(45)
+	DECLARE @rm_SelectedEmpUN VARCHAR(45),
+	DECLARE @CountEmpPosCandidate INT
+
 	SET NOCOUNT ON;
 	SELECT @rm_SelectedEmpUN = EmployeeUN FROM DELETED
-	EXEC('REVOKE ALL PRIVILEGES ON SCHEMA::DBO FROM ' + @rm_SelectedEmpUN);
-	EXEC('REVOKE ALL PRIVILEGES ON SCHEMA::DBO FROM ' + @rm_SelectedEmpUN);
-	EXEC('REVOKE ALL PRIVILEGES ON SCHEMA::DBO FROM ' + @rm_SelectedEmpUN);
 	EXEC('DROP ROLE ' + @rm_SelectedEmpUN)
 	EXEC('DROP LOGIN ' + @rm_SelectedEmpUN)
 	EXEC('DROP USER ' + @rm_SelectedEmpUN)

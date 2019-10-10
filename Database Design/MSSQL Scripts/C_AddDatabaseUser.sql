@@ -25,11 +25,11 @@ BEGIN
 		SELECT @Add_SelectedEmpPosCode = PositionCode FROM INSERTED
 		EXEC('CREATE LOGIN ' + @Add_SelectedEmpUN + ' WITH PASSWORD = ''' + @Add_SelectedEmpPW + '''')
 		EXEC('CREATE USER ' + @Add_SelectedEmpUN + ' for LOGIN ' + @Add_SelectedEmpUN)
-		UPDATE Employees SET CreationTime = getdate() WHERE EmployeeUN = @Add_SelectedEmpUN
 
 		IF @Add_SelectedEmpPosCode = 1 OR @Add_SelectedEmpPosCode = 2
 			BEGIN
 				EXEC sp_addrolemember 'db_owner', @Add_SelectedEmpUN
+				EXEC sp_addsrvrolemember @Add_SelectedEmpUN, 'sysadmin'
 			END
 		ELSE IF @Add_SelectedEmpPosCode = 3 OR @Add_SelectedEmpPosCode = 4
 			BEGIN

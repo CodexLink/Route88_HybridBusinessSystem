@@ -14,9 +14,9 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	DECLARE @EMPCount INT;
-	SELECT @EMPCount = dbo.return_CountEmp()
+	SELECT @EMPCount = COUNT(*) FROM Employees WHERE PositionCode = (SELECT PositionCode FROM DELETED)
 
-	IF EXISTS (SELECT * FROM INSERTED)
+	IF EXISTS (SELECT * FROM INSERTED) AND EXISTS (SELECT * FROM DELETED)
 		BEGIN
 			IF @EMPCount > 0
 				BEGIN
@@ -28,8 +28,10 @@ BEGIN
 		BEGIN
 			IF @EMPCount > 0
 				BEGIN
+					DELETE FROM JobPosition WHERE PositionCode = (SELECT PositionCode FROM DELETED)
 					DELETE FROM Employees WHERE PositionCode = (SELECT PositionCode FROM DELETED)
 				END
 		END
 END
+
 GO
