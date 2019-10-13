@@ -72,11 +72,15 @@
   <widget class="QGroupBox" name="GroupContainer_StaffAccount">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>116</y>
-     <width>653</width>
-     <height>311</height>
+     <x>0</x>
+     <y>100</y>
+     <width>671</width>
+     <height>351</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">
+background-color: rgb(40,40,40);</string>
    </property>
    <property name="title">
     <string/>
@@ -85,9 +89,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>280</y>
+      <y>310</y>
       <width>641</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -97,6 +101,10 @@
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+color: rgb(255,255,255);</string>
     </property>
     <property name="text">
      <string>...</string>
@@ -105,10 +113,10 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>20</x>
+      <y>20</y>
       <width>361</width>
-      <height>261</height>
+      <height>281</height>
      </rect>
     </property>
     <property name="font">
@@ -119,8 +127,12 @@
       <bold>true</bold>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(227, 151, 113);
+color: rgb(0,0,0);</string>
+    </property>
     <property name="title">
-     <string>Welcome Staff~!</string>
+     <string>Welcome Staff~!!!</string>
     </property>
     <widget class="QGroupBox" name="GroupContainer_PassCred_2">
      <property name="geometry">
@@ -168,8 +180,15 @@
         <bold>true</bold>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">
+color: rgb(0,0,0);</string>
+      </property>
       <property name="text">
        <string>...</string>
+      </property>
+      <property name="buddy">
+       <cstring>user_StaffName</cstring>
       </property>
      </widget>
     </widget>
@@ -197,7 +216,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Staff Job Position</string>
+      <string>Job Position</string>
      </property>
      <property name="flat">
       <bool>false</bool>
@@ -218,6 +237,10 @@
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+color: rgb(0,0,0);</string>
       </property>
       <property name="text">
        <string>...</string>
@@ -249,7 +272,7 @@
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>210</y>
+       <y>220</y>
        <width>121</width>
        <height>31</height>
       </rect>
@@ -261,6 +284,12 @@
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(40,40,40);
+color: rgb(255,255,255);
+border-radius: 5px;
+</string>
      </property>
      <property name="text">
       <string>Log-out</string>
@@ -269,8 +298,8 @@
     <widget class="QPushButton" name="ctrl_ExitProgram">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>210</y>
+       <x>80</x>
+       <y>220</y>
        <width>121</width>
        <height>31</height>
       </rect>
@@ -282,6 +311,12 @@
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(40,40,40);
+color: rgb(255,255,255);
+border-radius: 5px;
+</string>
      </property>
      <property name="text">
       <string>Quit</string>
@@ -291,10 +326,10 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>10</y>
+      <x>400</x>
+      <y>20</y>
       <width>251</width>
-      <height>261</height>
+      <height>281</height>
      </rect>
     </property>
     <property name="font">
@@ -304,6 +339,10 @@
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(227, 151, 113);
+color: rgb(0,0,0);</string>
     </property>
     <property name="title">
      <string>Systems Launcher</string>
@@ -343,6 +382,12 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(40,40,40);
+color: rgb(255,255,255);
+border-radius: 5px;
+</string>
+        </property>
         <property name="text">
          <string>Launch POS System</string>
         </property>
@@ -367,6 +412,12 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(40,40,40);
+color: rgb(255,255,255);
+border-radius: 5px;
+</string>
+        </property>
         <property name="text">
          <string>Launch Management System</string>
         </property>
@@ -390,6 +441,12 @@
           <weight>75</weight>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(40,40,40);
+color: rgb(255,255,255);
+border-radius: 5px;
+</string>
         </property>
         <property name="text">
          <string>About This System</string>
@@ -433,27 +490,27 @@
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
@@ -471,27 +528,27 @@
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
@@ -509,27 +566,27 @@
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>13</red>
-         <green>71</green>
-         <blue>161</blue>
+         <red>217</red>
+         <green>81</green>
+         <blue>78</blue>
         </color>
        </brush>
       </colorrole>
@@ -549,7 +606,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color:rgb(13, 71, 161)</string>
+    <string notr="true">background-color: rgb(217,81,78);</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
@@ -557,25 +614,6 @@
    <property name="frameShadow">
     <enum>QFrame::Sunken</enum>
    </property>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>10</y>
-      <width>81</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>IcoDisplay/r_88.ico</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -605,7 +643,7 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <family>Open Sans SemiBold</family>
+         <family>Open Sans</family>
          <pointsize>18</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -636,7 +674,7 @@
         <string notr="true">color: rgb(255, 255, 255)</string>
        </property>
        <property name="text">
-        <string>Point-Of-Sales and Data Management System</string>
+        <string>Point Of Sales and Data Management System</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -645,6 +683,25 @@
      </item>
     </layout>
    </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>10</y>
+      <width>81</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../IcoDisplay/r_88.ico</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
  </widget>
  <tabstops>
@@ -652,6 +709,8 @@
   <tabstop>ctrl_ManagementSystem</tabstop>
   <tabstop>ctrl_POSSystem</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../Desktop/New folder/source.qrc"/>
+ </resources>
  <connections/>
 </ui>

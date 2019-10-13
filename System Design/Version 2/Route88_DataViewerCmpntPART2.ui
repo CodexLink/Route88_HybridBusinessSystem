@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1222</width>
-    <height>387</height>
+    <width>950</width>
+    <height>747</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -52,6 +52,10 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(72, 145, 217);
+color:rgb(0,0,0);</string>
+        </property>
         <property name="title">
          <string>Data Table Selection</string>
         </property>
@@ -72,6 +76,10 @@
              <bold>true</bold>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(65, 65, 97);
+color: rgb(255,255,255);</string>
+           </property>
            <item>
             <property name="text">
              <string>None</string>
@@ -79,12 +87,12 @@
            </item>
            <item>
             <property name="text">
-             <string>Supplier Reference Data</string>
+             <string>Inventory Reference Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Inventory Reference Data</string>
+             <string>Supplier Reference Data</string>
             </property>
            </item>
            <item>
@@ -104,12 +112,12 @@
            </item>
            <item>
             <property name="text">
-             <string>Job Reference Data</string>
+             <string>Employee Reference Data</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Employee Reference Data</string>
+             <string>Job Reference Data</string>
             </property>
            </item>
           </widget>
@@ -126,6 +134,10 @@
           <weight>75</weight>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(72, 145, 217);
+color:rgb(0,0,0);</string>
         </property>
         <property name="title">
          <string>Search Query</string>
@@ -155,6 +167,9 @@
                <bold>true</bold>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string>By</string>
              </property>
@@ -182,12 +197,21 @@
              <property name="statusTip">
               <string/>
              </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(65, 65, 97);
+color: rgb(255,255,255);</string>
+             </property>
              <property name="currentText">
               <string>None</string>
              </property>
              <item>
               <property name="text">
                <string>None</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>All Items</string>
               </property>
              </item>
             </widget>
@@ -214,6 +238,9 @@
                <bold>true</bold>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string>Look For</string>
              </property>
@@ -237,6 +264,9 @@
                <weight>75</weight>
                <bold>true</bold>
               </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255,255,255);</string>
              </property>
              <property name="placeholderText">
               <string>Value Search...</string>
@@ -266,6 +296,11 @@
              </property>
              <property name="statusTip">
               <string/>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(65, 65, 97);
+color: rgb(255,255,255);
+</string>
              </property>
              <item>
               <property name="text">
@@ -320,6 +355,10 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(72, 145, 217);
+color:rgb(0,0,0);</string>
+        </property>
         <property name="title">
          <string>Search Patterns</string>
         </property>
@@ -342,6 +381,10 @@
              <weight>75</weight>
              <bold>true</bold>
             </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+color: rgb(0,0,0);</string>
            </property>
            <property name="text">
             <string>Exact</string>
@@ -372,6 +415,10 @@
              <weight>75</weight>
              <bold>true</bold>
             </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+color: rgb(0,0,0);</string>
            </property>
            <property name="text">
             <string>Contains</string>
@@ -406,6 +453,10 @@
            <property name="statusTip">
             <string/>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(65, 65, 97);
+color: rgb(255,255,255);</string>
+           </property>
            <item>
             <property name="text">
              <string>Between</string>
@@ -439,7 +490,8 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(65, 65, 97);
+color: rgb(255,255,255);</string>
       </property>
       <property name="title">
        <string>Data Table View</string>
@@ -452,6 +504,9 @@
            <family>Roboto Mono</family>
            <pointsize>9</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="sizeAdjustPolicy">
           <enum>QAbstractScrollArea::AdjustToContents</enum>
@@ -510,6 +565,10 @@
         <bold>true</bold>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(65, 65, 97);
+color: rgb(0,0,0);</string>
+      </property>
       <property name="title">
        <string>Staff Actions</string>
       </property>
@@ -539,8 +598,12 @@
          <property name="statusTip">
           <string/>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(72, 145, 217);
+color:rgb(0,0,0);</string>
+         </property>
          <property name="text">
-          <string>Add New Data</string>
+          <string>Add Entry</string>
          </property>
         </widget>
        </item>
@@ -572,8 +635,12 @@
          <property name="statusTip">
           <string/>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(72, 145, 217);
+color:rgb(0,0,0);</string>
+         </property>
          <property name="text">
-          <string>Edit / Modify Selected Row's Data</string>
+          <string>Edit / Modify Selected Entry</string>
          </property>
         </widget>
        </item>
@@ -602,8 +669,12 @@
          <property name="statusTip">
           <string/>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(72, 145, 217);
+color:rgb(0,0,0);</string>
+         </property>
          <property name="text">
-          <string>Delete Selected Data</string>
+          <string>Delete Selected Entry</string>
          </property>
         </widget>
        </item>
@@ -632,8 +703,12 @@
          <property name="statusTip">
           <string/>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(72, 145, 217);
+color:rgb(0,0,0);</string>
+         </property>
          <property name="text">
-          <string>Refresh Database and Update Table</string>
+          <string>Refresh Database</string>
          </property>
         </widget>
        </item>
@@ -647,7 +722,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1222</width>
+     <width>950</width>
      <height>21</height>
     </rect>
    </property>

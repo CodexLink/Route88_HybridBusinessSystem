@@ -50,14 +50,13 @@
   <property name="windowTitle">
    <string notr="true">Route88 System | Login Access</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>IcoDisplay/r_88.ico</normaloff>IcoDisplay/r_88.ico</iconset>
-  </property>
   <property name="toolTip">
    <string notr="true"/>
   </property>
   <property name="whatsThis">
+   <string notr="true"/>
+  </property>
+  <property name="styleSheet">
    <string notr="true"/>
   </property>
   <property name="sizeGripEnabled">
@@ -69,18 +68,21 @@
   <widget class="QGroupBox" name="GroupContainer_StaffAccount">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>110</y>
-     <width>401</width>
-     <height>171</height>
+     <x>0</x>
+     <y>100</y>
+     <width>431</width>
+     <height>231</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>Open Sans SemiBold</family>
-     <weight>75</weight>
-     <bold>true</bold>
+     <family>Open Sans</family>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 45, 66);
+</string>
    </property>
    <property name="title">
     <string/>
@@ -88,9 +90,9 @@
    <widget class="QGroupBox" name="GroupContainer_PassCred">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>381</width>
+      <x>30</x>
+      <y>100</y>
+      <width>371</width>
       <height>61</height>
      </rect>
     </property>
@@ -102,16 +104,30 @@
     </property>
     <property name="font">
      <font>
-      <family>Open Sans SemiBold</family>
+      <family>Open Sans</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0,0,0);
+background-color: rgb(0, 193, 142);
+</string>
+    </property>
     <property name="title">
-     <string>Staff Password</string>
+     <string>STAFF PASSWORD</string>
     </property>
     <property name="flat">
+     <bool>false</bool>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
      <bool>false</bool>
     </property>
     <widget class="QLineEdit" name="UserAcc_Password">
@@ -119,17 +135,20 @@
       <rect>
        <x>0</x>
        <y>30</y>
-       <width>261</width>
+       <width>251</width>
        <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <family>Open Sans SemiBold</family>
+       <family>Open Sans</family>
        <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="inputMask">
       <string notr="true" comment="*"/>
@@ -153,7 +172,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>260</x>
        <y>30</y>
        <width>111</width>
        <height>31</height>
@@ -161,16 +180,25 @@
      </property>
      <property name="font">
       <font>
-       <family>Open Sans SemiBold</family>
+       <family>Open Sans</family>
        <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(0,0,0);</string>
+     </property>
      <property name="text">
-      <string>Submit Data</string>
+      <string>SUBMIT DATA</string>
+     </property>
+     <property name="autoDefault">
+      <bool>true</bool>
      </property>
      <property name="default">
+      <bool>true</bool>
+     </property>
+     <property name="flat">
       <bool>true</bool>
      </property>
     </widget>
@@ -178,9 +206,9 @@
    <widget class="QGroupBox" name="GroupContainer_PassCred_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>381</width>
+      <x>30</x>
+      <y>40</y>
+      <width>371</width>
       <height>61</height>
      </rect>
     </property>
@@ -192,14 +220,20 @@
     </property>
     <property name="font">
      <font>
-      <family>Open Sans SemiBold</family>
+      <family>Open Sans</family>
       <pointsize>10</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0,0,0);
+background-color: rgb(0, 193, 142);
+
+</string>
+    </property>
     <property name="title">
-     <string>Staff Username</string>
+     <string>STAFF USERNAME</string>
     </property>
     <property name="flat">
      <bool>false</bool>
@@ -209,20 +243,26 @@
       <rect>
        <x>0</x>
        <y>30</y>
-       <width>381</width>
+       <width>371</width>
        <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <family>Open Sans SemiBold</family>
+       <family>Open Sans</family>
        <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
      <property name="inputMask">
       <string notr="true" comment="*"/>
+     </property>
+     <property name="text">
+      <string/>
      </property>
      <property name="maxLength">
       <number>50</number>
@@ -237,6 +277,30 @@
       <bool>true</bool>
      </property>
     </widget>
+   </widget>
+   <widget class="QLabel" name="StatusLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>180</y>
+      <width>401</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans SemiBold</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255,255,255);</string>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
    </widget>
   </widget>
   <widget class="QFrame" name="frame">
@@ -401,9 +465,9 @@ background-color: rgb(0, 45, 66);</string>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>100</x>
       <y>30</y>
-      <width>291</width>
+      <width>231</width>
       <height>21</height>
      </rect>
     </property>
@@ -425,9 +489,9 @@ background-color: rgb(0, 45, 66);</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>90</x>
       <y>60</y>
-      <width>291</width>
+      <width>261</width>
       <height>21</height>
      </rect>
     </property>
@@ -443,33 +507,7 @@ background-color: rgb(0, 45, 66);</string>
      <string notr="true">color: rgb(255, 255, 255)</string>
     </property>
     <property name="text">
-     <string> Point of Sale and Management System</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>10</y>
-      <width>81</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Open Sans SemiBold</family>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>IcoDisplay/r_88.ico</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
+     <string> Point of Sales and Management System</string>
     </property>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
@@ -494,31 +532,6 @@ background-color: rgb(0, 45, 66);</string>
      </property>
     </layout>
    </widget>
-   <zorder>label</zorder>
-   <zorder>label_2</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
-   <zorder>label_3</zorder>
-  </widget>
-  <widget class="QLabel" name="StatusLabel">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>290</y>
-     <width>421</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Open Sans SemiBold</family>
-     <pointsize>10</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>...</string>
-   </property>
   </widget>
  </widget>
  <tabstops>
@@ -526,6 +539,8 @@ background-color: rgb(0, 45, 66);</string>
   <tabstop>UserAcc_Password</tabstop>
   <tabstop>UserAcc_SubmitData</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="New folder/source.qrc"/>
+ </resources>
  <connections/>
 </ui>

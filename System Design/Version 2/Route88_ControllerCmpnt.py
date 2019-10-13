@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Route88_ControllerCmpnt.ui'
+# Form implementation generated from reading ui file 'Route88_ControllerCmpntPART2.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -136,10 +136,8 @@ class Ui_Route88_Controller_Window(object):
         font.setBold(True)
         font.setWeight(75)
         self.ctrl_UserLogout.setFont(font)
-        self.ctrl_UserLogout.setStyleSheet("background-color: rgb(40,40,40);\n"
-"color: rgb(255,255,255);\n"
-"border-radius: 5px;\n"
-"")
+        self.ctrl_UserLogout.setStyleSheet("background-color: rgb(255,255,255);\n"
+"color: rgb(0,0,0);")
         self.ctrl_UserLogout.setObjectName("ctrl_UserLogout")
         self.ctrl_ExitProgram = QtWidgets.QPushButton(self.groupBox)
         self.ctrl_ExitProgram.setGeometry(QtCore.QRect(80, 220, 121, 31))
@@ -149,10 +147,8 @@ class Ui_Route88_Controller_Window(object):
         font.setBold(True)
         font.setWeight(75)
         self.ctrl_ExitProgram.setFont(font)
-        self.ctrl_ExitProgram.setStyleSheet("background-color: rgb(40,40,40);\n"
-"color: rgb(255,255,255);\n"
-"border-radius: 5px;\n"
-"")
+        self.ctrl_ExitProgram.setStyleSheet("background-color: rgb(255,255,255);\n"
+"color: rgb(0,0,0);")
         self.ctrl_ExitProgram.setObjectName("ctrl_ExitProgram")
         self.groupBox_2 = QtWidgets.QGroupBox(self.GroupContainer_StaffAccount)
         self.groupBox_2.setGeometry(QtCore.QRect(400, 20, 251, 281))
@@ -187,9 +183,7 @@ class Ui_Route88_Controller_Window(object):
         font.setWeight(75)
         self.ctrl_POSSystem.setFont(font)
         self.ctrl_POSSystem.setStyleSheet("background-color: rgb(40,40,40);\n"
-"color: rgb(255,255,255);\n"
-"border-radius: 5px;\n"
-"")
+"color: rgb(255,255,255);")
         self.ctrl_POSSystem.setObjectName("ctrl_POSSystem")
         self.gridLayout.addWidget(self.ctrl_POSSystem, 1, 0, 1, 1)
         self.ctrl_ManagementSystem = QtWidgets.QPushButton(self.verticalLayoutWidget)
@@ -206,9 +200,7 @@ class Ui_Route88_Controller_Window(object):
         font.setWeight(75)
         self.ctrl_ManagementSystem.setFont(font)
         self.ctrl_ManagementSystem.setStyleSheet("background-color: rgb(40,40,40);\n"
-"color: rgb(255,255,255);\n"
-"border-radius: 5px;\n"
-"")
+"color: rgb(255,255,255);")
         self.ctrl_ManagementSystem.setObjectName("ctrl_ManagementSystem")
         self.gridLayout.addWidget(self.ctrl_ManagementSystem, 0, 0, 1, 1)
         self.ctrl_AboutSystem = QtWidgets.QPushButton(self.verticalLayoutWidget)
@@ -225,9 +217,7 @@ class Ui_Route88_Controller_Window(object):
         font.setWeight(75)
         self.ctrl_AboutSystem.setFont(font)
         self.ctrl_AboutSystem.setStyleSheet("background-color: rgb(40,40,40);\n"
-"color: rgb(255,255,255);\n"
-"border-radius: 5px;\n"
-"")
+"color: rgb(255,255,255);")
         self.ctrl_AboutSystem.setObjectName("ctrl_AboutSystem")
         self.gridLayout.addWidget(self.ctrl_AboutSystem, 2, 0, 1, 1)
         self.frame = QtWidgets.QFrame(Route88_Controller_Window)
@@ -282,6 +272,12 @@ class Ui_Route88_Controller_Window(object):
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.frame.setObjectName("frame")
+        self.label_3 = QtWidgets.QLabel(self.frame)
+        self.label_3.setGeometry(QtCore.QRect(60, 10, 81, 81))
+        self.label_3.setText("")
+        self.label_3.setPixmap(QtGui.QPixmap("IcoDisplay/r_88.ico"))
+        self.label_3.setScaledContents(True)
+        self.label_3.setObjectName("label_3")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.frame)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(1, 1, 2, 2))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
@@ -317,12 +313,6 @@ class Ui_Route88_Controller_Window(object):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.verticalLayout.addWidget(self.label_2)
-        self.label_3 = QtWidgets.QLabel(self.frame)
-        self.label_3.setGeometry(QtCore.QRect(100, 10, 81, 81))
-        self.label_3.setText("")
-        self.label_3.setPixmap(QtGui.QPixmap("../IcoDisplay/r_88.ico"))
-        self.label_3.setScaledContents(True)
-        self.label_3.setObjectName("label_3")
         self.user_StaffName.setBuddy(self.user_StaffName)
 
         self.retranslateUi(Route88_Controller_Window)
@@ -333,10 +323,10 @@ class Ui_Route88_Controller_Window(object):
     def retranslateUi(self, Route88_Controller_Window):
         _translate = QtCore.QCoreApplication.translate
         self.StatusLabel.setText(_translate("Route88_Controller_Window", "..."))
-        self.groupBox.setTitle(_translate("Route88_Controller_Window", "Welcome Staff~!!!"))
-        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_Controller_Window", "Staff Name"))
+        self.groupBox.setTitle(_translate("Route88_Controller_Window", "WELCOME STAFF~!"))
+        self.GroupContainer_PassCred_2.setTitle(_translate("Route88_Controller_Window", "STAFF NAME"))
         self.user_StaffName.setText(_translate("Route88_Controller_Window", "..."))
-        self.GroupContainer_PassCred.setTitle(_translate("Route88_Controller_Window", "Job Position"))
+        self.GroupContainer_PassCred.setTitle(_translate("Route88_Controller_Window", "STAFF JOB POSITION"))
         self.user_JobPosition.setText(_translate("Route88_Controller_Window", "..."))
         self.label_6.setText(_translate("Route88_Controller_Window", "Not this user? Please Log-out."))
         self.ctrl_UserLogout.setText(_translate("Route88_Controller_Window", "Log-out"))
